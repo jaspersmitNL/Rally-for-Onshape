@@ -19,13 +19,8 @@
   "content_scripts": [
     {
       "matches": ["https://cad.onshape.com/*"],
-      "js": [
-        "src/utils/core.js",
-        "src/utils/floatingNumberPad.js",
-        "src/utils/penSidebar.js",
-        "src/utils/touchPolish.js"
-      ],
-      "css": ["src/styles.css"],
+      "js": ["assets/main.js"],
+      "css": ["assets/main.css"],
       "run_at": "document_idle"
     }
   ],

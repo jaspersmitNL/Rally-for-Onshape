@@ -616,3 +616,10 @@ body[data-os-theme='dark']
   transform: scale(0.94);
   background: hsl(217.2 32.6% 17.5%);
 }
+
+.os-pen-btn-spacer {
+  height: 8px;
+  margin: 4px 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  flex-shrink: 0;
+}
