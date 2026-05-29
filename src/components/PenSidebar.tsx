@@ -399,100 +399,98 @@ export function PenSidebar() {
 	if (!route.isDocumentPage) return null;
 
 	return (
-		<TooltipProvider delayDuration={120}>
-			<motion.div
-				ref={sidebarRef}
-				id="os-pen-shortcut-sidebar"
-				layout
-				transition={{
-					layout: {
-						type: "spring",
-						stiffness: 500,
-						damping: 44,
-					},
-				}}
-				className={[
-					"fixed z-[999999]",
-					"flex flex-col items-center gap-1",
-					"rounded-[1.35rem] border border-white/10 bg-zinc-950/72 p-1.5 text-zinc-50 shadow-2xl shadow-black/40 backdrop-blur-2xl",
-					"ring-1 ring-white/10",
-					labelsVisible ? "os-labels-always-visible" : "",
-				].join(" ")}
-				onPointerMove={(e) => {
-					const state = dragStateRef.current;
+		<motion.div
+			ref={sidebarRef}
+			id="os-pen-shortcut-sidebar"
+			layout
+			transition={{
+				layout: {
+					type: "spring",
+					stiffness: 500,
+					damping: 44,
+				},
+			}}
+			className={[
+				"fixed z-[999999]",
+				"flex flex-col items-center gap-1",
+				"rounded-[1.35rem] border border-white/10 bg-zinc-950/72 p-1.5 text-zinc-50 shadow-2xl shadow-black/40 backdrop-blur-2xl",
+				"ring-1 ring-white/10",
+				labelsVisible ? "os-labels-always-visible" : "",
+			].join(" ")}
+			onPointerMove={(e) => {
+				const state = dragStateRef.current;
+				const sidebar = sidebarRef.current;
+
+				if (!state || !sidebar) return;
+
+				const nextLeft = state.startLeft + e.clientX - state.startX;
+				const nextTop = state.startTop + e.clientY - state.startY;
+
+				const maxLeft = window.innerWidth - sidebar.offsetWidth - 8;
+				const maxTop = window.innerHeight - sidebar.offsetHeight - 8;
+
+				sidebar.style.left = `${Math.max(8, Math.min(nextLeft, maxLeft))}px`;
+				sidebar.style.top = `${Math.max(8, Math.min(nextTop, maxTop))}px`;
+			}}
+			onPointerUp={(e) => {
+				const sidebar = sidebarRef.current;
+
+				if (!dragStateRef.current || !sidebar) return;
+
+				dragStateRef.current = null;
+				sidebar.classList.remove("is-dragging");
+
+				const rect = sidebar.getBoundingClientRect();
+
+				localStorage.setItem(
+					STORAGE_KEY,
+					JSON.stringify({
+						left: Math.round(rect.left),
+						top: Math.round(rect.top),
+					}),
+				);
+
+				try {
+					sidebar.releasePointerCapture(e.pointerId);
+				} catch {}
+			}}
+		>
+			<div
+				className="os-pen-drag-handle flex h-5 w-11 cursor-grab touch-none items-center justify-center rounded-xl text-zinc-500 transition-colors hover:bg-white/5 hover:text-zinc-300 active:cursor-grabbing"
+				onPointerDown={(e) => {
 					const sidebar = sidebarRef.current;
+					if (!sidebar) return;
 
-					if (!state || !sidebar) return;
-
-					const nextLeft = state.startLeft + e.clientX - state.startX;
-					const nextTop = state.startTop + e.clientY - state.startY;
-
-					const maxLeft = window.innerWidth - sidebar.offsetWidth - 8;
-					const maxTop = window.innerHeight - sidebar.offsetHeight - 8;
-
-					sidebar.style.left = `${Math.max(8, Math.min(nextLeft, maxLeft))}px`;
-					sidebar.style.top = `${Math.max(8, Math.min(nextTop, maxTop))}px`;
-				}}
-				onPointerUp={(e) => {
-					const sidebar = sidebarRef.current;
-
-					if (!dragStateRef.current || !sidebar) return;
-
-					dragStateRef.current = null;
-					sidebar.classList.remove("is-dragging");
+					e.preventDefault();
+					e.stopPropagation();
 
 					const rect = sidebar.getBoundingClientRect();
 
-					localStorage.setItem(
-						STORAGE_KEY,
-						JSON.stringify({
-							left: Math.round(rect.left),
-							top: Math.round(rect.top),
-						}),
-					);
+					dragStateRef.current = {
+						startX: e.clientX,
+						startY: e.clientY,
+						startLeft: rect.left,
+						startTop: rect.top,
+					};
 
-					try {
-						sidebar.releasePointerCapture(e.pointerId);
-					} catch {}
+					sidebar.style.transform = "none";
+					sidebar.classList.add("is-dragging");
+					sidebar.setPointerCapture(e.pointerId);
 				}}
 			>
-				<div
-					className="os-pen-drag-handle flex h-5 w-11 cursor-grab touch-none items-center justify-center rounded-xl text-zinc-500 transition-colors hover:bg-white/5 hover:text-zinc-300 active:cursor-grabbing"
-					onPointerDown={(e) => {
-						const sidebar = sidebarRef.current;
-						if (!sidebar) return;
+				<GripVertical className="h-3.5 w-3.5" strokeWidth={2.2} />
+			</div>
 
-						e.preventDefault();
-						e.stopPropagation();
-
-						const rect = sidebar.getBoundingClientRect();
-
-						dragStateRef.current = {
-							startX: e.clientX,
-							startY: e.clientY,
-							startLeft: rect.left,
-							startTop: rect.top,
-						};
-
-						sidebar.style.transform = "none";
-						sidebar.classList.add("is-dragging");
-						sidebar.setPointerCapture(e.pointerId);
-					}}
-				>
-					<GripVertical className="h-3.5 w-3.5" strokeWidth={2.2} />
-				</div>
-
-				<motion.div
-					layout
-					className="os-pen-buttons flex flex-col items-center gap-1"
-				>
-					<AnimatePresence mode="popLayout" initial={false}>
-						{items.map((item) => (
-							<AnimatedItem key={item.id} item={item} />
-						))}
-					</AnimatePresence>
-				</motion.div>
+			<motion.div
+				layout
+				className="os-pen-buttons flex flex-col items-center gap-1"
+			>
+				<AnimatePresence mode="popLayout" initial={false}>
+					{items.map((item) => (
+						<AnimatedItem key={item.id} item={item} />
+					))}
+				</AnimatePresence>
 			</motion.div>
-		</TooltipProvider>
+		</motion.div>
 	);
 }
