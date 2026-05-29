@@ -16,7 +16,9 @@
 
     if (
       recentlyTouched &&
-      ['mousedown', 'mouseup', 'click', 'dblclick', 'contextmenu'].includes(e.type)
+      ['mousedown', 'mouseup', 'click', 'dblclick', 'contextmenu'].includes(
+        e.type,
+      )
     ) {
       e.preventDefault();
       e.stopImmediatePropagation();
@@ -31,8 +33,8 @@
     'mouseup',
     'click',
     'dblclick',
-    'contextmenu'
-  ].forEach(type => {
+    'contextmenu',
+  ].forEach((type) => {
     window.addEventListener(type, touchNavBlocker, true);
   });
 })();
