@@ -18,11 +18,7 @@ import {
 	X,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-	pressKey,
-	subscribeToFeature,
-	subscribeToRoute,
-} from "../core/utils";
+import { pressKey, subscribeToFeature, subscribeToRoute } from "../core/utils";
 
 const STORAGE_KEY = "onshapePenSidebarPosition";
 const LABEL_MODE_KEY = "onshapePenSidebarLabelsAlwaysVisible";
@@ -331,14 +327,14 @@ export function PenSidebar() {
 			<div className="os-pen-buttons">
 				{items.map((item, index) => {
 					if (item === "spacer") {
-						return <Spacer key={`spacer-${item[0]}`} />;
+						return <Spacer key={`spacer-${index}`} />;
 					}
 
 					const [iconName, title, onClick] = item;
 
 					return (
 						<PenButton
-							key={`${iconName}-${title}-${iconName}`}
+							key={`${iconName}-${title}-${index}`}
 							iconName={iconName}
 							title={title}
 							onClick={onClick}

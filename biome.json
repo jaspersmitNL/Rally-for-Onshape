@@ -16,11 +16,12 @@
 		"enabled": true,
 		"rules": {
 			"recommended": true,
+      "suspicious": {
+        "noArrayIndexKey": "warn"
+      },
       "correctness": {
         "useExhaustiveDependencies": "info"
-
       }
-
 		}
 	},
 	"javascript": {
