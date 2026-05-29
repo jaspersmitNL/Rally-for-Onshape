@@ -1,0 +1,570 @@
+/* =========================================================
+   Onshape Dark ShadCN Theme — scoped away from custom toolbar
+   ========================================================= */
+:root,
+body[data-os-theme="dark"] {
+    --sh-bg: hsl(222.2 84% 4.9%);
+    --sh-card: hsl(222.2 84% 4.9%);
+    --sh-popover: hsl(222.2 84% 4.9%);
+    --sh-fg: hsl(210 40% 98%);
+    --sh-muted: hsl(217.2 32.6% 17.5%);
+    --sh-muted-fg: hsl(215 20.2% 65.1%);
+    --sh-border: hsl(217.2 32.6% 17.5%);
+    --sh-accent: hsl(217.2 32.6% 17.5%);
+    --sh-accent-fg: hsl(210 40% 98%);
+    --sh-radius: 12px;
+}
+
+/* Onshape design-token overrides */
+body[data-os-theme="dark"] {
+    --os-background-primary: var(--sh-bg) !important;
+    --os-background-secondary: var(--sh-card) !important;
+    --os-background-tertiary: var(--sh-muted) !important;
+
+    --os-fill-primary: var(--sh-bg) !important;
+    --os-fill-secondary: var(--sh-card) !important;
+    --os-fill-tertiary: var(--sh-muted) !important;
+    --os-fill-senary: var(--sh-bg) !important;
+
+    --os-outline-primary: var(--sh-border) !important;
+    --os-outline-secondary: var(--sh-border) !important;
+    --os-outline-tertiary: var(--sh-border) !important;
+    --os-outline-subtle: hsl(217.2 32.6% 17.5% / 0.65) !important;
+
+    --os-text-primary: var(--sh-fg) !important;
+    --os-text-secondary: var(--sh-muted-fg) !important;
+
+    --os-icon-outline-primary: var(--sh-muted-fg) !important;
+    --os-icon-accent-tertiary: var(--sh-fg) !important;
+
+    --os-navbar-item--hover: var(--sh-accent) !important;
+}
+
+/* Main app surfaces */
+body[data-os-theme="dark"] :where( .left-navigation-container,
+.osx-flyout-header,
+.osx-flyout-scroll-content,
+.osx-user-notification-flyout-header,
+.osx-user-notification-flyout-scroll-content,
+.modal-content,
+.modal-dialog,
+.dropdown-menu,
+.popover,
+.card,
+.panel,
+.toolbar):not(#os-pen-shortcut-sidebar):not(#os-floating-numpad):not(.os-pen-btn):not(.os-numpad-btn) {
+    background: var(--sh-card) !important;
+    color: var(--sh-fg) !important;
+    border-color: var(--sh-border) !important;
+}
+
+/* Left nav from the uploaded Onshape HTML */
+body[data-os-theme="dark"] .left-navigation-container {
+    background: hsl(222.2 84% 4.9% / 0.96) !important;
+    border-right: 1px solid var(--sh-border) !important;
+}
+
+body[data-os-theme="dark"] .left-navigation-container .action-button:hover {
+    background: var(--sh-accent) !important;
+}
+
+body[data-os-theme="dark"] .left-navigation-container .background {
+    border-radius: 10px !important;
+}
+
+body[data-os-theme="dark"] .left-navigation-container .icon.os-active .background {
+    background: var(--sh-fg) !important;
+}
+
+body[data-os-theme="dark"] .left-navigation-container .icon.os-active .osx-svg-icon {
+    color: var(--sh-bg) !important;
+}
+
+/* Nav/top buttons — scoped to Onshape classes only */
+body[data-os-theme="dark"] :where( .osx-nav-item,
+.osx-flyout-toggle-button,
+.action-button,
+.btn):not(.os-pen-btn):not(.os-numpad-btn):not(.os-numpad-close) {
+    color: var(--sh-fg) !important;
+    border-color: var(--sh-border) !important;
+    border-radius: 10px !important;
+}
+
+body[data-os-theme="dark"] :where( .osx-nav-item,
+.osx-flyout-toggle-button,
+.action-button,
+.btn):not(.os-pen-btn):not(.os-numpad-btn):hover {
+    background: var(--sh-accent) !important;
+}
+
+/* Flyouts / side panels */
+body[data-os-theme="dark"] :where( .osx-flyout-container,
+.osx-flyout-header,
+.osx-flyout-scroll-content,
+.osx-user-notification-flyout-header,
+.osx-user-notification-flyout-scroll-content) {
+    background: hsl(222.2 84% 4.9% / 0.96) !important;
+    border-color: var(--sh-border) !important;
+    color: var(--sh-fg) !important;
+}
+
+/* Inputs */
+body[data-os-theme="dark"] :where( input,
+textarea,
+select,
+.form-control):not(#os-pen-shortcut-sidebar *):not(#os-floating-numpad *) {
+    background: hsl(222.2 84% 4.9%) !important;
+    color: var(--sh-fg) !important;
+    border: 1px solid var(--sh-border) !important;
+    border-radius: 10px !important;
+}
+
+body[data-os-theme="dark"] :where( input,
+textarea,
+select,
+.form-control):focus:not(#os-pen-shortcut-sidebar *):not(#os-floating-numpad *) {
+    outline: 2px solid hsl(212.7 26.8% 83.9% / 0.45) !important;
+    outline-offset: 1px !important;
+}
+
+/* Tables / rows / menus */
+body[data-os-theme="dark"] :where( tr,
+li,
+[role="menuitem"],
+[role="option"],
+[role="listitem"]):not(#os-pen-shortcut-sidebar *):not(#os-floating-numpad *) {
+    color: var(--sh-fg) !important;
+}
+
+body[data-os-theme="dark"] :where( tr:hover,
+li:hover,
+[role="menuitem"]:hover,
+[role="option"]:hover,
+[role="listitem"]:hover):not(#os-pen-shortcut-sidebar *):not(#os-floating-numpad *) {
+    background: var(--sh-accent) !important;
+}
+
+/* Scrollable panes */
+body[data-os-theme="dark"] :where( .osx-flyout-scroll-content,
+.osx-user-notification-flyout-scroll-content,
+[class*="scroll"],
+[class*="Scroll"]):not(#os-floating-numpad):not(#os-pen-shortcut-sidebar) {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(215 20.2% 65.1% / 0.5) transparent;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* WebKit scrollbars */
+body[data-os-theme="dark"] *:not(#os-pen-shortcut-sidebar):not(#os-pen-shortcut-sidebar *):not(#os-floating-numpad):not(#os-floating-numpad *)::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+body[data-os-theme="dark"] *:not(#os-pen-shortcut-sidebar):not(#os-pen-shortcut-sidebar *):not(#os-floating-numpad):not(#os-floating-numpad *)::-webkit-scrollbar-thumb {
+    background: hsl(215 20.2% 65.1% / 0.38);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+/* Canvas / viewport background */
+body[data-os-theme="dark"] :where( #renderTarget,
+.glCanvas,
+.os-main-view,
+[class*="glView"],
+[class*="scene"],
+[class*="Scene"],
+[class*="viewport"],
+[class*="Viewport"]):not(#os-pen-shortcut-sidebar):not(#os-floating-numpad) {
+    background: radial-gradient( circle at top,
+    hsl(215 27.9% 16.9%),
+    hsl(222.2 84% 4.9%)) !important;
+}
+
+/* Protect your custom injected UI completely */
+#os-pen-shortcut-sidebar,
+#os-pen-shortcut-sidebar *,
+#os-floating-numpad,
+#os-floating-numpad * {
+    box-sizing: border-box;
+}
+/* =========================================================
+   Onshape Pen Sidebar — label toggle support
+   ========================================================= */
+
+#os-pen-shortcut-sidebar .os-pen-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    align-items: center;
+}
+
+#os-pen-shortcut-sidebar .os-pen-btn {
+    gap: 10px;
+    overflow: visible;
+}
+
+#os-pen-shortcut-sidebar .os-pen-btn-label {
+    display: none;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+/* Icon-only mode */
+#os-pen-shortcut-sidebar:not(.os-labels-always-visible) {
+    width: 58px;
+}
+
+#os-pen-shortcut-sidebar:not(.os-labels-always-visible) .os-pen-btn {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    justify-content: center;
+}
+
+/* Always-show-labels mode */
+#os-pen-shortcut-sidebar.os-labels-always-visible {
+    width: 190px;
+}
+
+#os-pen-shortcut-sidebar.os-labels-always-visible .os-pen-buttons {
+    align-items: stretch;
+}
+
+#os-pen-shortcut-sidebar.os-labels-always-visible .os-pen-btn {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    justify-content: flex-start;
+}
+
+#os-pen-shortcut-sidebar.os-labels-always-visible .os-pen-btn svg {
+    flex: 0 0 20px;
+}
+
+#os-pen-shortcut-sidebar.os-labels-always-visible .os-pen-btn-label {
+    display: inline-block;
+}
+
+#os-pen-shortcut-sidebar.os-labels-always-visible .os-pen-btn::after {
+    display: none;
+}
+
+/* =========================================================
+   Floating Numpad
+   ========================================================= */
+
+#os-floating-numpad {
+    position: fixed;
+    z-index: 999999;
+
+    width: 220px;
+    max-width: calc(100vw - 24px);
+
+    background: hsl(222.2 84% 4.9% / 0.96);
+    border: 1px solid hsl(217.2 32.6% 17.5%);
+    border-radius: 18px;
+
+    backdrop-filter: blur(14px);
+
+    padding: 12px;
+
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255,255,255,0.03);
+
+    display: none;
+
+    user-select: none;
+    touch-action: manipulation;
+}
+
+#os-floating-numpad.is-visible {
+    display: block;
+}
+
+#os-floating-numpad .os-numpad-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 10px;
+
+    color: var(--sh-fg);
+
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+#os-floating-numpad .os-numpad-close {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 10px;
+
+    background: transparent;
+    color: var(--sh-muted-fg);
+
+    font-size: 18px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 120ms ease,
+        color 120ms ease,
+        transform 80ms ease;
+}
+
+#os-floating-numpad .os-numpad-close:hover {
+    background: var(--sh-accent);
+    color: var(--sh-fg);
+}
+
+#os-floating-numpad .os-numpad-close:active {
+    transform: scale(0.94);
+}
+
+#os-floating-numpad .os-numpad-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+#os-floating-numpad .os-numpad-btn {
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--sh-border);
+    border-radius: 12px;
+
+    background: hsl(222.2 84% 6.5%);
+    color: var(--sh-fg);
+
+    font-size: 18px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 120ms ease,
+        border-color 120ms ease,
+        transform 80ms ease;
+
+    touch-action: manipulation;
+}
+
+#os-floating-numpad .os-numpad-btn:hover {
+    background: var(--sh-accent);
+}
+
+#os-floating-numpad .os-numpad-btn:active {
+    transform: scale(0.96);
+}
+
+#os-floating-numpad .os-numpad-btn.wide {
+    grid-column: span 4;
+}
+
+#os-pen-shortcut-sidebar {
+      position: fixed;
+      z-index: 999999;
+      width: 58px;
+      padding: 8px;
+      border-radius: 22px;
+      background: hsl(222.2 84% 4.9% / 0.92);
+      border: 1px solid hsl(217.2 32.6% 17.5%);
+      box-shadow:
+        0 24px 80px rgba(0,0,0,0.48),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+      backdrop-filter: blur(20px) saturate(1.5);
+      -webkit-backdrop-filter: blur(20px) saturate(1.5);
+      user-select: none;
+      touch-action: none;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .os-pen-drag-handle {
+      height: 30px;
+      border-radius: 16px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: hsl(217.2 32.6% 17.5% / 0.72);
+      color: hsl(215 20.2% 65.1%);
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .os-pen-dots {
+      font-size: 18px;
+      letter-spacing: -1px;
+      transform: rotate(90deg);
+      opacity: 0.75;
+    }
+
+    .os-pen-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .os-pen-btn {
+      position: relative;
+      width: 42px;
+      height: 42px;
+      border: 1px solid hsl(217.2 32.6% 17.5%);
+      border-radius: 14px;
+      background: hsl(222.2 84% 4.9%);
+      color: hsl(210 40% 98%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: manipulation;
+      box-shadow:
+        0 8px 18px rgba(0,0,0,0.26),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+      transition:
+        transform 90ms ease,
+        background 120ms ease,
+        border-color 120ms ease,
+        color 120ms ease;
+    }
+
+    .os-pen-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    .os-pen-btn:hover {
+      background: hsl(217.2 32.6% 17.5%);
+      border-color: hsl(215 20.2% 65.1% / 0.35);
+    }
+
+    .os-pen-btn:active {
+      transform: scale(0.92);
+      background: hsl(215 27.9% 16.9%);
+    }
+
+    .os-pen-btn::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 54px;
+      top: 50%;
+      transform: translateY(-85%);
+      background: hsl(222.2 84% 4.9%);
+      color: hsl(210 40% 98%);
+      border: 1px solid hsl(217.2 32.6% 17.5%);
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 120ms ease, transform 120ms ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      z-index: 1000001;
+    }
+
+    .os-pen-btn:hover::after {
+      opacity: 1;
+      transform: translateY(-115%);
+    }
+
+    #os-floating-numpad {
+      position: fixed;
+      z-index: 1000000;
+      width: 210px;
+      padding: 10px;
+      border-radius: 24px;
+      background: hsl(222.2 84% 4.9% / 0.94);
+      border: 1px solid hsl(217.2 32.6% 17.5%);
+      box-shadow:
+        0 24px 80px rgba(0,0,0,0.52),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+      backdrop-filter: blur(22px) saturate(1.5);
+      -webkit-backdrop-filter: blur(22px) saturate(1.5);
+      display: none;
+      user-select: none;
+      touch-action: none;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    #os-floating-numpad.is-visible {
+      display: block;
+    }
+
+    .os-numpad-header {
+      height: 34px;
+      border-radius: 17px;
+      margin-bottom: 10px;
+      padding: 0 10px;
+      background: hsl(217.2 32.6% 17.5% / 0.72);
+      color: hsl(215 20.2% 65.1%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+
+    .os-numpad-close {
+      width: 26px;
+      height: 26px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: hsl(215 20.2% 65.1%);
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .os-numpad-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .os-numpad-btn {
+      height: 52px;
+      border: 1px solid hsl(217.2 32.6% 17.5%);
+      border-radius: 16px;
+      background: hsl(222.2 84% 4.9%);
+      color: hsl(210 40% 98%);
+      font-size: 19px;
+      font-weight: 800;
+      cursor: pointer;
+      touch-action: manipulation;
+      box-shadow:
+        0 8px 18px rgba(0,0,0,0.25),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+      transition: transform 90ms ease, background 120ms ease;
+    }
+
+    .os-numpad-btn:active {
+      transform: scale(0.94);
+      background: hsl(217.2 32.6% 17.5%);
+    }
