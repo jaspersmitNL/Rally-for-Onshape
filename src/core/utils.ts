@@ -1,161 +1,209 @@
-export function pressKey(key, opts = {}) {
-  const isLetter = /^[a-z]$/i.test(key);
-  const isDigit = /^[0-9]$/.test(key);
-  const upperKey = key.toUpperCase();
+export type PressKeyOptions = {
+	code?: string;
+	keyCode?: number;
+	which?: number;
+	target?: EventTarget | null;
+	ctrlKey?: boolean;
+	shiftKey?: boolean;
+	altKey?: boolean;
+	metaKey?: boolean;
+};
 
-  const keyCode =
-    opts.keyCode ||
-    (isLetter ? upperKey.charCodeAt(0) : isDigit ? key.charCodeAt(0) : 0);
+export type OnshapeRoute = {
+	href: string;
+	pathname: string;
+	isDocumentPage: boolean;
+	documentId: string | null;
+};
 
-  const eventOptions = {
-    key,
-    code: opts.code || (isLetter ? `Key${upperKey}` : isDigit ? `Digit${key}` : key),
-    keyCode,
-    which: opts.which || keyCode,
-    bubbles: true,
-    cancelable: true,
-    ctrlKey: !!opts.ctrlKey,
-    shiftKey: !!opts.shiftKey,
-    altKey: !!opts.altKey,
-    metaKey: !!opts.metaKey,
-  };
+export type FeatureState = {
+	dialog: HTMLElement | null;
+	isFeatureOpen: boolean;
+	featureType: string | null;
+};
 
-  const targets = [
-    opts.target,
-    document.activeElement,
-    document.querySelector("canvas"),
-    document.body,
-    document,
-    window,
-  ].filter(Boolean);
+export type Unsubscribe = () => void;
 
-  targets.forEach((target) => {
-    target.dispatchEvent(new KeyboardEvent("keydown", eventOptions));
-    target.dispatchEvent(new KeyboardEvent("keypress", eventOptions));
+export function pressKey(key: string, opts: PressKeyOptions = {}): void {
+	const isLetter = /^[a-z]$/i.test(key);
+	const isDigit = /^[0-9]$/.test(key);
+	const upperKey = key.toUpperCase();
 
-    setTimeout(() => {
-      target.dispatchEvent(new KeyboardEvent("keyup", eventOptions));
-    }, 35);
-  });
+	const keyCode =
+		opts.keyCode ??
+		(isLetter ? upperKey.charCodeAt(0) : isDigit ? key.charCodeAt(0) : 0);
+
+	const code =
+		opts.code ?? (isLetter ? `Key${upperKey}` : isDigit ? `Digit${key}` : key);
+
+	const eventOptions: KeyboardEventInit = {
+		key,
+		code,
+		keyCode,
+		which: opts.which ?? keyCode,
+		bubbles: true,
+		cancelable: true,
+		composed: true,
+		ctrlKey: !!opts.ctrlKey,
+		shiftKey: !!opts.shiftKey,
+		altKey: !!opts.altKey,
+		metaKey: !!opts.metaKey,
+	};
+
+	const targets: EventTarget[] = [
+		opts.target,
+		window,
+		document,
+		document.body,
+		document.querySelector("canvas"),
+		document.activeElement,
+	].filter((target): target is EventTarget => !!target);
+
+	for (const target of targets) {
+		target.dispatchEvent(new KeyboardEvent("keydown", eventOptions));
+		target.dispatchEvent(new KeyboardEvent("keypress", eventOptions));
+
+		window.setTimeout(() => {
+			target.dispatchEvent(new KeyboardEvent("keyup", eventOptions));
+		}, 35);
+	}
 }
 
-export function getRoute() {
-  const pathname = window.location.pathname;
-  const documentMatch = pathname.match(/^\/documents\/([^/]+)/);
+export function getRoute(): OnshapeRoute {
+	const pathname = window.location.pathname;
+	const documentMatch = pathname.match(/^\/documents\/([^/]+)/);
 
-  return {
-    href: window.location.href,
-    pathname,
-    isDocumentPage: !!documentMatch,
-    documentId: documentMatch?.[1] || null,
-  };
+	return {
+		href: window.location.href,
+		pathname,
+		isDocumentPage: !!documentMatch,
+		documentId: documentMatch?.[1] ?? null,
+	};
 }
 
-export function getFeatureState() {
-  const dialog = document.querySelector("#feature-dialog.feature-dialog");
+export function getFeatureState(): FeatureState {
+	const dialog = document.querySelector<HTMLElement>(
+		"#feature-dialog.feature-dialog",
+	);
 
-  return {
-    dialog,
-    isFeatureOpen: !!dialog,
-    featureType: dialog?.getAttribute("feature-type") || null,
-  };
+	return {
+		dialog,
+		isFeatureOpen: !!dialog,
+		featureType: dialog?.getAttribute("feature-type") ?? null,
+	};
 }
 
-export function subscribeToRoute(callback) {
-  let lastHref = window.location.href;
+export function subscribeToRoute(
+	callback: (route: OnshapeRoute) => void,
+): Unsubscribe {
+	let lastHref = window.location.href;
 
-  const check = () => {
-    if (window.location.href === lastHref) return;
+	const check = (): void => {
+		if (window.location.href === lastHref) return;
 
-    lastHref = window.location.href;
-    callback(getRoute());
-  };
+		lastHref = window.location.href;
+		callback(getRoute());
+	};
 
-  const interval = setInterval(check, 250);
+	const interval = window.setInterval(check, 250);
 
-  window.addEventListener("hashchange", check);
-  window.addEventListener("popstate", check);
+	window.addEventListener("hashchange", check);
+	window.addEventListener("popstate", check);
 
-  callback(getRoute());
+	callback(getRoute());
 
-  return () => {
-    clearInterval(interval);
-    window.removeEventListener("hashchange", check);
-    window.removeEventListener("popstate", check);
-  };
+	return () => {
+		window.clearInterval(interval);
+		window.removeEventListener("hashchange", check);
+		window.removeEventListener("popstate", check);
+	};
 }
 
-export function subscribeToFeature(callback) {
-  let lastFeatureType;
-  let lastIsFeatureOpen;
-  let timer;
+export function subscribeToFeature(
+	callback: (state: FeatureState) => void,
+): Unsubscribe {
+	let lastFeatureType: string | null | undefined;
+	let lastIsFeatureOpen: boolean | undefined;
+	let timer: number | undefined;
 
-  const emitIfChanged = () => {
-    clearTimeout(timer);
+	const emitIfChanged = (): void => {
+		if (timer) {
+			window.clearTimeout(timer);
+		}
 
-    timer = setTimeout(() => {
-      const state = getFeatureState();
+		timer = window.setTimeout(() => {
+			const state = getFeatureState();
 
-      if (
-        state.featureType === lastFeatureType &&
-        state.isFeatureOpen === lastIsFeatureOpen
-      ) {
-        return;
-      }
+			if (
+				state.featureType === lastFeatureType &&
+				state.isFeatureOpen === lastIsFeatureOpen
+			) {
+				return;
+			}
 
-      lastFeatureType = state.featureType;
-      lastIsFeatureOpen = state.isFeatureOpen;
+			lastFeatureType = state.featureType;
+			lastIsFeatureOpen = state.isFeatureOpen;
 
-      callback(state);
-    }, 50);
-  };
+			callback(state);
+		}, 50);
+	};
 
-  const observer = new MutationObserver(emitIfChanged);
+	const observer = new MutationObserver(emitIfChanged);
 
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ["feature-type", "class", "style"],
-  });
+	observer.observe(document.body, {
+		childList: true,
+		subtree: true,
+		attributes: true,
+		attributeFilter: ["feature-type", "class", "style"],
+	});
 
-  emitIfChanged();
+	emitIfChanged();
 
-  return () => {
-    clearTimeout(timer);
-    observer.disconnect();
-  };
+	return () => {
+		if (timer) {
+			window.clearTimeout(timer);
+		}
+
+		observer.disconnect();
+	};
 }
 
-export function setNativeValue(el, value) {
-  const valueSetter = Object.getOwnPropertyDescriptor(el, "value")?.set;
-  const prototypeSetter = Object.getOwnPropertyDescriptor(
-    Object.getPrototypeOf(el),
-    "value",
-  )?.set;
+export function setNativeValue(
+	el: HTMLInputElement | HTMLTextAreaElement,
+	value: string,
+): void {
+	const valueSetter = Object.getOwnPropertyDescriptor(el, "value")?.set;
+	const prototypeSetter = Object.getOwnPropertyDescriptor(
+		Object.getPrototypeOf(el),
+		"value",
+	)?.set;
 
-  if (prototypeSetter && valueSetter !== prototypeSetter) {
-    prototypeSetter.call(el, value);
-  } else if (valueSetter) {
-    valueSetter.call(el, value);
-  } else {
-    el.value = value;
-  }
+	if (prototypeSetter && valueSetter !== prototypeSetter) {
+		prototypeSetter.call(el, value);
+	} else if (valueSetter) {
+		valueSetter.call(el, value);
+	} else {
+		el.value = value;
+	}
 }
 
-export function fireInputEvents(el, inputType = "insertText", data = null) {
-  el.dispatchEvent(
-    new InputEvent("input", {
-      bubbles: true,
-      cancelable: true,
-      inputType,
-      data,
-    }),
-  );
+export function fireInputEvents(
+	el: HTMLElement,
+	inputType: InputEvent["inputType"] = "insertText",
+	data: string | null = null,
+): void {
+	el.dispatchEvent(
+		new InputEvent("input", {
+			bubbles: true,
+			cancelable: true,
+			inputType,
+			data,
+		}),
+	);
 
-  el.dispatchEvent(
-    new Event("change", {
-      bubbles: true,
-    }),
-  );
+	el.dispatchEvent(
+		new Event("change", {
+			bubbles: true,
+		}),
+	);
 }
