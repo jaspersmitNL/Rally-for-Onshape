@@ -1,15 +1,16 @@
 (function () {
   'use strict';
 
-  if (window.__onshapeFloatingNumpadLoaded) return;
-  window.__onshapeFloatingNumpadLoaded = true;
+  if (window.__onshapeFloatingNumpadRegistered) return;
+  window.__onshapeFloatingNumpadRegistered = true;
+
+  const ACTION_DELAY = 40;
+  const AUTO_HIDE_DELAY = 600;
 
   let activeInput = null;
   let numpad = null;
   let hideTimer = null;
-
-  const ACTION_DELAY = 40;
-  const AUTO_HIDE_DELAY = 600;
+  let cleanupFns = [];
 
   function ready(fn) {
     if (window.OnshapeTablet) fn();
@@ -17,6 +18,15 @@
   }
 
   ready(() => {
+    window.OnshapeTablet.runWhenDocumentPage(
+      () => initFloatingNumpad(),
+      () => destroyFloatingNumpad(),
+    );
+  });
+
+  function initFloatingNumpad() {
+    if (document.querySelector('#os-floating-numpad')) return;
+
     const { pressKey, setNativeValue, fireInputEvents } = window.OnshapeTablet;
 
     function hideNumpad() {
@@ -43,7 +53,7 @@
           focused !== activeInput &&
           focused !== document.body &&
           focused !== document.documentElement &&
-          !numpad.contains(focused)
+          !numpad?.contains(focused)
         ) {
           hideNumpad();
         }
@@ -59,7 +69,11 @@
       el.focus();
 
       if (key === 'Enter') {
-        pressKey('Enter', { code: 'Enter', keyCode: 13, which: 13 });
+        pressKey('Enter', {
+          code: 'Enter',
+          keyCode: 13,
+          which: 13,
+        });
 
         setTimeout(() => {
           hideNumpad();
@@ -69,7 +83,12 @@
       }
 
       if (key === 'Tab') {
-        pressKey('Tab', { code: 'Tab', keyCode: 9, which: 9 });
+        pressKey('Tab', {
+          code: 'Tab',
+          keyCode: 9,
+          which: 9,
+        });
+
         return;
       }
 
@@ -106,8 +125,11 @@
       }
 
       if (el.isContentEditable) {
-        if (key === 'Backspace') document.execCommand('delete');
-        else document.execCommand('insertText', false, key);
+        if (key === 'Backspace') {
+          document.execCommand('delete');
+        } else {
+          document.execCommand('insertText', false, key);
+        }
       }
     }
 
@@ -148,12 +170,12 @@
     });
 
     numpad.innerHTML = `
-            <div class="os-numpad-header">
-                <span>NUM</span>
-                <button class="os-numpad-close" type="button" tabindex="-1">×</button>
-            </div>
-            <div class="os-numpad-grid"></div>
-        `;
+      <div class="os-numpad-header">
+        <span>NUM</span>
+        <button class="os-numpad-close" type="button" tabindex="-1">×</button>
+      </div>
+      <div class="os-numpad-grid"></div>
+    `;
 
     const numpadGrid = numpad.querySelector('.os-numpad-grid');
 
@@ -185,18 +207,18 @@
 
     document.body.appendChild(numpad);
 
-    numpad
-      .querySelector('.os-numpad-close')
-      .addEventListener('pointerdown', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+    const closeButton = numpad.querySelector('.os-numpad-close');
 
-        cancelPendingHide();
+    closeButton?.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-        setTimeout(() => {
-          hideNumpad();
-        }, ACTION_DELAY);
-      });
+      cancelPendingHide();
+
+      setTimeout(() => {
+        hideNumpad();
+      }, ACTION_DELAY);
+    });
 
     function isUsefulInput(el) {
       return (
@@ -237,33 +259,48 @@
       numpad.style.top = `${top}px`;
     }
 
-    window.addEventListener(
-      'focusin',
-      (e) => {
-        if (!isUsefulInput(e.target)) return;
-        if (numpad.contains(e.target)) return;
+    const handleFocusIn = (e) => {
+      if (!isUsefulInput(e.target)) return;
+      if (numpad?.contains(e.target)) return;
 
-        cancelPendingHide();
+      cancelPendingHide();
 
-        activeInput = e.target;
-        positionNumpadNearInput(activeInput);
-        numpad.classList.add('is-visible');
-      },
-      true,
-    );
+      activeInput = e.target;
+      positionNumpadNearInput(activeInput);
+      numpad.classList.add('is-visible');
+    };
 
-    window.addEventListener(
-      'focusout',
-      (e) => {
-        if (!activeInput) return;
+    const handleFocusOut = (e) => {
+      if (!activeInput) return;
 
-        if (e.relatedTarget && numpad.contains(e.relatedTarget)) {
-          return;
-        }
+      if (e.relatedTarget && numpad?.contains(e.relatedTarget)) {
+        return;
+      }
 
-        scheduleAutoHide();
-      },
-      true,
-    );
-  });
+      scheduleAutoHide();
+    };
+
+    window.addEventListener('focusin', handleFocusIn, true);
+    window.addEventListener('focusout', handleFocusOut, true);
+
+    cleanupFns = [
+      () => window.removeEventListener('focusin', handleFocusIn, true),
+      () => window.removeEventListener('focusout', handleFocusOut, true),
+    ];
+  }
+
+  function destroyFloatingNumpad() {
+    if (hideTimer) {
+      clearTimeout(hideTimer);
+      hideTimer = null;
+    }
+
+    cleanupFns.forEach((cleanup) => cleanup());
+    cleanupFns = [];
+
+    activeInput = null;
+
+    document.querySelector('#os-floating-numpad')?.remove();
+    numpad = null;
+  }
 })();
