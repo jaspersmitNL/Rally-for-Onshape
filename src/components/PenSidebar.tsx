@@ -1,19 +1,13 @@
 import {
 	Check,
-	Circle,
 	GripVertical,
 	Home,
 	Keyboard,
 	Maximize,
-	Minus,
 	MousePointer2,
 	PanelLeft,
-	RectangleHorizontal,
 	Redo2,
-	Ruler,
-	Scissors,
 	Search,
-	Slash,
 	Trash2,
 	Undo2,
 	X,
@@ -25,42 +19,19 @@ import { Separator } from "@/components/ui/separator";
 import {
 	Tooltip,
 	TooltipContent,
-	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { actions } from "@/features/actions";
 import { featureDefinitions } from "@/features/definitions";
-import type { IconName, ToolDefinition } from "@/features/types";
+import type { ToolDefinition } from "@/features/types";
 import { pressKey, subscribeToFeature, subscribeToRoute } from "../core/utils";
 
 const STORAGE_KEY = "onshapePenSidebarPosition";
 const LABEL_MODE_KEY = "onshapePenSidebarLabelsAlwaysVisible";
 
-const ICONS = {
-	check: Check,
-	circle: Circle,
-	delete: Trash2,
-	dimension: Ruler,
-	esc: X,
-	fullscreen: Maximize,
-	home: Home,
-	keyboard: Keyboard,
-	line: Slash,
-	normal: MousePointer2,
-	offset: Minus,
-	panelLeft: PanelLeft,
-	rectangle: RectangleHorizontal,
-	redo: Redo2,
-	search: Search,
-	space: MousePointer2,
-	trim: Scissors,
-	undo: Undo2,
-};
-
 type ToolItem = {
 	type: "button";
 	id: string;
-	iconName: IconName;
+	icon: ToolDefinition["icon"];
 	title: string;
 	onClick: () => void;
 	tone?: "default" | "primary" | "danger" | "success";
@@ -81,7 +52,11 @@ type MenuItem = ToolItem | SpacerItem | SectionLabelItem;
 
 function showKeyboard() {
 	try {
-		navigator.virtualKeyboard?.show?.();
+		const nav = navigator as Navigator & {
+			virtualKeyboard?: { show?: () => void };
+		};
+
+		nav.virtualKeyboard?.show?.();
 	} catch {}
 
 	try {
@@ -119,8 +94,8 @@ function confirmAction() {
 	}, 40);
 }
 
-function PenButton({ iconName, title, onClick, tone = "default" }: ToolItem) {
-	const Icon = ICONS[iconName];
+function PenButton({ icon, title, onClick, tone = "default" }: ToolItem) {
+	const Icon = icon;
 
 	const toneClass =
 		tone === "primary"
@@ -305,14 +280,14 @@ export function PenSidebar() {
 
 		const button = (
 			id: string,
-			iconName: IconName,
+			icon: ToolDefinition["icon"],
 			title: string,
 			onClick: () => void,
 			tone?: ToolItem["tone"],
 		): ToolItem => ({
 			type: "button",
 			id,
-			iconName,
+			icon,
 			title,
 			onClick,
 			tone,
@@ -327,14 +302,14 @@ export function PenSidebar() {
 		});
 
 		const globalItems: MenuItem[] = [
-			button("labels", "panelLeft", "Labels", () =>
+			button("labels", PanelLeft, "Labels", () =>
 				setLabelsVisible((value) => !value),
 			),
-			button("keyboard", "keyboard", "Keyboard", () =>
+			button("keyboard", Keyboard, "Keyboard", () =>
 				setTimeout(showKeyboard, 100),
 			),
-			button("fullscreen", "fullscreen", "Fullscreen", toggleFullscreen),
-			button("home", "home", "Home", () => {
+			button("fullscreen", Maximize, "Fullscreen", toggleFullscreen),
+			button("home", Home, "Home", () => {
 				window.location.href = "https://cad.onshape.com/documents";
 			}),
 		];
@@ -344,10 +319,10 @@ export function PenSidebar() {
 				"feature-label",
 				featureDefinitions[featureType ?? ""]?.label ?? "Feature",
 			),
-			button("cancel", "esc", "Cancel", cancelAction, "danger"),
+			button("cancel", X, "Cancel", cancelAction, "danger"),
 			button(
 				"confirm",
-				"check",
+				Check,
 				"Confirm",
 				() => setTimeout(confirmAction, 100),
 				"success",
@@ -356,18 +331,18 @@ export function PenSidebar() {
 
 		const defaultDocumentItems: MenuItem[] = [
 			label("view-label", "View"),
-			button("clear", "space", "Clear", clearSelectionAction),
-			button("shortcut-menu", "search", "Shortcut Menu", shortcutMenuAction),
-			button("normal-to", "normal", "Normal To", normalToAction),
-			button("delete", "delete", "Delete", deleteAction, "danger"),
+			button("clear", MousePointer2, "Clear", clearSelectionAction),
+			button("shortcut-menu", Search, "Shortcut Menu", shortcutMenuAction),
+			button("normal-to", MousePointer2, "Normal To", normalToAction),
+			button("delete", Trash2, "Delete", deleteAction, "danger"),
 		];
 
 		const mapFeatureTool = (tool: ToolDefinition): ToolItem => ({
 			type: "button",
 			id: tool.id,
-			iconName: tool.iconName,
+			icon: tool.icon,
 			title: tool.title,
-			onClick: actions[tool.action as keyof typeof actions] ?? (() => {}),
+			onClick: tool.onClick,
 			tone: tool.tone,
 		});
 
@@ -376,11 +351,11 @@ export function PenSidebar() {
 					label("feature-tools-label", "Tools"),
 					button(
 						"shortcut-menu",
-						"search",
+						Search,
 						"Shortcut Menu",
 						shortcutMenuAction,
 					),
-					button("normal-to", "normal", "Normal To", normalToAction),
+					button("normal-to", MousePointer2, "Normal To", normalToAction),
 				])
 			: defaultDocumentItems;
 
@@ -391,8 +366,8 @@ export function PenSidebar() {
 			...featureSpecificItems,
 			spacer("history-spacer"),
 			label("history-label", "History"),
-			button("undo", "undo", "Undo", undoAction),
-			button("redo", "redo", "Redo", redoAction),
+			button("undo", Undo2, "Undo", undoAction),
+			button("redo", Redo2, "Redo", redoAction),
 		];
 	}, [featureType]);
 
@@ -411,7 +386,7 @@ export function PenSidebar() {
 				},
 			}}
 			className={[
-				"fixed z-[999999]",
+				"fixed z-999999",
 				"flex flex-col items-center gap-1",
 				"rounded-[1.35rem] border border-white/10 bg-zinc-950/72 p-1.5 text-zinc-50 shadow-2xl shadow-black/40 backdrop-blur-2xl",
 				"ring-1 ring-white/10",

@@ -1,30 +1,12 @@
-export type ToolTone = "default" | "primary" | "success" | "danger";
+import type { LucideIcon } from "lucide-react";
 
-export type IconName =
-	| "check"
-	| "circle"
-	| "delete"
-	| "dimension"
-	| "esc"
-	| "fullscreen"
-	| "home"
-	| "keyboard"
-	| "line"
-	| "normal"
-	| "offset"
-	| "panelLeft"
-	| "rectangle"
-	| "redo"
-	| "search"
-	| "space"
-	| "trim"
-	| "undo";
+export type ToolTone = "default" | "primary" | "success" | "danger";
 
 export type ToolDefinition = {
 	id: string;
-	iconName: IconName;
+	icon: LucideIcon;
 	title: string;
-	action: string;
+	onClick: () => void;
 	tone?: ToolTone;
 };
 

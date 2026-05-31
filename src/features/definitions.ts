@@ -1,4 +1,15 @@
+import { pressKey } from "@/core/utils";
 import type { FeatureDefinition } from "@/features/types";
+import {
+	Circle,
+	Minus,
+	RectangleHorizontal,
+	Ruler,
+	Scissors,
+	Slash,
+} from "lucide-react";
+
+const pressKeyAction = (key: string, opts = {}) => () => pressKey(key, opts);
 
 export const featureDefinitions: Record<string, FeatureDefinition> = {
 	newSketch: {
@@ -6,41 +17,41 @@ export const featureDefinitions: Record<string, FeatureDefinition> = {
 		tools: [
 			{
 				id: "line",
-				iconName: "line",
+				icon: Slash,
 				title: "Line",
-				action: "line",
+				onClick: pressKeyAction("l"),
 				tone: "primary",
 			},
 			{
 				id: "circle",
-				iconName: "circle",
+				icon: Circle,
 				title: "Circle",
-				action: "circle",
+				onClick: pressKeyAction("c"),
 			},
 			{
 				id: "rectangle",
-				iconName: "rectangle",
+				icon: RectangleHorizontal,
 				title: "Rectangle",
-				action: "rectangle",
+				onClick: pressKeyAction("r"),
 			},
 			{
 				id: "dimension",
-				iconName: "dimension",
+				icon: Ruler,
 				title: "Dimension",
-				action: "dimension",
+				onClick: pressKeyAction("d"),
 				tone: "primary",
 			},
 			{
 				id: "trim",
-				iconName: "trim",
+				icon: Scissors,
 				title: "Trim",
-				action: "trim",
+				onClick: pressKeyAction("t"),
 			},
 			{
 				id: "offset",
-				iconName: "offset",
+				icon: Minus,
 				title: "Offset",
-				action: "offset",
+				onClick: pressKeyAction("o"),
 			},
 		],
 	},
