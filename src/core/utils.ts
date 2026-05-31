@@ -24,6 +24,45 @@ export type FeatureState = {
 
 export type Unsubscribe = () => void;
 
+export function executeOnshapeCommand(
+  command: string,
+  commandDetails?: unknown,
+): boolean {
+  window.postMessage(
+    {
+      type: "OS_EXECUTE_BROADCAST_EVENT",
+      name: command,
+      args: [commandDetails],
+    },
+    window.location.origin,
+  );
+
+  return true;
+}
+
+export type ExecuteOnshapeCommandOptions = {
+	namespace: string;
+	command: string;
+	commandDetails?: unknown;
+	ignoreNamespace?: boolean;
+};
+
+export function executeOnshapeShortcutCommand(
+	tool: ExecuteOnshapeCommandOptions,
+): boolean {
+  window.postMessage(
+		{
+			type: "OS_EXECUTE_COMMAND",
+			namespace: tool.namespace,
+			command: tool.command,
+			commandDetails: tool.commandDetails,
+		},
+		window.location.origin,
+	);
+
+	return true;
+}
+
 export function pressKey(key: string, opts: PressKeyOptions = {}): void {
 	const isLetter = /^[a-z]$/i.test(key);
 	const isDigit = /^[0-9]$/.test(key);
@@ -69,104 +108,6 @@ export function pressKey(key: string, opts: PressKeyOptions = {}): void {
 	}
 }
 
-export function getRoute(): OnshapeRoute {
-	const pathname = window.location.pathname;
-	const documentMatch = pathname.match(/^\/documents\/([^/]+)/);
-
-	return {
-		href: window.location.href,
-		pathname,
-		isDocumentPage: !!documentMatch,
-		documentId: documentMatch?.[1] ?? null,
-	};
-}
-
-export function getFeatureState(): FeatureState {
-	const dialog = document.querySelector<HTMLElement>(
-		"#feature-dialog.feature-dialog",
-	);
-
-	return {
-		dialog,
-		isFeatureOpen: !!dialog,
-		featureType: dialog?.getAttribute("feature-type") ?? null,
-	};
-}
-
-export function subscribeToRoute(
-	callback: (route: OnshapeRoute) => void,
-): Unsubscribe {
-	let lastHref = window.location.href;
-
-	const check = (): void => {
-		if (window.location.href === lastHref) return;
-
-		lastHref = window.location.href;
-		callback(getRoute());
-	};
-
-	const interval = window.setInterval(check, 250);
-
-	window.addEventListener("hashchange", check);
-	window.addEventListener("popstate", check);
-
-	callback(getRoute());
-
-	return () => {
-		window.clearInterval(interval);
-		window.removeEventListener("hashchange", check);
-		window.removeEventListener("popstate", check);
-	};
-}
-
-export function subscribeToFeature(
-	callback: (state: FeatureState) => void,
-): Unsubscribe {
-	let lastFeatureType: string | null | undefined;
-	let lastIsFeatureOpen: boolean | undefined;
-	let timer: number | undefined;
-
-	const emitIfChanged = (): void => {
-		if (timer) {
-			window.clearTimeout(timer);
-		}
-
-		timer = window.setTimeout(() => {
-			const state = getFeatureState();
-
-			if (
-				state.featureType === lastFeatureType &&
-				state.isFeatureOpen === lastIsFeatureOpen
-			) {
-				return;
-			}
-
-			lastFeatureType = state.featureType;
-			lastIsFeatureOpen = state.isFeatureOpen;
-
-			callback(state);
-		}, 50);
-	};
-
-	const observer = new MutationObserver(emitIfChanged);
-
-	observer.observe(document.body, {
-		childList: true,
-		subtree: true,
-		attributes: true,
-		attributeFilter: ["feature-type", "class", "style"],
-	});
-
-	emitIfChanged();
-
-	return () => {
-		if (timer) {
-			window.clearTimeout(timer);
-		}
-
-		observer.disconnect();
-	};
-}
 
 export function setNativeValue(
 	el: HTMLInputElement | HTMLTextAreaElement,

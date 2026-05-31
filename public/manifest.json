@@ -1,28 +1,47 @@
 {
-  "manifest_version": 3,
-  "name": "Onshape Tablet UI",
-  "version": "0.1.0",
-  "description": "Custom tablet and pen UI improvements for Onshape.",
-  "icons": {
-    "16": "icons/icon-128.png",
-    "32": "icons/icon-128.png",
-    "48": "icons/icon-128.png",
-    "128": "icons/icon-128.png"
-  },
-  "action": {
-    "default_title": "Onshape Tablet",
-    "default_icon": {
-      "16": "icons/icon-128.png",
-      "32": "icons/icon-128.png"
-    }
-  },
-  "content_scripts": [
-    {
-      "matches": ["https://cad.onshape.com/*"],
-      "js": ["assets/main.js"],
-      "css": ["assets/main.css"],
-      "run_at": "document_idle"
-    }
-  ],
-  "permissions": ["storage"]
+	"manifest_version": 3,
+	"name": "Onshape Tablet UI",
+	"version": "0.1.0",
+	"description": "Custom tablet and pen UI improvements for Onshape.",
+	"icons": {
+		"16": "icons/icon-128.png",
+		"32": "icons/icon-128.png",
+		"48": "icons/icon-128.png",
+		"128": "icons/icon-128.png"
+	},
+	"action": {
+		"default_title": "Onshape Tablet",
+		"default_icon": {
+			"16": "icons/icon-128.png",
+			"32": "icons/icon-128.png"
+		}
+	},
+	"content_scripts": [
+		{
+			"matches": ["https://cad.onshape.com/*"],
+			"js": ["assets/main.js"],
+			"css": ["assets/main.css"],
+			"run_at": "document_idle"
+		}
+	],
+	"web_accessible_resources": [
+		{
+			"resources": ["onshape-page-bridge.js"],
+			"matches": ["https://cad.onshape.com/*"]
+		}
+	],
+	"commands": {
+		"reload-extension": {
+			"suggested_key": {
+				"default": "Ctrl+Shift+R",
+				"mac": "Command+Shift+R"
+			},
+			"description": "Reload extension"
+		}
+	},
+	"background": {
+		"service_worker": "background.js",
+		"type": "module"
+	},
+	"permissions": ["storage"]
 }

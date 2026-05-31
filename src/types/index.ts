@@ -1,0 +1,47 @@
+export type OnshapeToolbarMode =
+  | "Sketch"
+  | "Part Studio"
+  | "Assembly"
+  | "Drawing";
+
+export interface OnshapeShortcutCommand {
+  id: string;
+
+  tabType: OnshapeToolbarMode | string;
+  tabId: number;
+
+  showLabel?: boolean;
+
+  namespace: string;
+  command: string;
+  commandDetails?: unknown;
+
+  tooltipKey?: string;
+  expandedTooltipKey?: string;
+
+  icon?: string;
+  name?: string;
+
+  context?: number;
+  nodeType?: number;
+  ownerType?: number;
+
+  ownerId?: string;
+
+  display?: boolean;
+  disabled?: boolean;
+
+  useDynamicSnippet?: boolean;
+
+  isGeneralTool?: boolean;
+  ignoreNamespace?: boolean;
+  isFsVersionCompatible?: boolean;
+}
+
+export interface OnshapeShortcutMode {
+  tabType: OnshapeToolbarMode | string;
+  tabId: number;
+  commands: OnshapeShortcutCommand[];
+}
+
+export interface OnshapeShortcutCommandsResponse { tabType: OnshapeToolbarMode; commands: OnshapeShortcutCommand[] }

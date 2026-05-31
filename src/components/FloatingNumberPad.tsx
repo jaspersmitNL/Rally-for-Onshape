@@ -3,12 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import {
-	fireInputEvents,
-	pressKey,
-	setNativeValue,
-	subscribeToRoute,
-} from "../core/utils";
+import { fireInputEvents, pressKey, setNativeValue } from "../core/utils";
 
 const ACTION_DELAY = 40;
 const AUTO_HIDE_DELAY = 600;
@@ -207,16 +202,6 @@ export function FloatingNumpad() {
 			}
 		}
 	}
-
-	useEffect(() => {
-		return subscribeToRoute((route) => {
-			setIsDocumentPage(route.isDocumentPage);
-
-			if (!route.isDocumentPage) {
-				hideNumpad();
-			}
-		});
-	}, []);
 
 	useEffect(() => {
 		const handleFocusIn = (e: FocusEvent) => {
