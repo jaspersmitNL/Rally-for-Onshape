@@ -1,5 +1,3 @@
-import { pressKey } from "@/core/utils";
-import type { FeatureDefinition } from "@/features/types";
 import {
 	Circle,
 	Minus,
@@ -8,8 +6,13 @@ import {
 	Scissors,
 	Slash,
 } from "lucide-react";
+import { pressKey } from "@/core/utils";
+import type { FeatureDefinition } from "@/features/types";
 
-const pressKeyAction = (key: string, opts = {}) => () => pressKey(key, opts);
+const pressKeyAction =
+	(key: string, opts = {}) =>
+	() =>
+		pressKey(key, opts);
 
 export const featureDefinitions: Record<string, FeatureDefinition> = {
 	newSketch: {

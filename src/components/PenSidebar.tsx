@@ -349,12 +349,7 @@ export function PenSidebar() {
 		const featureSpecificItems = featureType
 			? (featureDefinitions[featureType]?.tools.map(mapFeatureTool) ?? [
 					label("feature-tools-label", "Tools"),
-					button(
-						"shortcut-menu",
-						Search,
-						"Shortcut Menu",
-						shortcutMenuAction,
-					),
+					button("shortcut-menu", Search, "Shortcut Menu", shortcutMenuAction),
 					button("normal-to", MousePointer2, "Normal To", normalToAction),
 				])
 			: defaultDocumentItems;
