@@ -90,10 +90,6 @@ export function FloatingNumpad() {
 	const activeInputRef = useRef<HTMLElement | null>(null);
 	const hideTimerRef = useRef<number | null>(null);
 
-	const [isDocumentPage, setIsDocumentPage] = useState(() =>
-		window.location.pathname.startsWith("/documents/"),
-	);
-
 	const [isVisible, setIsVisible] = useState(false);
 	const [position, setPosition] = useState<Position>({ left: 0, top: 0 });
 
@@ -218,6 +214,9 @@ export function FloatingNumpad() {
 
 	useEffect(() => {
 		const handleFocusIn = (e: FocusEvent) => {
+			if (!window.location.pathname.startsWith("/documents/")) {
+				return;
+			}
 			const target = e.target;
 			const numpad = numpadRef.current;
 
@@ -263,8 +262,6 @@ export function FloatingNumpad() {
 			}
 		};
 	}, []);
-
-	if (!isDocumentPage) return null;
 
 	return (
 		<Card
