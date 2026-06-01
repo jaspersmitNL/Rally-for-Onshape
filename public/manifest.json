@@ -3,6 +3,7 @@
 	"name": "Onshape Tablet UI",
 	"version": "0.1.0",
 	"description": "Custom tablet and pen UI improvements for Onshape.",
+	"homepage_url": "https://github.com/RileyDavidson-Evans/onshape-tablet-and-pen-browser-extension",
 	"icons": {
 		"16": "icons/icon-128.png",
 		"32": "icons/icon-128.png",
