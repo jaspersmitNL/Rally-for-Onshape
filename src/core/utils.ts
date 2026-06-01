@@ -85,6 +85,21 @@ function toggleFullscreen() {
 	}
 }
 
+export function clickElement(
+	selector: string,
+	root: ParentNode = document,
+): boolean {
+	const element = root.querySelector<HTMLElement>(selector);
+
+	if (!element) {
+		console.warn(`Element not found: ${selector}`);
+		return false;
+	}
+
+	element.click();
+	return true;
+}
+
 export function pressKey(key: string, opts: PressKeyOptions = {}): void {
 	const isLetter = /^[a-z]$/i.test(key);
 	const isDigit = /^[0-9]$/.test(key);

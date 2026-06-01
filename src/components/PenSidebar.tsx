@@ -23,7 +23,11 @@ import type {
 	OnshapeToolbarMode,
 } from "@/types";
 import { getToolIcon } from "../core/iconMapping";
-import { executeOnshapeShortcutCommand, pressKey } from "../core/utils";
+import {
+	clickElement,
+	executeOnshapeShortcutCommand,
+	pressKey,
+} from "../core/utils";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
 const STORAGE_KEY = "onshapePenSidebarPosition";
@@ -187,14 +191,18 @@ export function PenSidebar() {
 			label: "Cancel",
 			description: "Cancel the current command.",
 			icon: IconX,
-			onClick: () => pressKey("Escape"),
+			onClick: () => {
+				clickElement("#feature-dialog .ns-dialog-button-cancel");
+			},
 		},
 		{
 			id: "confirm",
 			label: "Confirm",
 			description: "Confirm the current command.",
 			icon: IconCheck,
-			onClick: () => pressKey("Enter"),
+			onClick: () => {
+				clickElement("#feature-dialog .ns-dialog-button-ok");
+			},
 		},
 	];
 
