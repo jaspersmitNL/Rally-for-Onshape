@@ -324,7 +324,7 @@ export function PenSidebar() {
 									<MotionButton
 										className="h-10 w-10 shrink-0 cursor-pointer os-animate-in"
 										variant={
-											tool.command === currentTool ? "default" : "outline"
+											tool.command === currentTool ? "secondary" : "outline"
 										}
 										whileTap={{ scale: 0.94 }}
 										onClick={(e) => {
