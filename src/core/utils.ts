@@ -77,6 +77,70 @@ function showKeyboard() {
 	} catch {}
 }
 
+const ON_SHAPE_ICON_SPRITE_SELECTOR =
+	"osc-icons-min.osc-svgmin-container";
+
+export async function waitForOnshapeIconSprite(
+	timeoutMs = 5000,
+): Promise<HTMLElement | null> {
+	const existing = document.querySelector<HTMLElement>(
+		ON_SHAPE_ICON_SPRITE_SELECTOR,
+	);
+
+	if (existing?.querySelector("svg")) {
+		return existing;
+	}
+
+	return new Promise((resolve) => {
+		const timeout = window.setTimeout(() => {
+			observer.disconnect();
+			resolve(null);
+		}, timeoutMs);
+
+		const observer = new MutationObserver(() => {
+			const sprite = document.querySelector<HTMLElement>(
+				ON_SHAPE_ICON_SPRITE_SELECTOR,
+			);
+
+			if (sprite?.querySelector("svg")) {
+				window.clearTimeout(timeout);
+				observer.disconnect();
+				resolve(sprite);
+			}
+		});
+
+		observer.observe(document.documentElement, {
+			childList: true,
+			subtree: true,
+		});
+	});
+}
+
+export async function copyOnshapeIconSpriteToShadowRoot(
+	shadowRoot: ShadowRoot,
+) {
+	if (shadowRoot.querySelector("[data-onshape-icon-sprite]")) return;
+
+	const source = await waitForOnshapeIconSprite();
+
+	if (!source) {
+		console.warn("[OnshapeIcon] Timed out waiting for Onshape icon sprite");
+		return;
+	}
+
+	const clone = source.cloneNode(true) as HTMLElement;
+	clone.setAttribute("data-onshape-icon-sprite", "true");
+
+	clone.style.width = "0";
+	clone.style.height = "0";
+	clone.style.display = "block";
+	clone.style.position = "absolute";
+	clone.style.pointerEvents = "none";
+	clone.style.overflow = "hidden";
+
+	shadowRoot.prepend(clone);
+}
+
 function toggleFullscreen() {
 	if (!document.fullscreenElement) {
 		document.documentElement.requestFullscreen?.();

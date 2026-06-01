@@ -26,12 +26,12 @@ import type {
 	OnshapeShortcutCommandsResponse,
 	OnshapeToolbarMode,
 } from "@/types";
-import { getToolIcon } from "../core/iconMapping";
 import {
 	clickElement,
 	executeOnshapeShortcutCommand,
 	pressKey,
 } from "../core/utils";
+import { OnshapeIcon } from "./OnShapeIcon";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
 const STORAGE_KEY = "onshapePenSidebarPosition";
@@ -136,6 +136,7 @@ export function PenSidebar() {
 				await delay(1000);
 
 				getUserShortcutCommands().then((commands) => {
+					console.log("Received user shortcut commands", commands);
 					setAllCommands(commands);
 				});
 			}
@@ -317,8 +318,6 @@ export function PenSidebar() {
 						<IconLoader2 className="h-6 w-6 animate-spin text-muted-foreground my-2" />
 					)}
 					{modeTools.map((tool) => {
-						const Icon = getToolIcon(tool.command);
-
 						return (
 							<Tooltip key={tool.id}>
 								<TooltipTrigger asChild>
@@ -343,7 +342,7 @@ export function PenSidebar() {
 											executeOnshapeShortcutCommand(tool);
 										}}
 									>
-										<Icon className="h-5 w-5" />
+										<OnshapeIcon icon={tool.icon!} className="h-5 w-5" />
 									</MotionButton>
 								</TooltipTrigger>
 

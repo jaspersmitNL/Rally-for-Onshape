@@ -4,6 +4,7 @@ import type {
 	OnshapeToolbarMode,
 } from "@/types";
 
+
 export function getUserShortcutCommands(): Promise<OnshapeShortcutCommandsResponse[]> {
 	const requestId = crypto.randomUUID();
 

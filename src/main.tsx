@@ -5,6 +5,7 @@ import onshapeThemeCss from "@/styles/onshape-theme.css?inline";
 import { FloatingNumpad } from "./components/FloatingNumberPad";
 import { PenSidebar } from "./components/PenSidebar";
 import { TooltipProvider } from "./components/ui/tooltip";
+import { copyOnshapeIconSpriteToShadowRoot } from "./core/utils";
 import { PortalContainerProvider } from "./extensions/PortalContainerContext";
 
 function injectOnshapeBridge(): void {
@@ -18,12 +19,12 @@ function injectOnshapeBridge(): void {
 }
 
 function injectGlobalStyle(id: string, css: string) {
-  if (document.getElementById(id)) return;
+	if (document.getElementById(id)) return;
 
-  const style = document.createElement("style");
-  style.id = id;
-  style.textContent = css;
-  document.documentElement.appendChild(style);
+	const style = document.createElement("style");
+	style.id = id;
+	style.textContent = css;
+	document.documentElement.appendChild(style);
 }
 
 injectOnshapeBridge();
@@ -39,6 +40,9 @@ if (!document.getElementById("onshape-extension-host")) {
 	document.documentElement.appendChild(host);
 
 	const shadow = host.attachShadow({ mode: "open" });
+	setTimeout(() => {
+		copyOnshapeIconSpriteToShadowRoot(shadow);
+	}, 2000);
 
 	const style = document.createElement("style");
 	style.textContent = cssText;
