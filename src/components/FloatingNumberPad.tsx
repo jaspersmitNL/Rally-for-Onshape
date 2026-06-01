@@ -1,3 +1,4 @@
+import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -294,7 +295,7 @@ export function FloatingNumpad() {
 				</div>
 
 				<Button
-					className="h-7 w-7 rounded-lg"
+					className="h-7 w-7 cursor-pointer"
 					variant="ghost"
 					size="icon"
 					type="button"
@@ -310,21 +311,19 @@ export function FloatingNumpad() {
 						}, ACTION_DELAY);
 					}}
 				>
-					X
+					<X />
 				</Button>
 			</div>
-
-			<Separator className="mb-2" />
 
 			<div className="grid grid-cols-4 gap-1.5">
 				{KEYS.map(([label, key, className]) => (
 					<Button
 						key={`${label}-${key}`}
 						className={[
-							"h-11 rounded-xl text-base font-medium",
+							"h-11 text-base font-medium cursor-pointer",
 							className === "wide" ? "col-span-4" : "",
 						].join(" ")}
-						variant={className === "wide" ? "default" : "secondary"}
+						variant={className === "wide" ? "secondary" : "outline"}
 						tabIndex={-1}
 						type="button"
 						onPointerDown={(e) => {
