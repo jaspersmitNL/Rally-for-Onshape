@@ -1,6 +1,7 @@
 import {
 	IconCheck,
 	IconDeselect,
+	IconEdit,
 	IconFocusAuto,
 	IconGripHorizontal,
 	IconKeyboard,
@@ -245,15 +246,6 @@ export function PenSidebar() {
 		},
 	];
 
-	console.log(
-		"Rendering PenSidebar with modeTools:",
-		modeTools,
-		"and utilityActions:",
-		utilityActions,
-		"Current tool:",
-		currentTool,
-	);
-
 	return (
 		<Draggable
 			nodeRef={nodeRef}
@@ -276,10 +268,39 @@ export function PenSidebar() {
 				<div className="flex flex-col items-center gap-1">
 					<Button
 						variant="outline"
-						className="os-pen-drag-handle h-10 w-10 cursor-grab rounded-xl active:cursor-grabbing"
+						className="os-pen-drag-handle h-10 w-10 shrink-0 cursor-pointer active:cursor-grabbing"
 					>
-						<IconGripHorizontal className="h-5 w-5" />
+						<IconGripHorizontal />
 					</Button>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Button
+								variant="outline"
+								className="h-10 w-10 shrink-0 cursor-pointer"
+								onClick={() =>
+									window.open(
+										"https://cad.onshape.com/user/settings?minicontext=0",
+										"_blank",
+									)
+								}
+							>
+								<IconEdit />
+							</Button>
+						</TooltipTrigger>
+
+						<TooltipContent side="right">
+							<Card className="w-[350px]">
+								<CardHeader>
+									<CardTitle>Edit Shortcuts</CardTitle>
+									<CardDescription>
+										The dynamic items are based on your onshape mini toolbar
+										items. Click the button to edit and then refresh the page to
+										see the changes.
+									</CardDescription>
+								</CardHeader>
+							</Card>
+						</TooltipContent>
+					</Tooltip>
 				</div>
 
 				<SidebarDivider />
