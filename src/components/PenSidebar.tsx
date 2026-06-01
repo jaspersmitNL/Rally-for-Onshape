@@ -253,7 +253,7 @@ export function PenSidebar() {
 			<div
 				ref={nodeRef}
 				id="os-pen-shortcut-sidebar"
-				className="fixed left-0 top-0 z-[999999] flex max-h-[72vh] flex-col rounded-md border bg-background/95 p-2 shadow-2xl backdrop-blur"
+				className="fixed left-0 top-0 z-[999999] flex max-h-[80vh] flex-col rounded-md border bg-background/95 p-2 shadow-2xl backdrop-blur"
 			>
 				<div className="flex flex-col items-center gap-1">
 					<Button
