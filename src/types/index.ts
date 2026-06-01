@@ -45,3 +45,11 @@ export interface OnshapeShortcutMode {
 }
 
 export interface OnshapeShortcutCommandsResponse { tabType: OnshapeToolbarMode; commands: OnshapeShortcutCommand[] }
+
+export type UtilityAction = {
+	id: string;
+	label: string;
+	description: string;
+	icon: React.ComponentType<{ className?: string }>;
+	onClick: () => void;
+};

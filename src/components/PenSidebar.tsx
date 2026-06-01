@@ -1,16 +1,4 @@
-import {
-	IconCheck,
-	IconDeselect,
-	IconEdit,
-	IconFocusAuto,
-	IconGripHorizontal,
-	IconKeyboard,
-	IconLoader2,
-	IconRotateClockwise,
-	IconSearch,
-	IconTrash,
-	IconX,
-} from "@tabler/icons-react";
+import { IconEdit, IconGripHorizontal, IconLoader2 } from "@tabler/icons-react";
 import { capitalize } from "lodash-es";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
@@ -22,15 +10,12 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getUserShortcutCommands } from "@/core/userShortcuts";
+import { utilityActions } from "@/services/penSidebarCodeUtils";
 import type {
 	OnshapeShortcutCommandsResponse,
 	OnshapeToolbarMode,
 } from "@/types";
-import {
-	clickElement,
-	executeOnshapeShortcutCommand,
-	pressKey,
-} from "../core/utils";
+import { executeOnshapeShortcutCommand, pressKey } from "../core/utils";
 import { OnshapeIcon } from "./OnShapeIcon";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
@@ -41,48 +26,8 @@ const MotionButton = motion.create(Button);
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-type UtilityAction = {
-	id: string;
-	label: string;
-	description: string;
-	icon: React.ComponentType<{ className?: string }>;
-	onClick: () => void;
-};
-
 function SidebarDivider() {
 	return <div className="my-3 h-px w-full bg-border" />;
-}
-
-function UtilityButton({ action }: { action: UtilityAction }) {
-	const Icon = action.icon;
-
-	return (
-		<Tooltip>
-			<TooltipTrigger asChild>
-				<Button
-					className="h-10 w-10 cursor-pointer"
-					variant="outline"
-					size="icon"
-					onClick={(e) => {
-						e.preventDefault();
-						e.stopPropagation();
-						action.onClick();
-					}}
-				>
-					<Icon className="h-5 w-5" />
-				</Button>
-			</TooltipTrigger>
-
-			<TooltipContent side="right">
-				<Card className="w-[260px]">
-					<CardHeader>
-						<CardTitle>{action.label}</CardTitle>
-						<CardDescription>{action.description}</CardDescription>
-					</CardHeader>
-				</Card>
-			</TooltipContent>
-		</Tooltip>
-	);
 }
 
 export function PenSidebar() {
@@ -172,85 +117,6 @@ export function PenSidebar() {
 
 	const modeTools =
 		allCommands.find((c) => c.tabType === toolbarType)?.commands ?? [];
-
-	const utilityActions: UtilityAction[] = [
-		{
-			id: "undo",
-			label: "Undo",
-			description: "Undo the last action.",
-			icon: () => <IconRotateClockwise className="transform rotate-180" />,
-			onClick: () =>
-				document.activeElement?.dispatchEvent(
-					new KeyboardEvent("keydown", {
-						key: "z",
-						code: "KeyZ",
-						ctrlKey: true,
-						bubbles: true,
-						cancelable: true,
-					}),
-				),
-		},
-		{
-			id: "redo",
-			label: "Redo",
-			description: "Redo the last undone action.",
-			icon: IconRotateClockwise,
-			onClick: () =>
-				document.activeElement?.dispatchEvent(
-					new KeyboardEvent("keydown", {
-						key: "y",
-						code: "KeyY",
-						ctrlKey: true,
-						bubbles: true,
-						cancelable: true,
-					}),
-				),
-		},
-		{
-			id: "delete",
-			label: "Delete",
-			description: "Delete the selected item.",
-			icon: IconTrash,
-			onClick: () => pressKey("Delete"),
-		},
-		{
-			id: "focus",
-			label: "Focus",
-			description: "Auto orient the view to the selected item(s).",
-			icon: IconFocusAuto,
-			onClick: () => pressKey("n"),
-		},
-		{
-			id: "space",
-			label: "Clear Selection",
-			description: "Clear the current selection.",
-			icon: IconDeselect,
-			onClick: () =>
-				pressKey(" ", {
-					code: "Space",
-					keyCode: 32,
-					which: 32,
-				}),
-		},
-		{
-			id: "escape",
-			label: "Cancel",
-			description: "Cancel the current command.",
-			icon: IconX,
-			onClick: () => {
-				clickElement("#feature-dialog .ns-dialog-button-cancel");
-			},
-		},
-		{
-			id: "confirm",
-			label: "Confirm",
-			description: "Confirm the current command.",
-			icon: IconCheck,
-			onClick: () => {
-				clickElement("#feature-dialog .ns-dialog-button-ok");
-			},
-		},
-	];
 
 	return (
 		<Draggable
@@ -366,9 +232,36 @@ export function PenSidebar() {
 				<SidebarDivider />
 
 				<div className="flex flex-col items-center gap-1">
-					{utilityActions.map((action) => (
-						<UtilityButton key={action.id} action={action} />
-					))}
+					{utilityActions.map((action) => {
+						const Icon = action.icon;
+						return (
+							<Tooltip key={action.id}>
+								<TooltipTrigger asChild>
+									<Button
+										className="h-10 w-10 cursor-pointer"
+										variant="outline"
+										size="icon"
+										onClick={(e) => {
+											e.preventDefault();
+											e.stopPropagation();
+											action.onClick();
+										}}
+									>
+										<Icon className="h-5 w-5" />
+									</Button>
+								</TooltipTrigger>
+
+								<TooltipContent side="right">
+									<Card className="w-[260px]">
+										<CardHeader>
+											<CardTitle>{action.label}</CardTitle>
+											<CardDescription>{action.description}</CardDescription>
+										</CardHeader>
+									</Card>
+								</TooltipContent>
+							</Tooltip>
+						);
+					})}
 				</div>
 			</div>
 		</Draggable>
