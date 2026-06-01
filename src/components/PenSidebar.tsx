@@ -1,5 +1,5 @@
 import { capitalize } from "lodash-es";
-import { GripHorizontal, LoaderCircle, Pencil } from "lucide-react";
+import { GripHorizontal, LoaderCircle, Pencil, X, XCircle } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
@@ -27,7 +27,7 @@ const MotionButton = motion.create(Button);
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function SidebarDivider() {
-	return <div className="my-3 h-px w-full bg-border" />;
+	return <div className="my-3 mx-auto h-px w-8/12 bg-border" />;
 }
 
 export function PenSidebar() {
@@ -135,9 +135,9 @@ export function PenSidebar() {
 			<div
 				ref={nodeRef}
 				id="os-pen-shortcut-sidebar"
-				className="fixed left-0 top-0 z-[999999] flex max-h-[80vh] flex-col rounded-md border bg-background/95 p-2 shadow-2xl backdrop-blur os-animate-in"
+				className="fixed left-0 top-0 z-[999999] flex max-h-[80vh] flex-col rounded-md border bg-background/95 py-2 shadow-2xl backdrop-blur os-animate-in overflow-hidden"
 			>
-				<div className="flex flex-col items-center gap-1">
+				<div className="flex flex-col items-center gap-1 px-2">
 					<Button
 						variant="outline"
 						size="icon"
@@ -179,11 +179,11 @@ export function PenSidebar() {
 
 				<SidebarDivider />
 
-				<div className="relative flex min-h-0 flex-1 flex-col items-center overflow-hidden">
+				<div className="relative flex min-h-0 flex-1 flex-col items-center">
 					<AnimatePresence mode="wait" initial={false}>
 						<motion.div
 							key={toolbarType}
-							className="flex min-h-0 w-full flex-1 flex-col items-center gap-1 overflow-y-auto px-1"
+							className="flex min-h-0 w-full flex-1 flex-col items-center gap-1 overflow-y-auto px-2"
 							initial={{ x: 28, opacity: 0, filter: "blur(4px)" }}
 							animate={{ x: 0, opacity: 1, filter: "blur(0px)" }}
 							exit={{ x: -28, opacity: 0, filter: "blur(4px)" }}
@@ -202,7 +202,7 @@ export function PenSidebar() {
 								<Tooltip key={tool.id}>
 									<TooltipTrigger asChild>
 										<MotionButton
-											className="h-10 w-10 shrink-0 cursor-pointer"
+											className="h-10 w-10 shrink-0 cursor-pointer relative"
 											variant={
 												tool.command === currentTool ? "secondary" : "outline"
 											}
@@ -231,7 +231,12 @@ export function PenSidebar() {
 												executeOnshapeShortcutCommand(tool);
 											}}
 										>
-											<OnshapeIcon icon={tool.icon!} className="h-5 w-5" />
+											<OnshapeIcon icon={tool.icon!} />
+											{tool.command === currentTool && (
+												<div className="absolute h-2 w-2 pointer-events-none top-0 right-0 text-muted-foreground">
+													<XCircle />
+												</div>
+											)}
 										</MotionButton>
 									</TooltipTrigger>
 

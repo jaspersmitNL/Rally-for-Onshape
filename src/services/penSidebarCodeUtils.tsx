@@ -1,10 +1,10 @@
 import {
-	ArrowLeft,
-	ArrowRight,
 	Check,
 	Focus,
 	MousePointerBan,
+	Redo,
 	Trash2,
+	Undo,
 	X,
 } from "lucide-react";
 import { clickElement, pressKey } from "@/core/utils";
@@ -15,7 +15,7 @@ export const utilityActions: UtilityAction[] = [
 		id: "undo",
 		label: "Undo",
 		description: "Undo the last action.",
-		icon: ArrowLeft,
+		icon: Undo,
 		onClick: () =>
 			document.activeElement?.dispatchEvent(
 				new KeyboardEvent("keydown", {
@@ -31,7 +31,7 @@ export const utilityActions: UtilityAction[] = [
 		id: "redo",
 		label: "Redo",
 		description: "Redo the last undone action.",
-		icon: ArrowRight,
+		icon: Redo,
 		onClick: () =>
 			document.activeElement?.dispatchEvent(
 				new KeyboardEvent("keydown", {
