@@ -90,7 +90,9 @@
 		}
 
 		$rootScope.$broadcast = function patchedBroadcast(name, ...args) {
-			forward("broadcast", name, args);
+			if (name !== "$stateChangeStart") {
+				forward("broadcast", name, args);
+			}
 			return originalBroadcast.apply(this, [name, ...args]);
 		};
 
