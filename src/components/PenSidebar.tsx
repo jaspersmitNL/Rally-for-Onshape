@@ -152,6 +152,10 @@ export function PenSidebar() {
 			if (data.name === "ELEMENT_TOOLBAR_EXIT_CURRENT_TOOL") {
 				setCurrentTool(null);
 			}
+
+			if (data.name === "DOCUMENT_UNLOADED") {
+				setVisible(false);
+			}
 		}
 
 		window.addEventListener("message", onMessage);
