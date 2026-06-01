@@ -82,6 +82,8 @@ export function PenSidebar() {
 		OnshapeShortcutCommandsResponse[]
 	>([]);
 
+	const [currentTool, setCurrentTool] = useState<string | null>(null);
+
 	const [visible, setVisible] = useState(false);
 
 	const [position, setPosition] = useState(() => {
@@ -133,6 +135,16 @@ export function PenSidebar() {
 				const newToolbarType = data.args?.[0]?.toolbarName || null;
 				setToolbarType(newToolbarType);
 			}
+
+			if (data.name === "ELEMENT_TOOLBAR_SET_CURRENT_TOOL") {
+				const currentTool = data.args?.[0];
+				setCurrentTool(currentTool);
+			}
+
+			if (data.name === "ELEMENT_TOOLBAR_EXIT_CURRENT_TOOL") {
+				setCurrentTool(null);
+			}
+			console.debug("Received message:", data.type, data.name, data.args);
 		}
 
 		window.addEventListener("message", onMessage);
@@ -186,6 +198,15 @@ export function PenSidebar() {
 		},
 	];
 
+	console.log(
+		"Rendering PenSidebar with modeTools:",
+		modeTools,
+		"and utilityActions:",
+		utilityActions,
+		"Current tool:",
+		currentTool,
+	);
+
 	return (
 		<Draggable
 			nodeRef={nodeRef}
@@ -228,7 +249,9 @@ export function PenSidebar() {
 								<TooltipTrigger asChild>
 									<MotionButton
 										className="h-10 w-10 shrink-0 cursor-pointer"
-										variant="outline"
+										variant={
+											tool.command === currentTool ? "secondary" : "outline"
+										}
 										whileTap={{ scale: 0.94 }}
 										onClick={(e) => {
 											e.preventDefault();
@@ -238,9 +261,6 @@ export function PenSidebar() {
 										}}
 									>
 										<Icon className="h-5 w-5" />
-										{labelsVisible && (
-											<span className="sr-only">{tool.command}</span>
-										)}
 									</MotionButton>
 								</TooltipTrigger>
 
