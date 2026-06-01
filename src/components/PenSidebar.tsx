@@ -1,5 +1,5 @@
-import { IconEdit, IconGripHorizontal, IconLoader2 } from "@tabler/icons-react";
 import { capitalize } from "lodash-es";
+import { GripHorizontal, LoaderCircle, Pencil } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
@@ -143,7 +143,7 @@ export function PenSidebar() {
 						size="icon"
 						className="os-pen-drag-handle h-10 w-10 shrink-0 cursor-pointer active:cursor-grabbing"
 					>
-						<IconGripHorizontal />
+						<GripHorizontal />
 					</Button>
 					<Tooltip>
 						<TooltipTrigger asChild>
@@ -158,7 +158,7 @@ export function PenSidebar() {
 									)
 								}
 							>
-								<IconEdit />
+								<Pencil />
 							</Button>
 						</TooltipTrigger>
 
@@ -195,7 +195,7 @@ export function PenSidebar() {
 							}}
 						>
 							{modeTools.length === 0 && (
-								<IconLoader2 className="my-2 h-6 w-6 animate-spin text-muted-foreground" />
+								<LoaderCircle className="my-2 h-6 w-6 animate-spin text-muted-foreground" />
 							)}
 
 							{modeTools.map((tool, index) => (

@@ -1,12 +1,12 @@
 import {
-	IconArrowBackUp,
-	IconArrowForwardUp,
-	IconCheck,
-	IconDeselect,
-	IconFocusAuto,
-	IconTrash,
-	IconX,
-} from "@tabler/icons-react";
+	ArrowLeft,
+	ArrowRight,
+	Check,
+	Focus,
+	MousePointerBan,
+	Trash2,
+	X,
+} from "lucide-react";
 import { clickElement, pressKey } from "@/core/utils";
 import type { UtilityAction } from "@/types";
 
@@ -15,7 +15,7 @@ export const utilityActions: UtilityAction[] = [
 		id: "undo",
 		label: "Undo",
 		description: "Undo the last action.",
-		icon: IconArrowBackUp,
+		icon: ArrowLeft,
 		onClick: () =>
 			document.activeElement?.dispatchEvent(
 				new KeyboardEvent("keydown", {
@@ -31,7 +31,7 @@ export const utilityActions: UtilityAction[] = [
 		id: "redo",
 		label: "Redo",
 		description: "Redo the last undone action.",
-		icon: IconArrowForwardUp,
+		icon: ArrowRight,
 		onClick: () =>
 			document.activeElement?.dispatchEvent(
 				new KeyboardEvent("keydown", {
@@ -47,21 +47,21 @@ export const utilityActions: UtilityAction[] = [
 		id: "delete",
 		label: "Delete",
 		description: "Delete the selected item.",
-		icon: IconTrash,
+		icon: Trash2,
 		onClick: () => pressKey("Delete"),
 	},
 	{
 		id: "focus",
 		label: "Focus",
 		description: "Auto orient the view to the selected item(s).",
-		icon: IconFocusAuto,
+		icon: Focus,
 		onClick: () => pressKey("n"),
 	},
 	{
 		id: "space",
 		label: "Clear Selection",
 		description: "Clear the current selection.",
-		icon: IconDeselect,
+		icon: MousePointerBan,
 		onClick: () =>
 			pressKey(" ", {
 				code: "Space",
@@ -73,7 +73,7 @@ export const utilityActions: UtilityAction[] = [
 		id: "escape",
 		label: "Cancel",
 		description: "Cancel the current command.",
-		icon: IconX,
+		icon: X,
 		onClick: () => {
 			clickElement("#feature-dialog .ns-dialog-button-cancel");
 		},
@@ -82,7 +82,7 @@ export const utilityActions: UtilityAction[] = [
 		id: "confirm",
 		label: "Confirm",
 		description: "Confirm the current command.",
-		icon: IconCheck,
+		icon: Check,
 		onClick: () => {
 			clickElement("#feature-dialog .ns-dialog-button-ok");
 		},
