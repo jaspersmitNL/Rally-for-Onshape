@@ -62,6 +62,7 @@ function UtilityButton({ action }: { action: UtilityAction }) {
 				<Button
 					className="h-10 w-10 cursor-pointer"
 					variant="outline"
+					size="icon"
 					onClick={(e) => {
 						e.preventDefault();
 						e.stopPropagation();
@@ -272,6 +273,7 @@ export function PenSidebar() {
 				<div className="flex flex-col items-center gap-1">
 					<Button
 						variant="outline"
+						size="icon"
 						className="os-pen-drag-handle h-10 w-10 shrink-0 cursor-pointer active:cursor-grabbing"
 					>
 						<IconGripHorizontal />
@@ -280,6 +282,7 @@ export function PenSidebar() {
 						<TooltipTrigger asChild>
 							<Button
 								variant="outline"
+								size="icon"
 								className="h-10 w-10 shrink-0 cursor-pointer"
 								onClick={() =>
 									window.open(
