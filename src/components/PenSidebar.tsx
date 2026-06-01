@@ -1,5 +1,6 @@
 import {
 	IconCheck,
+	IconDeselect,
 	IconGripHorizontal,
 	IconKeyboard,
 	IconLoader2,
@@ -187,6 +188,18 @@ export function PenSidebar() {
 			onClick: () => pressKey("Delete"),
 		},
 		{
+			id: "space",
+			label: "Clear Selection",
+			description: "Clear the current selection.",
+			icon: IconDeselect,
+			onClick: () =>
+				pressKey(" ", {
+					code: "Space",
+					keyCode: 32,
+					which: 32,
+				}),
+		},
+		{
 			id: "escape",
 			label: "Cancel",
 			description: "Cancel the current command.",
@@ -258,12 +271,20 @@ export function PenSidebar() {
 									<MotionButton
 										className="h-10 w-10 shrink-0 cursor-pointer"
 										variant={
-											tool.command === currentTool ? "secondary" : "outline"
+											tool.command === currentTool ? "default" : "outline"
 										}
 										whileTap={{ scale: 0.94 }}
 										onClick={(e) => {
 											e.preventDefault();
 											e.stopPropagation();
+											if (tool.command === currentTool) {
+												pressKey("Escape", {
+													code: "Escape",
+													keyCode: 27,
+													which: 27,
+												});
+												return;
+											}
 
 											executeOnshapeShortcutCommand(tool);
 										}}
