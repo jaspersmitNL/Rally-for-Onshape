@@ -1,6 +1,6 @@
 import { IconEdit, IconGripHorizontal, IconLoader2 } from "@tabler/icons-react";
 import { capitalize } from "lodash-es";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import { Button } from "@/components/ui/button";
@@ -179,54 +179,78 @@ export function PenSidebar() {
 
 				<SidebarDivider />
 
-				<div className="flex min-h-0 flex-1 flex-col items-center gap-1 overflow-y-auto">
-					{modeTools.length === 0 && (
-						<IconLoader2 className="h-6 w-6 animate-spin text-muted-foreground my-2" />
-					)}
-					{modeTools.map((tool) => {
-						return (
-							<Tooltip key={tool.id}>
-								<TooltipTrigger asChild>
-									<MotionButton
-										className="h-10 w-10 shrink-0 cursor-pointer os-animate-in"
-										variant={
-											tool.command === currentTool ? "secondary" : "outline"
-										}
-										whileTap={{ scale: 0.94 }}
-										onClick={(e) => {
-											e.preventDefault();
-											e.stopPropagation();
-											if (tool.command === currentTool) {
-												pressKey("Escape", {
-													code: "Escape",
-													keyCode: 27,
-													which: 27,
-												});
-												return;
+				<div className="relative flex min-h-0 flex-1 flex-col items-center overflow-hidden">
+					<AnimatePresence mode="wait" initial={false}>
+						<motion.div
+							key={toolbarType}
+							className="flex min-h-0 w-full flex-1 flex-col items-center gap-1 overflow-y-auto px-1"
+							initial={{ x: 28, opacity: 0, filter: "blur(4px)" }}
+							animate={{ x: 0, opacity: 1, filter: "blur(0px)" }}
+							exit={{ x: -28, opacity: 0, filter: "blur(4px)" }}
+							transition={{
+								type: "spring",
+								stiffness: 420,
+								damping: 36,
+								mass: 0.8,
+							}}
+						>
+							{modeTools.length === 0 && (
+								<IconLoader2 className="my-2 h-6 w-6 animate-spin text-muted-foreground" />
+							)}
+
+							{modeTools.map((tool, index) => (
+								<Tooltip key={tool.id}>
+									<TooltipTrigger asChild>
+										<MotionButton
+											className="h-10 w-10 shrink-0 cursor-pointer"
+											variant={
+												tool.command === currentTool ? "secondary" : "outline"
 											}
+											initial={{ opacity: 0, x: 12, scale: 0.92 }}
+											animate={{ opacity: 1, x: 0, scale: 1 }}
+											transition={{
+												delay: index * 0.025,
+												type: "spring",
+												stiffness: 520,
+												damping: 32,
+											}}
+											whileTap={{ scale: 0.94 }}
+											onClick={(e) => {
+												e.preventDefault();
+												e.stopPropagation();
 
-											executeOnshapeShortcutCommand(tool);
-										}}
-									>
-										<OnshapeIcon icon={tool.icon!} className="h-5 w-5" />
-									</MotionButton>
-								</TooltipTrigger>
+												if (tool.command === currentTool) {
+													pressKey("Escape", {
+														code: "Escape",
+														keyCode: 27,
+														which: 27,
+													});
+													return;
+												}
 
-								<TooltipContent side="right">
-									<Card className="w-[350px]">
-										<CardHeader>
-											<CardTitle>{capitalize(tool.command)}</CardTitle>
-											<CardDescription>
-												{capitalize(
-													tool.expandedTooltipKey?.replace("tooltips:::", ""),
-												)}
-											</CardDescription>
-										</CardHeader>
-									</Card>
-								</TooltipContent>
-							</Tooltip>
-						);
-					})}
+												executeOnshapeShortcutCommand(tool);
+											}}
+										>
+											<OnshapeIcon icon={tool.icon!} className="h-5 w-5" />
+										</MotionButton>
+									</TooltipTrigger>
+
+									<TooltipContent side="right">
+										<Card className="w-[350px]">
+											<CardHeader>
+												<CardTitle>{capitalize(tool.command)}</CardTitle>
+												<CardDescription>
+													{capitalize(
+														tool.expandedTooltipKey?.replace("tooltips:::", ""),
+													)}
+												</CardDescription>
+											</CardHeader>
+										</Card>
+									</TooltipContent>
+								</Tooltip>
+							))}
+						</motion.div>
+					</AnimatePresence>
 				</div>
 
 				<SidebarDivider />
