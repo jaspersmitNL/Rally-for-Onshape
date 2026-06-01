@@ -150,7 +150,6 @@ export function PenSidebar() {
 			if (data.name === "ELEMENT_TOOLBAR_EXIT_CURRENT_TOOL") {
 				setCurrentTool(null);
 			}
-			console.debug("Received message:", data.type, data.name, data.args);
 		}
 
 		window.addEventListener("message", onMessage);

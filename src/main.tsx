@@ -1,6 +1,8 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import cssText from "@/styles.css?inline";
+import cssText from "@/styles/extension.css?inline";
+import onshapeThemeCss from "@/styles/onshape-theme.css?inline";
+import onshapeNavigationCss from "@/styles/onshape-navigation.css?inline";
 import { FloatingNumpad } from "./components/FloatingNumberPad";
 import { PenSidebar } from "./components/PenSidebar";
 import { TooltipProvider } from "./components/ui/tooltip";
@@ -16,7 +18,18 @@ function injectOnshapeBridge(): void {
 	document.documentElement.appendChild(script);
 }
 
+function injectGlobalStyle(id: string, css: string) {
+  if (document.getElementById(id)) return;
+
+  const style = document.createElement("style");
+  style.id = id;
+  style.textContent = css;
+  document.documentElement.appendChild(style);
+}
+
 injectOnshapeBridge();
+injectGlobalStyle("os-onshape-theme", onshapeThemeCss);
+injectGlobalStyle("os-onshape-navigation", onshapeNavigationCss);
 
 if (!document.getElementById("onshape-extension-host")) {
 	const host = document.createElement("div");

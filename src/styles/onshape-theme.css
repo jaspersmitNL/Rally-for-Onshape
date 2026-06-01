@@ -1,0 +1,287 @@
+/* ===============================
+   Onshape shadcn-style dark theme
+   =============================== */
+
+:root {
+  --os-bg: #09090b;
+  --os-card: #18181b;
+  --os-card-soft: #1f1f23;
+  --os-muted: #27272a;
+  --os-muted-hover: #323238;
+  --os-border: rgba(255, 255, 255, 0.1);
+  --os-border-strong: rgba(255, 255, 255, 0.16);
+
+  --os-text: #fafafa;
+  --os-text-muted: #a1a1aa;
+  --os-text-dim: #71717a;
+
+  --os-primary: #3b82f6;
+  --os-primary-soft: rgba(59, 130, 246, 0.18);
+
+  --os-radius-sm: 8px;
+  --os-radius: 12px;
+  --os-radius-lg: 16px;
+
+  --os-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+/* App shell */
+
+html,
+body,
+#container,
+#app,
+.application,
+.workspace {
+  background: var(--os-bg) !important;
+  color: var(--os-text) !important;
+}
+
+/* Canvas area / modeling viewport surround */
+
+canvas,
+.gl-canvas,
+.graphics-canvas {
+  background: radial-gradient(
+    circle at center,
+    #18181b 0%,
+    #111113 55%,
+    #09090b 100%
+  ) !important;
+}
+
+.part-studio-viewport,
+.assembly-viewport,
+.drawing-viewport,
+.graphics-area,
+.graphics-region,
+.viewport-container,
+.document-workspace,
+.os-graphics {
+  background:
+    radial-gradient(circle at 50% 35%, rgba(63, 63, 70, 0.28), transparent 38%),
+    linear-gradient(180deg, #111113 0%, #09090b 100%) !important;
+}
+
+/* Subtle canvas frame */
+
+.part-studio-viewport,
+.assembly-viewport,
+.graphics-area,
+.viewport-container {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.035) !important;
+}
+
+/* General panels/dialogs/menus */
+
+.ns-dialog,
+.ns-panel,
+.ns-popover,
+.ns-menu,
+.ns-dropdown,
+.ns-context-menu,
+.dropdown-menu,
+.modal,
+[role="dialog"],
+[role="menu"],
+[role="listbox"] {
+  background: rgba(24, 24, 27, 0.96) !important;
+  color: var(--os-text) !important;
+  border: 1px solid var(--os-border) !important;
+  border-radius: var(--os-radius-lg) !important;
+  box-shadow: var(--os-shadow) !important;
+  backdrop-filter: blur(18px) saturate(140%) !important;
+}
+
+/* Feature dialog */
+
+#feature-dialog,
+.feature-dialog,
+.feature-dialog-content {
+  background: rgba(24, 24, 27, 0.97) !important;
+  color: var(--os-text) !important;
+  border: 1px solid var(--os-border) !important;
+  border-radius: 18px !important;
+  box-shadow: var(--os-shadow) !important;
+  overflow: hidden !important;
+}
+
+#feature-dialog input,
+#feature-dialog textarea,
+#feature-dialog select {
+  min-height: 34px !important;
+}
+
+/* Toolbars */
+
+.ns-toolbar,
+.toolbar,
+.top-toolbar,
+[role="toolbar"] {
+  background: rgba(24, 24, 27, 0.9) !important;
+  color: var(--os-text) !important;
+  border: 1px solid var(--os-border) !important;
+  border-radius: var(--os-radius) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+/* Buttons */
+
+button,
+.ns-button,
+.btn,
+[role="button"] {
+  border-radius: var(--os-radius-sm) !important;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.08s ease !important;
+}
+
+button:hover,
+.ns-button:hover,
+.btn:hover,
+[role="button"]:hover {
+  background: var(--os-muted-hover) !important;
+  border-color: var(--os-border-strong) !important;
+}
+
+button:active,
+.ns-button:active,
+.btn:active,
+[role="button"]:active {
+  transform: scale(0.98);
+}
+
+/* Inputs */
+
+input,
+textarea,
+select,
+[contenteditable="true"] {
+  background: var(--os-card-soft) !important;
+  color: var(--os-text) !important;
+  border: 1px solid var(--os-border) !important;
+  border-radius: var(--os-radius-sm) !important;
+  box-shadow: none !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+[contenteditable="true"]:focus {
+  outline: none !important;
+  border-color: var(--os-primary) !important;
+  box-shadow: 0 0 0 3px var(--os-primary-soft) !important;
+}
+
+/* Text */
+
+label,
+span,
+div,
+p,
+td,
+th {
+  color: inherit;
+}
+
+.text-muted,
+.ns-muted,
+.description,
+.help-text {
+  color: var(--os-text-muted) !important;
+}
+
+/* Tables / lists */
+
+table,
+.list,
+.tree,
+.panel-list {
+  background: transparent !important;
+  color: var(--os-text) !important;
+}
+
+tr:hover,
+.list-item:hover,
+.tree-item:hover,
+.ns-menu-item:hover,
+.dropdown-item:hover {
+  background: var(--os-muted-hover) !important;
+}
+
+/* Selected states */
+
+.selected,
+.active,
+.is-selected,
+[aria-selected="true"] {
+  background: var(--os-primary-soft) !important;
+  color: var(--os-text) !important;
+  border-color: rgba(59, 130, 246, 0.45) !important;
+}
+
+/* Tabs */
+
+.tab,
+.ns-tab,
+[role="tab"] {
+  border-radius: var(--os-radius-sm) !important;
+  color: var(--os-text-muted) !important;
+}
+
+.tab.active,
+.ns-tab.active,
+[role="tab"][aria-selected="true"] {
+  background: var(--os-card-soft) !important;
+  color: var(--os-text) !important;
+}
+
+/* Bottom / side bars */
+
+.bottom-bar,
+.status-bar,
+.left-panel,
+.right-panel,
+.side-panel,
+.sidebar {
+  background: rgba(24, 24, 27, 0.94) !important;
+  border-color: var(--os-border) !important;
+  color: var(--os-text) !important;
+}
+
+/* Scrollbars */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3f3f46 transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #52525b;
+}
+
+/* Avoid styling your own extension twice */
+
+#os-pen-shortcut-sidebar,
+#os-floating-numpad {
+  color: initial;
+}
