@@ -2,7 +2,6 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import cssText from "@/styles/extension.css?inline";
 import onshapeThemeCss from "@/styles/onshape-theme.css?inline";
-import onshapeNavigationCss from "@/styles/onshape-navigation.css?inline";
 import { FloatingNumpad } from "./components/FloatingNumberPad";
 import { PenSidebar } from "./components/PenSidebar";
 import { TooltipProvider } from "./components/ui/tooltip";
@@ -29,7 +28,10 @@ function injectGlobalStyle(id: string, css: string) {
 
 injectOnshapeBridge();
 injectGlobalStyle("os-onshape-theme", onshapeThemeCss);
-injectGlobalStyle("os-onshape-navigation", onshapeNavigationCss);
+
+document.documentElement.dataset.osTheme = "dark";
+document.body.dataset.osTheme = "dark";
+document.body.dataset.bsTheme = "dark";
 
 if (!document.getElementById("onshape-extension-host")) {
 	const host = document.createElement("div");
