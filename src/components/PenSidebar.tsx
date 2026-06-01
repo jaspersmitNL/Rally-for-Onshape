@@ -10,6 +10,7 @@ import {
 	IconTrash,
 	IconX,
 } from "@tabler/icons-react";
+import { capitalize } from "lodash-es";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
@@ -321,9 +322,11 @@ export function PenSidebar() {
 								<TooltipContent side="right">
 									<Card className="w-[350px]">
 										<CardHeader>
-											<CardTitle>{tool.command}</CardTitle>
+											<CardTitle>{capitalize(tool.command)}</CardTitle>
 											<CardDescription>
-												{tool.expandedTooltipKey?.replace("tooltips:::", "")}
+												{capitalize(
+													tool.expandedTooltipKey?.replace("tooltips:::", ""),
+												)}
 											</CardDescription>
 										</CardHeader>
 									</Card>
