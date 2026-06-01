@@ -2,8 +2,16 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 
 @custom-variant dark (&:is(.dark *));
+
+:host,
+:host *,
+#os-pen-shortcut-sidebar,
+#os-floating-numpad {
+  font-family: "Poppins", system-ui, sans-serif !important;
+}
 
 @theme inline {
 	--font-heading: var(--font-sans);
