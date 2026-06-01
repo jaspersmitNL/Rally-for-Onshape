@@ -1,6 +1,7 @@
 import {
 	IconCheck,
 	IconDeselect,
+	IconFocusAuto,
 	IconGripHorizontal,
 	IconKeyboard,
 	IconLoader2,
@@ -186,6 +187,13 @@ export function PenSidebar() {
 			description: "Delete the selected item.",
 			icon: IconTrash,
 			onClick: () => pressKey("Delete"),
+		},
+		{
+			id: "focus",
+			label: "Focus",
+			description: "Auto orient the view to the selected item(s).",
+			icon: IconFocusAuto,
+			onClick: () => pressKey("n"),
 		},
 		{
 			id: "space",
