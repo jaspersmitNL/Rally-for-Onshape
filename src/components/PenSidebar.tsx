@@ -175,20 +175,37 @@ export function PenSidebar() {
 							</Card>
 						</TooltipContent>
 					</Tooltip>
-					<Button
-						variant="outline"
-						size="icon"
-						className="h-10 w-10 shrink-0 cursor-pointer active:cursor-grabbing"
-					>
-						{collapsed ? <ChevronDown /> : <ChevronUp />}
-					</Button>
-				</div>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Button
+								variant="outline"
+								size="icon"
+								className="h-10 w-10 shrink-0 cursor-pointer"
+								onClick={() => setCollapsed((c) => !c)}
+							>
+								{collapsed ? <ChevronDown /> : <ChevronUp />}
+							</Button>
+						</TooltipTrigger>
 
-				<PenSidebarMainContent
-					modeTools={modeTools}
-					toolbarType={toolbarType}
-					currentTool={currentTool}
-				/>
+						<TooltipContent side="right">
+							<Card className="w-[350px]">
+								<CardHeader>
+									<CardTitle>Collapse</CardTitle>
+									<CardDescription>
+										Hide / Show the sidebar content.
+									</CardDescription>
+								</CardHeader>
+							</Card>
+						</TooltipContent>
+					</Tooltip>
+				</div>
+				{!collapsed && (
+					<PenSidebarMainContent
+						modeTools={modeTools}
+						toolbarType={toolbarType}
+						currentTool={currentTool}
+					/>
+				)}
 			</div>
 		</Draggable>
 	);
