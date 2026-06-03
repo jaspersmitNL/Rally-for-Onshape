@@ -96,4 +96,4 @@ export const topUtilityActions: UtilityAction[] = [
 		icon: ScanSearch,
 		onClick: () => pressKey("f"),
 	},
-];
+] as const;

@@ -23,10 +23,16 @@ export function PenSidebarMainContent({
 	modeTools,
 	toolbarType,
 	currentTool,
+	undoEnabled,
+	redoEnabled,
+	featureDialogVisible,
 }: {
 	currentTool: string | null;
 	modeTools: OnshapeShortcutCommand[];
 	toolbarType: OnshapeToolbarMode;
+	undoEnabled: boolean;
+	redoEnabled: boolean;
+	featureDialogVisible: boolean;
 }) {
 	return (
 		<>
@@ -35,14 +41,20 @@ export function PenSidebarMainContent({
 			<div className="grid grid-cols-2 justify-items-center gap-1 px-2">
 				{topUtilityActions.map((action) => {
 					const Icon = action.icon;
+					const buttonDisabled =
+						(action.label === "Undo" && !undoEnabled) ||
+						(action.label === "Redo" && !redoEnabled) ||
+						(action.label === "Cancel" && !featureDialogVisible) ||
+						(action.label === "Confirm" && !featureDialogVisible);
 
 					return (
 						<Tooltip key={action.id}>
 							<TooltipTrigger asChild>
 								<Button
-									className="h-10 w-10 cursor-pointer"
+									className={`h-10 w-10 cursor-pointer ${action.className || ""}`}
 									variant="outline"
 									size="icon"
+									disabled={buttonDisabled}
 									onClick={(e) => {
 										e.preventDefault();
 										e.stopPropagation();

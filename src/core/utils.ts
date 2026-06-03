@@ -308,3 +308,32 @@ export function fireInputEvents(
 		}),
 	);
 }
+
+export function watchElementPresence(
+	selector: string,
+	callback: (isPresent: boolean, element: Element | null) => void,
+	root: ParentNode = document.body,
+): () => void {
+	let isPresent = false;
+
+	const check = () => {
+		const element = root.querySelector(selector);
+		const nextPresent = !!element;
+
+		if (nextPresent !== isPresent) {
+			isPresent = nextPresent;
+			callback(nextPresent, element);
+		}
+	};
+
+	check();
+
+	const observer = new MutationObserver(check);
+
+	observer.observe(root, {
+		childList: true,
+		subtree: true,
+	});
+
+	return () => observer.disconnect();
+}

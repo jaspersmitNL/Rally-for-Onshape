@@ -18,7 +18,7 @@ import {
 	FORWARDED_ONSHAPE_EVENTS,
 } from "@/constants/onshapeEvents";
 import { getUserShortcutCommands } from "@/core/userShortcuts";
-import { toggleFullscreen } from "@/core/utils";
+import { toggleFullscreen, watchElementPresence } from "@/core/utils";
 import type {
 	OnshapeShortcutCommandsResponse,
 	OnshapeToolbarMode,
@@ -45,6 +45,11 @@ export function PenSidebar() {
 	const [collapsed, setCollapsed] = useState(false);
 
 	const [visible, setVisible] = useState(false);
+
+	const [undoEnabled, setUndoEnabled] = useState(false);
+	const [redoEnabled, setRedoEnabled] = useState(false);
+
+	const [featureDialogVisible, setFeatureDialogVisible] = useState(false);
 
 	const initialLoadDoneRef = useRef(false);
 
@@ -100,12 +105,37 @@ export function PenSidebar() {
 					document
 						.querySelector(".os-mini-toolbar-panel")
 						?.classList.remove("os-extension-hidden-item");
+					const featureDialogParent = document.querySelector("#content-div");
+					if (featureDialogParent)
+						watchElementPresence(
+							"#feature-dialog",
+							(isPresent) => setFeatureDialogVisible(isPresent),
+							featureDialogParent,
+						);
 				});
 			}
 
 			if (data.name === FORWARDED_ONSHAPE_EVENTS.CHANGE_ELEMENT_TOOLBAR) {
 				const newToolbarType = data.args?.[0]?.toolbarName || null;
 				setToolbarType(newToolbarType);
+			}
+
+			if (data.name === FORWARDED_ONSHAPE_EVENTS.ENABLE_TOOLBAR_COMMAND) {
+				if (data.args?.includes("UNDO_A_CHANGE")) {
+					setUndoEnabled(true);
+				}
+				if (data.args?.includes("REDO_A_CHANGE")) {
+					setRedoEnabled(true);
+				}
+			}
+
+			if (data.name === FORWARDED_ONSHAPE_EVENTS.DISABLE_TOOLBAR_COMMAND) {
+				if (data.args?.includes("UNDO_A_CHANGE")) {
+					setUndoEnabled(false);
+				}
+				if (data.args?.includes("REDO_A_CHANGE")) {
+					setRedoEnabled(false);
+				}
 			}
 
 			if (
@@ -246,6 +276,9 @@ export function PenSidebar() {
 						modeTools={modeTools}
 						toolbarType={toolbarType}
 						currentTool={currentTool}
+						redoEnabled={redoEnabled}
+						undoEnabled={undoEnabled}
+						featureDialogVisible={featureDialogVisible}
 					/>
 				)}
 			</div>

@@ -52,4 +52,5 @@ export type UtilityAction = {
 	description: string;
 	icon: React.ComponentType<{ className?: string }>;
 	onClick: () => void;
+  className?: string;
 };
