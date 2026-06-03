@@ -66,7 +66,11 @@ if (!document.getElementById("onshape-extension-host")) {
 	createRoot(root).render(
 		<React.StrictMode>
 			<PortalContainerProvider container={portalRoot}>
-				<TooltipProvider delayDuration={120} skipDelayDuration={0}>
+				<TooltipProvider
+					delayDuration={0}
+					skipDelayDuration={0}
+					disableHoverableContent
+				>
 					<PenSidebar />
 					<FloatingNumpad />
 				</TooltipProvider>

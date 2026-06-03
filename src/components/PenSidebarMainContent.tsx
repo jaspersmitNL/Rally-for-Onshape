@@ -7,7 +7,7 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { utilityActions } from "@/services/penSidebarCodeUtils";
+import { topUtilityActions } from "@/services/penSidebarCodeUtils";
 import type { OnshapeShortcutCommand, OnshapeToolbarMode } from "@/types";
 import { executeOnshapeShortcutCommand, pressKey } from "../core/utils";
 import { OnshapeIcon } from "./OnShapeIcon";
@@ -32,90 +32,10 @@ export function PenSidebarMainContent({
 		<>
 			<SidebarDivider />
 
-			<div className="relative flex min-h-0 flex-1 flex-col items-center">
-				<AnimatePresence mode="wait" initial={false}>
-					<motion.div
-						key={toolbarType}
-						className="flex min-h-0 w-full flex-1 flex-col items-center gap-1 overflow-y-auto px-2"
-						initial={{ x: 28, opacity: 0, filter: "blur(4px)" }}
-						animate={{ x: 0, opacity: 1, filter: "blur(0px)" }}
-						exit={{ x: -28, opacity: 0, filter: "blur(4px)" }}
-						transition={{
-							type: "spring",
-							stiffness: 420,
-							damping: 36,
-							mass: 0.8,
-						}}
-					>
-						{modeTools.length === 0 && (
-							<LoaderCircle className="my-2 h-6 w-6 animate-spin text-muted-foreground" />
-						)}
-
-						{modeTools.map((tool, index) => (
-							<Tooltip key={tool.id}>
-								<TooltipTrigger asChild>
-									<MotionButton
-										className="h-10 w-10 shrink-0 cursor-pointer relative"
-										variant={
-											tool.command === currentTool ? "secondary" : "outline"
-										}
-										initial={{ opacity: 0, x: 12, scale: 0.92 }}
-										animate={{ opacity: 1, x: 0, scale: 1 }}
-										transition={{
-											delay: index * 0.025,
-											type: "spring",
-											stiffness: 520,
-											damping: 32,
-										}}
-										whileTap={{ scale: 0.94 }}
-										onClick={(e) => {
-											e.preventDefault();
-											e.stopPropagation();
-
-											if (tool.command === currentTool) {
-												pressKey("Escape", {
-													code: "Escape",
-													keyCode: 27,
-													which: 27,
-												});
-												return;
-											}
-
-											executeOnshapeShortcutCommand(tool);
-										}}
-									>
-										<OnshapeIcon icon={tool.icon!} />
-										{tool.command === currentTool && (
-											<div className="absolute h-2 w-2 pointer-events-none top-0 right-0 text-muted-foreground">
-												<XCircle />
-											</div>
-										)}
-									</MotionButton>
-								</TooltipTrigger>
-
-								<TooltipContent side="right">
-									<Card className="w-[350px]">
-										<CardHeader>
-											<CardTitle>{capitalize(tool.command)}</CardTitle>
-											<CardDescription>
-												{capitalize(
-													tool.expandedTooltipKey?.replace("tooltips:::", ""),
-												)}
-											</CardDescription>
-										</CardHeader>
-									</Card>
-								</TooltipContent>
-							</Tooltip>
-						))}
-					</motion.div>
-				</AnimatePresence>
-			</div>
-
-			<SidebarDivider />
-
-			<div className="flex flex-col items-center gap-1">
-				{utilityActions.map((action) => {
+			<div className="grid grid-cols-2 justify-items-center gap-1 px-2">
+				{topUtilityActions.map((action) => {
 					const Icon = action.icon;
+
 					return (
 						<Tooltip key={action.id}>
 							<TooltipTrigger asChild>
@@ -144,6 +64,89 @@ export function PenSidebarMainContent({
 						</Tooltip>
 					);
 				})}
+			</div>
+
+			<SidebarDivider />
+
+			<div className="relative flex min-h-0 flex-1 flex-col items-center">
+				<AnimatePresence mode="wait" initial={false}>
+					<motion.div
+						key={toolbarType}
+						className="grid min-h-0 w-full flex-1 grid-cols-2 content-start justify-items-center gap-1 overflow-y-auto px-2"
+						initial={{ x: 28, opacity: 0, filter: "blur(4px)" }}
+						animate={{ x: 0, opacity: 1, filter: "blur(0px)" }}
+						exit={{ x: -28, opacity: 0, filter: "blur(4px)" }}
+						transition={{
+							type: "spring",
+							stiffness: 420,
+							damping: 36,
+							mass: 0.8,
+						}}
+					>
+						{modeTools.length === 0 && (
+							<LoaderCircle className="col-span-2 my-2 h-6 w-6 animate-spin text-muted-foreground" />
+						)}
+
+						{modeTools.map((tool, index) => (
+							<Tooltip key={tool.id}>
+								<TooltipTrigger asChild>
+									<MotionButton
+										className="relative h-10 w-10 shrink-0 cursor-pointer"
+										variant={
+											tool.command === currentTool ? "secondary" : "outline"
+										}
+										size="icon"
+										initial={{ opacity: 0, x: 12, scale: 0.92 }}
+										animate={{ opacity: 1, x: 0, scale: 1 }}
+										transition={{
+											delay: index * 0.025,
+											type: "spring",
+											stiffness: 520,
+											damping: 32,
+										}}
+										whileTap={{ scale: 0.94 }}
+										onClick={(e) => {
+											e.preventDefault();
+											e.stopPropagation();
+
+											if (tool.command === currentTool) {
+												pressKey("Escape", {
+													code: "Escape",
+													keyCode: 27,
+													which: 27,
+												});
+												return;
+											}
+
+											executeOnshapeShortcutCommand(tool);
+										}}
+									>
+										<OnshapeIcon icon={tool.icon!} />
+
+										{tool.command === currentTool && (
+											<div className="pointer-events-none absolute right-0 top-0 h-2 w-2 text-muted-foreground">
+												<XCircle />
+											</div>
+										)}
+									</MotionButton>
+								</TooltipTrigger>
+
+								<TooltipContent side="right">
+									<Card className="w-[350px]">
+										<CardHeader>
+											<CardTitle>{capitalize(tool.command)}</CardTitle>
+											<CardDescription>
+												{capitalize(
+													tool.expandedTooltipKey?.replace("tooltips:::", ""),
+												)}
+											</CardDescription>
+										</CardHeader>
+									</Card>
+								</TooltipContent>
+							</Tooltip>
+						))}
+					</motion.div>
+				</AnimatePresence>
 			</div>
 		</>
 	);

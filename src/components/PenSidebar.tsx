@@ -152,9 +152,9 @@ export function PenSidebar() {
 			<div
 				ref={nodeRef}
 				id="os-pen-shortcut-sidebar"
-				className="fixed left-0 top-0 z-[999999] flex max-h-[80vh] flex-col rounded-md border bg-background/95 py-2 shadow-2xl backdrop-blur os-animate-in overflow-hidden"
+				className="fixed left-0 top-0 z-[9999] flex max-h-[80vh] flex-col rounded-md border bg-background/95 py-2 shadow-2xl backdrop-blur os-animate-in overflow-hidden"
 			>
-				<div className="flex flex-col items-center gap-1 px-2">
+				<div className="grid grid-cols-2 justify-items-center gap-1 px-2">
 					<Button
 						variant="outline"
 						size="icon"
@@ -162,25 +162,25 @@ export function PenSidebar() {
 					>
 						<GripHorizontal />
 					</Button>
+
 					<Tooltip>
 						<TooltipTrigger asChild>
 							<Button
 								variant="outline"
 								size="icon"
 								className="h-10 w-10 shrink-0 cursor-pointer"
-								onClick={toggleFullscreen}
+								onClick={() => setCollapsed((c) => !c)}
 							>
-								<Fullscreen />
+								{collapsed ? <ChevronDown /> : <ChevronUp />}
 							</Button>
 						</TooltipTrigger>
 
 						<TooltipContent side="right">
 							<Card className="w-[350px]">
 								<CardHeader>
-									<CardTitle>Toggle Fullscreen</CardTitle>
+									<CardTitle>Collapse</CardTitle>
 									<CardDescription>
-										Toggles the fullscreen onshape experience, give it a try to
-										experience onshape like a native app!
+										Hide / Show the sidebar content.
 									</CardDescription>
 								</CardHeader>
 							</Card>
@@ -222,18 +222,19 @@ export function PenSidebar() {
 								variant="outline"
 								size="icon"
 								className="h-10 w-10 shrink-0 cursor-pointer"
-								onClick={() => setCollapsed((c) => !c)}
+								onClick={toggleFullscreen}
 							>
-								{collapsed ? <ChevronDown /> : <ChevronUp />}
+								<Fullscreen />
 							</Button>
 						</TooltipTrigger>
 
 						<TooltipContent side="right">
 							<Card className="w-[350px]">
 								<CardHeader>
-									<CardTitle>Collapse</CardTitle>
+									<CardTitle>Toggle Fullscreen</CardTitle>
 									<CardDescription>
-										Hide / Show the sidebar content.
+										Toggles the fullscreen onshape experience, give it a try to
+										experience onshape like a native app!
 									</CardDescription>
 								</CardHeader>
 							</Card>
