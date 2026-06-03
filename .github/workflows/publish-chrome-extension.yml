@@ -16,74 +16,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Derive version from release tag
-        shell: bash
-        run: |
-          VERSION="${GITHUB_REF_NAME#v}"
-
-          if ! [[ "$VERSION" =~ ^[0-9]+(\.[0-9]+){1,3}$ ]]; then
-            echo "Invalid Chrome extension version: $VERSION"
-            echo "Use release tags like v0.1.0 or v1.2.3"
-            exit 1
-          fi
-
-          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
-
-      - name: Set package and manifest versions
-        run: |
-          node -e "
-            const fs = require('fs');
-
-            const version = process.env.VERSION;
-
-            const files = [
-              'package.json',
-              'public/manifest.json'
-            ];
-
-            for (const file of files) {
-              const json = JSON.parse(fs.readFileSync(file, 'utf8'));
-              json.version = version;
-              fs.writeFileSync(file, JSON.stringify(json, null, 2) + '\n');
-              console.log(\`Set \${file} version to \${version}\`);
-            }
-          "
-
-      - name: Build extension
-        run: npm run build
-
-      - name: Verify built manifest version
-        run: |
-          node -e "
-            const manifest = require('./dist/manifest.json');
-
-            if (manifest.version !== process.env.VERSION) {
-              console.error('Expected version', process.env.VERSION, 'but got', manifest.version);
-              process.exit(1);
-            }
-
-            console.log('Built manifest version:', manifest.version);
-          "
-
-      - name: Zip extension
-        run: |
-          cd dist
-          zip -r ../chrome-extension-${{ env.VERSION }}.zip .
-
-      - name: Upload ZIP to GitHub release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: chrome-extension-${{ env.VERSION }}.zip
-
       - name: Get Chrome Web Store access token
         id: auth
         shell: bash
@@ -104,7 +36,105 @@ jobs:
 
           echo "access_token=$ACCESS_TOKEN" >> "$GITHUB_OUTPUT"
 
+      - name: Check Chrome Web Store review status
+        id: review_check
+        shell: bash
+        run: |
+          RESPONSE=$(curl -sS \
+            -H "Authorization: Bearer ${{ steps.auth.outputs.access_token }}" \
+            "https://chromewebstore.googleapis.com/v2/publishers/${{ secrets.GOOGLE_CHROME_PUBLISHER_ID }}/items/${{ secrets.GOOGLE_CHROME_EXTENSION_ID }}:fetchStatus")
+
+          echo "$RESPONSE"
+
+          SUBMITTED_STATE=$(echo "$RESPONSE" | jq -r '.submittedItemRevisionStatus.state // empty')
+          SUBMITTED_VERSION=$(echo "$RESPONSE" | jq -r '.submittedItemRevisionStatus.distributionChannels[0].crxVersion // empty')
+
+          if [ "$SUBMITTED_STATE" = "PENDING_REVIEW" ]; then
+            echo "::notice::Chrome Web Store already has version $SUBMITTED_VERSION pending review. Skipping publish."
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "No pending Chrome Web Store review found."
+            echo "should_publish=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Node
+        if: steps.review_check.outputs.should_publish == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.review_check.outputs.should_publish == 'true'
+        run: npm ci
+
+      - name: Derive version from release tag
+        if: steps.review_check.outputs.should_publish == 'true'
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+
+          if ! [[ "$VERSION" =~ ^[0-9]+(\.[0-9]+){1,3}$ ]]; then
+            echo "Invalid Chrome extension version: $VERSION"
+            echo "Use release tags like v0.1.0 or v1.2.3"
+            exit 1
+          fi
+
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Set package and manifest versions
+        if: steps.review_check.outputs.should_publish == 'true'
+        run: |
+          node -e "
+            const fs = require('fs');
+
+            const version = process.env.VERSION;
+
+            const files = [
+              'package.json',
+              'public/manifest.json'
+            ];
+
+            for (const file of files) {
+              const json = JSON.parse(fs.readFileSync(file, 'utf8'));
+              json.version = version;
+              fs.writeFileSync(file, JSON.stringify(json, null, 2) + '\n');
+              console.log(\`Set \${file} version to \${version}\`);
+            }
+          "
+
+      - name: Build extension
+        if: steps.review_check.outputs.should_publish == 'true'
+        run: npm run build
+
+      - name: Verify built manifest version
+        if: steps.review_check.outputs.should_publish == 'true'
+        run: |
+          node -e "
+            const manifest = require('./dist/manifest.json');
+
+            if (manifest.version !== process.env.VERSION) {
+              console.error('Expected version', process.env.VERSION, 'but got', manifest.version);
+              process.exit(1);
+            }
+
+            console.log('Built manifest version:', manifest.version);
+          "
+
+      - name: Zip extension
+        if: steps.review_check.outputs.should_publish == 'true'
+        run: |
+          cd dist
+          zip -r ../chrome-extension-${{ env.VERSION }}.zip .
+
+      - name: Upload ZIP to GitHub release
+        if: steps.review_check.outputs.should_publish == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: chrome-extension-${{ env.VERSION }}.zip
+
       - name: Upload extension to Chrome Web Store
+        if: steps.review_check.outputs.should_publish == 'true'
         shell: bash
         run: |
           RESPONSE=$(curl -sS -X POST \
@@ -122,6 +152,7 @@ jobs:
           fi
 
       - name: Submit extension for review
+        if: steps.review_check.outputs.should_publish == 'true'
         shell: bash
         run: |
           RESPONSE=$(curl -sS -X POST \
