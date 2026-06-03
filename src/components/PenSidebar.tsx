@@ -8,6 +8,10 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+	ACCEPTED_ONSHAPE_TO_EXTENSION_EVENT_TYPE,
+	FORWARDED_ONSHAPE_EVENTS,
+} from "@/constants/onshapeEvents";
 import { getUserShortcutCommands } from "@/core/userShortcuts";
 import type {
 	OnshapeShortcutCommandsResponse,
@@ -20,13 +24,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 const STORAGE_KEY = "onshapePenSidebarPosition";
 const LABEL_MODE_KEY = "onshapePenSidebarLabelsAlwaysVisible";
 
-const MotionButton = motion.create(Button);
-
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-function SidebarDivider() {
-	return <div className="my-3 mx-auto h-px w-8/12 bg-border" />;
-}
 
 export function PenSidebar() {
 	const nodeRef = useRef<HTMLDivElement>(null);
@@ -62,9 +60,9 @@ export function PenSidebar() {
 			if (event.source !== window) return;
 
 			const data = event.data;
-			if (!data || data.type !== "OS_ANGULAR_EVENT") return;
+			if (!data || data.type !== ACCEPTED_ONSHAPE_TO_EXTENSION_EVENT_TYPE) return;
 
-			if (data.name === "ELEMENT_LOAD_DONE") {
+			if (data.name === FORWARDED_ONSHAPE_EVENTS.ELEMENT_LOAD_DONE) {
 				setVisible(true);
 				pressKey("s");
 
@@ -86,21 +84,25 @@ export function PenSidebar() {
 				});
 			}
 
-			if (data.name === "CHANGE_ELEMENT_TOOLBAR") {
+			if (data.name === FORWARDED_ONSHAPE_EVENTS.CHANGE_ELEMENT_TOOLBAR) {
 				const newToolbarType = data.args?.[0]?.toolbarName || null;
 				setToolbarType(newToolbarType);
 			}
 
-			if (data.name === "ELEMENT_TOOLBAR_SET_CURRENT_TOOL") {
+			if (
+				data.name === FORWARDED_ONSHAPE_EVENTS.ELEMENT_TOOLBAR_SET_CURRENT_TOOL
+			) {
 				const currentTool = data.args?.[0];
 				setCurrentTool(currentTool);
 			}
 
-			if (data.name === "ELEMENT_TOOLBAR_EXIT_CURRENT_TOOL") {
+			if (
+				data.name === FORWARDED_ONSHAPE_EVENTS.ELEMENT_TOOLBAR_EXIT_CURRENT_TOOL
+			) {
 				setCurrentTool(null);
 			}
 
-			if (data.name === "DOCUMENT_UNLOADED") {
+			if (data.name === FORWARDED_ONSHAPE_EVENTS.DOCUMENT_UNLOADED) {
 				setVisible(false);
 			}
 		}
