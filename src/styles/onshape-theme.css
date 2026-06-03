@@ -4,74 +4,81 @@
 [data-os-theme],
 [data-os-theme="light"],
 [data-os-theme="dark"] {
-  color-scheme: dark;
+	color-scheme: dark;
 
-   --os-font-family: "Poppins", system-ui, sans-serif;
+	--os-font-family: "Poppins", system-ui, sans-serif;
 
-  --os-color-shadcn-background: #09090b;
-  --os-color-shadcn-card: #18181b;
-  --os-color-shadcn-muted: #27272a;
-  --os-color-shadcn-border: #3f3f46;
-  --os-color-shadcn-text: #fafafa;
-  --os-color-shadcn-muted-text: #a1a1aa;
-  --os-color-shadcn-primary: #3b82f6;
+	/* Premium graphite / blue-black palette */
+	--os-color-shadcn-background: #090b11;
+	--os-color-shadcn-card: #12151d;
+	--os-color-shadcn-muted: #1b2230;
+	--os-color-shadcn-border: #2b3445;
+	--os-color-shadcn-text: #f8fafc;
+	--os-color-shadcn-muted-text: #94a3b8;
+	--os-color-shadcn-primary: #60a5fa;
 
-  --os-background-primary: var(--os-color-shadcn-card);
-  --os-background-secondary: var(--os-color-shadcn-background);
-  --os-background-tertiary: var(--os-color-shadcn-card);
-  --os-background-quaternary: var(--os-color-shadcn-muted);
-  --os-background-quinary: var(--os-color-shadcn-muted);
-  --os-background-senary: var(--os-color-shadcn-background);
+	--os-color-surface-glass: rgba(18, 21, 29, 0.92);
+	--os-color-surface-glass-strong: rgba(18, 21, 29, 0.97);
+	--os-color-surface-hover: rgba(30, 41, 59, 0.9);
+	--os-color-surface-selected: rgba(96, 165, 250, 0.16);
+	--os-color-surface-selected-strong: rgba(96, 165, 250, 0.24);
 
-  --os-fill-primary: var(--os-color-shadcn-card);
-  --os-fill-quinary: var(--os-color-shadcn-muted);
-  --os-fill-senary: var(--os-color-shadcn-background);
+	--os-background-primary: var(--os-color-shadcn-card);
+	--os-background-secondary: var(--os-color-shadcn-background);
+	--os-background-tertiary: #151a24;
+	--os-background-quaternary: var(--os-color-shadcn-muted);
+	--os-background-quinary: #202938;
+	--os-background-senary: var(--os-color-shadcn-background);
 
-  --os-text-primary: var(--os-color-shadcn-text);
-  --os-text-secondary: var(--os-color-shadcn-muted-text);
-  --os-text-quaternary: var(--os-color-shadcn-text);
-  --os-text-quinary: var(--os-color-shadcn-text);
+	--os-fill-primary: var(--os-color-shadcn-card);
+	--os-fill-quinary: var(--os-color-shadcn-muted);
+	--os-fill-senary: var(--os-color-shadcn-background);
 
-  --os-outline-primary: var(--os-color-shadcn-border);
-  --os-outline-secondary: var(--os-color-shadcn-border);
-  --os-outline-tertiary: #27272a;
-  --os-outline-quaternary: #27272a;
-  --os-outline-subtle: #27272a;
+	--os-text-primary: var(--os-color-shadcn-text);
+	--os-text-secondary: var(--os-color-shadcn-muted-text);
+	--os-text-quaternary: var(--os-color-shadcn-text);
+	--os-text-quinary: var(--os-color-shadcn-text);
 
-  --os-accent-primary: var(--os-color-shadcn-primary);
-  --os-active: var(--os-color-shadcn-primary);
-  --os-focus: var(--os-color-shadcn-primary);
-  --os-link: #93c5fd;
+	--os-outline-primary: var(--os-color-shadcn-border);
+	--os-outline-secondary: #334155;
+	--os-outline-tertiary: #1e293b;
+	--os-outline-quaternary: #1e293b;
+	--os-outline-subtle: rgba(148, 163, 184, 0.16);
 
-  --os-navbar-background: var(--os-color-shadcn-card);
-  --os-navbar-item--hover: var(--os-color-shadcn-muted);
+	--os-accent-primary: var(--os-color-shadcn-primary);
+	--os-active: var(--os-color-shadcn-primary);
+	--os-focus: var(--os-color-shadcn-primary);
+	--os-link: #93c5fd;
 
-  --os-toolbar-background: var(--os-color-shadcn-card);
-  --os-left-panel-background: var(--os-color-shadcn-background);
-  --os-left-panel-body-fill: var(--os-color-shadcn-card);
+	--os-navbar-background: rgba(18, 21, 29, 0.96);
+	--os-navbar-item--hover: var(--os-color-surface-hover);
 
-  --os-feature-dialog-background: rgba(24, 24, 27, 0.96);
-  --os-feature-dialog-header-background: var(--os-color-shadcn-card);
-  --os-feature-dialog-footer-fill: var(--os-color-shadcn-muted);
-  --os-feature-dialog-textbox-fill: var(--os-color-shadcn-background);
+	--os-toolbar-background: rgba(18, 21, 29, 0.94);
+	--os-left-panel-background: #090b11;
+	--os-left-panel-body-fill: rgba(18, 21, 29, 0.96);
 
-  --os-form-field-fill: var(--os-color-shadcn-background);
-  --os-form-field-text: var(--os-color-shadcn-text);
-  --os-form-field-outline--idle: var(--os-color-shadcn-border);
-  --os-form-field-outline--focused: var(--os-color-shadcn-primary);
+	--os-feature-dialog-background: var(--os-color-surface-glass-strong);
+	--os-feature-dialog-header-background: rgba(18, 21, 29, 0.98);
+	--os-feature-dialog-footer-fill: #1b2230;
+	--os-feature-dialog-textbox-fill: #090b11;
 
-  --os-dropdown-menu-fill--idle: var(--os-color-shadcn-card);
-  --os-dropdown-menu-fill--hover: var(--os-color-shadcn-muted);
-  --os-dropdown-menu-fill--selected: rgba(59, 130, 246, 0.2);
+	--os-form-field-fill: #090b11;
+	--os-form-field-text: var(--os-color-shadcn-text);
+	--os-form-field-outline--idle: #2b3445;
+	--os-form-field-outline--focused: var(--os-color-shadcn-primary);
 
-  --os-context-menu-background--idle: var(--os-color-shadcn-card);
-  --os-context-menu-background--hover: var(--os-color-shadcn-muted);
+	--os-dropdown-menu-fill--idle: var(--os-color-surface-glass-strong);
+	--os-dropdown-menu-fill--hover: var(--os-color-surface-hover);
+	--os-dropdown-menu-fill--selected: var(--os-color-surface-selected);
 
-  --os-tree-background: var(--os-color-shadcn-card);
-  --os-tree-item-background--hover: var(--os-color-shadcn-muted);
-  --os-tree-item-background--selected: rgba(59, 130, 246, 0.2);
+	--os-context-menu-background--idle: var(--os-color-surface-glass-strong);
+	--os-context-menu-background--hover: var(--os-color-surface-hover);
 
-  --os-shortcut-menu-fill: rgba(24, 24, 27, 0.96);
+	--os-tree-background: rgba(18, 21, 29, 0.96);
+	--os-tree-item-background--hover: var(--os-color-surface-hover);
+	--os-tree-item-background--selected: var(--os-color-surface-selected);
+
+	--os-shortcut-menu-fill: rgba(18, 21, 29, 0.97);
 }
 
 html,
@@ -92,4 +99,23 @@ th {
 
 .os-extension-hidden-item {
   display: none !important;
+}
+
+#canvas {
+	background:
+		radial-gradient(
+			circle at top left,
+			rgba(59, 130, 246, 0.05),
+			transparent 50%
+		),
+		radial-gradient(
+			circle at bottom right,
+			rgba(99, 102, 241, 0.04),
+			transparent 55%
+		),
+		linear-gradient(
+			180deg,
+			#12151d 0%,
+			#090b11 100%
+		) !important;
 }
