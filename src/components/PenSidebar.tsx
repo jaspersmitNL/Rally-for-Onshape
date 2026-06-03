@@ -49,6 +49,13 @@ export function PenSidebar() {
 	const [toolbarType, setToolbarType] =
 		useState<OnshapeToolbarMode>("Part Studio");
 
+	const onLeaveDocumentHandler = () => {
+		setVisible(false);
+		initialLoadDoneRef.current = false;
+		setAllCommands([]);
+		setCurrentTool(null);
+	};
+
 	useEffect(() => {
 		async function onMessage(event: MessageEvent) {
 			if (event.source !== window) return;
@@ -102,7 +109,7 @@ export function PenSidebar() {
 			}
 
 			if (data.name === FORWARDED_ONSHAPE_EVENTS.DOCUMENT_UNLOADED) {
-				setVisible(false);
+				onLeaveDocumentHandler();
 			}
 		}
 
