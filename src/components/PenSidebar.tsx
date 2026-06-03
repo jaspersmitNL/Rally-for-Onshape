@@ -1,5 +1,4 @@
 import { ChevronDown, ChevronUp, GripHorizontal, Pencil } from "lucide-react";
-import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import { Button } from "@/components/ui/button";
@@ -22,9 +21,6 @@ import { PenSidebarMainContent } from "./PenSidebarMainContent";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
 const STORAGE_KEY = "onshapePenSidebarPosition";
-const LABEL_MODE_KEY = "onshapePenSidebarLabelsAlwaysVisible";
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export function PenSidebar() {
 	const nodeRef = useRef<HTMLDivElement>(null);
@@ -37,6 +33,8 @@ export function PenSidebar() {
 	const [collapsed, setCollapsed] = useState(false);
 
 	const [visible, setVisible] = useState(false);
+
+	const initialLoadDoneRef = useRef(false);
 
 	const [position, setPosition] = useState(() => {
 		try {
@@ -51,23 +49,24 @@ export function PenSidebar() {
 	const [toolbarType, setToolbarType] =
 		useState<OnshapeToolbarMode>("Part Studio");
 
-	const [labelsVisible, setLabelsVisible] = useState(
-		() => localStorage.getItem(LABEL_MODE_KEY) === "true",
-	);
-
 	useEffect(() => {
 		async function onMessage(event: MessageEvent) {
 			if (event.source !== window) return;
 
 			const data = event.data;
-			if (!data || data.type !== ACCEPTED_ONSHAPE_TO_EXTENSION_EVENT_TYPE) return;
+			if (!data || data.type !== ACCEPTED_ONSHAPE_TO_EXTENSION_EVENT_TYPE)
+				return;
 
 			if (data.name === FORWARDED_ONSHAPE_EVENTS.ELEMENT_LOAD_DONE) {
-				setVisible(true);
+				document
+					.querySelector(".os-mini-toolbar-panel")
+					?.classList.add("os-extension-hidden-item");
 				pressKey("s");
+			}
 
-				await delay(250);
-
+			if (data.name === FORWARDED_ONSHAPE_EVENTS.OPEN_MINI_TOOLBAR) {
+				if (initialLoadDoneRef.current) return;
+				initialLoadDoneRef.current = true;
 				document.body.dispatchEvent(
 					new MouseEvent("mousedown", {
 						bubbles: true,
@@ -75,12 +74,12 @@ export function PenSidebar() {
 						view: window,
 					}),
 				);
-
-				await delay(1000);
-
 				getUserShortcutCommands().then((commands) => {
-					console.log("Received user shortcut commands", commands);
+					setVisible(true);
 					setAllCommands(commands);
+					document
+						.querySelector(".os-mini-toolbar-panel")
+						?.classList.remove("os-extension-hidden-item");
 				});
 			}
 
@@ -110,10 +109,6 @@ export function PenSidebar() {
 		window.addEventListener("message", onMessage);
 		return () => window.removeEventListener("message", onMessage);
 	}, []);
-
-	useEffect(() => {
-		localStorage.setItem(LABEL_MODE_KEY, String(labelsVisible));
-	}, [labelsVisible]);
 
 	if (!visible) return null;
 

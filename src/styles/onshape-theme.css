@@ -89,3 +89,7 @@ td,
 th {
   font-family: var(--os-font-family) !important;
 }
+
+.os-extension-hidden-item {
+  display: none !important;
+}

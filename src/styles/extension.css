@@ -139,5 +139,5 @@
 }
 
 .os-animate-in {
-  animation: os-fade-in 180ms ease-out both;
+  animation: os-fade-in 300ms ease-in forwards;
 }
