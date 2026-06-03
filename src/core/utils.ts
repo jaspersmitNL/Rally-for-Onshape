@@ -47,6 +47,36 @@ export type ExecuteOnshapeCommandOptions = {
 	ignoreNamespace?: boolean;
 };
 
+export function suppressVirtualKeyboard(): void {
+	if (navigator.maxTouchPoints === 0) return;
+
+	function patchInput(input: HTMLInputElement | HTMLTextAreaElement) {
+		if (input.dataset.osKeyboardSuppressed) return;
+
+		input.dataset.osKeyboardSuppressed = "true";
+		input.setAttribute("inputmode", "none");
+
+		input.addEventListener("focus", () => {
+			navigator.virtualKeyboard?.hide?.();
+		});
+	}
+
+	const patchAll = () => {
+		document
+			.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+				"input, textarea"
+			)
+			.forEach(patchInput);
+	};
+
+	patchAll();
+
+	new MutationObserver(patchAll).observe(document.documentElement, {
+		childList: true,
+		subtree: true,
+	});
+}
+
 export function executeOnshapeShortcutCommand(
 	tool: ExecuteOnshapeCommandOptions,
 ): boolean {
