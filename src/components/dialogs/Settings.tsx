@@ -1,4 +1,5 @@
-import { Code, Coffee, MessageCircle, Pencil, Settings } from "lucide-react";
+import { Code, Coffee, MessageCircle, Pencil } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -6,7 +7,6 @@ import {
 	DialogDescription,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger,
 } from "@/components/ui/dialog";
 import { EDIT_SHORTCUT_ITEMS_URL } from "@/constants/onshape";
 import {
@@ -15,6 +15,11 @@ import {
 	GITHUB_URL,
 } from "@/constants/social";
 import { useSettingsDialog } from "@/contexts/SettingsDialogContext";
+import {
+	type FloatingNumpadMode,
+	getFloatingNumpadMode,
+	setFloatingNumpadMode,
+} from "@/core/settings";
 
 const links = [
 	{
@@ -43,8 +48,39 @@ const links = [
 	},
 ];
 
+const floatingNumpadModes: {
+	value: FloatingNumpadMode;
+	label: string;
+	description: string;
+}[] = [
+	{
+		value: "auto",
+		label: "Auto",
+		description: "Show only when Onshape Plus detects tablet mode.",
+	},
+	{
+		value: "always",
+		label: "Always",
+		description: "Show whenever a supported input is focused.",
+	},
+	{
+		value: "off",
+		label: "Off",
+		description: "Never show the floating numpad.",
+	},
+];
+
 export function SettingsDialog() {
 	const { isSettingsOpen, setSettingsOpen } = useSettingsDialog();
+	const [numpadMode, setNumpadModeState] = useState<FloatingNumpadMode>(() =>
+		getFloatingNumpadMode(),
+	);
+
+	function updateNumpadMode(mode: FloatingNumpadMode) {
+		setNumpadModeState(mode);
+		setFloatingNumpadMode(mode);
+	}
+
 	return (
 		<Dialog open={isSettingsOpen} onOpenChange={setSettingsOpen}>
 			<DialogContent
@@ -66,11 +102,51 @@ export function SettingsDialog() {
 								Onshape Plus
 							</DialogTitle>
 							<DialogDescription className="text-sm text-slate-300">
-								Links, support, and quick menu configuration.
+								Settings, links, support, and quick menu configuration.
 							</DialogDescription>
 						</DialogHeader>
 
-						<div className="mt-5 grid gap-2">
+						<div className="mt-5 rounded-xl border border-white/10 bg-white/[0.035] p-3">
+							<div className="text-sm font-medium text-slate-100">
+								Floating Numpad
+							</div>
+
+							<div className="mt-1 text-xs leading-snug text-slate-300">
+								Choose when the floating numeric keypad should appear.
+							</div>
+
+							<div className="mt-3 grid grid-cols-3 gap-1.5">
+								{floatingNumpadModes.map((mode) => {
+									const isSelected = numpadMode === mode.value;
+
+									return (
+										<Button
+											key={mode.value}
+											type="button"
+											variant="ghost"
+											className={[
+												"h-9 cursor-pointer rounded-lg border text-xs font-medium",
+												isSelected
+													? "border-blue-400/30 bg-blue-500/20 text-blue-100 hover:bg-blue-500/25"
+													: "border-white/10 bg-white/[0.045] text-slate-300 hover:bg-white/10 hover:text-white",
+											].join(" ")}
+											onClick={() => updateNumpadMode(mode.value)}
+										>
+											{mode.label}
+										</Button>
+									);
+								})}
+							</div>
+
+							<div className="mt-3 text-xs leading-snug text-slate-400">
+								{
+									floatingNumpadModes.find((mode) => mode.value === numpadMode)
+										?.description
+								}
+							</div>
+						</div>
+
+						<div className="mt-3 grid gap-2">
 							{links.map((item) => {
 								const Icon = item.icon;
 

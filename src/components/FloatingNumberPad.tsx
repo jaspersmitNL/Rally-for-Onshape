@@ -1,9 +1,10 @@
-import { X } from "lucide-react";
+import { Settings, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { shouldUseFloatingNumpad } from "@/lib/utils";
+import { useSettingsDialog } from "@/contexts/SettingsDialogContext";
+import { shouldUseFloatingNumpad } from "@/core/settings";
 import { fireInputEvents, pressKey, setNativeValue } from "../core/utils";
 
 const ACTION_DELAY = 40;
@@ -91,6 +92,7 @@ export function FloatingNumpad() {
 	const numpadRef = useRef<HTMLDivElement | null>(null);
 	const activeInputRef = useRef<HTMLElement | null>(null);
 	const hideTimerRef = useRef<number | null>(null);
+	const { openSettings } = useSettingsDialog();
 
 	const [isVisible, setIsVisible] = useState(false);
 	const [position, setPosition] = useState<Position>({ left: 0, top: 0 });
@@ -304,26 +306,36 @@ export function FloatingNumpad() {
 							NUM
 						</span>
 					</div>
+					<div className="flex gap-3">
+						<Button
+							className="h-7 w-7"
+							variant={"ghost"}
+							size={"icon"}
+							onClick={openSettings}
+						>
+							<Settings />
+						</Button>
 
-					<Button
-						className="h-7 w-7 cursor-pointer rounded-lg text-slate-400 hover:bg-white/10 hover:text-white"
-						variant="ghost"
-						size="icon"
-						type="button"
-						tabIndex={-1}
-						onPointerDown={(e) => {
-							e.preventDefault();
-							e.stopPropagation();
+						<Button
+							className="h-7 w-7 cursor-pointer rounded-lg text-slate-400 hover:bg-white/10 hover:text-white"
+							variant="ghost"
+							size="icon"
+							type="button"
+							tabIndex={-1}
+							onPointerDown={(e) => {
+								e.preventDefault();
+								e.stopPropagation();
 
-							cancelPendingHide();
+								cancelPendingHide();
 
-							window.setTimeout(() => {
-								hideNumpad();
-							}, ACTION_DELAY);
-						}}
-					>
-						<X className="h-4 w-4" />
-					</Button>
+								window.setTimeout(() => {
+									hideNumpad();
+								}, ACTION_DELAY);
+							}}
+						>
+							<X className="h-4 w-4" />
+						</Button>
+					</div>
 				</div>
 
 				<Separator className="mb-2 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
