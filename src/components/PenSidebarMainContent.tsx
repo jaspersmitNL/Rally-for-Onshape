@@ -7,7 +7,10 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { topUtilityActions } from "@/services/penSidebarCodeUtils";
+import {
+	topUtilityActions,
+	topUtilityActionsExtended,
+} from "@/services/penSidebarCodeUtils";
 import type { OnshapeShortcutCommand, OnshapeToolbarMode } from "@/types";
 import { executeOnshapeShortcutCommand, pressKey } from "../core/utils";
 import { OnshapeIcon } from "./OnShapeIcon";
@@ -52,9 +55,45 @@ export function PenSidebarMainContent({
 							<TooltipTrigger asChild>
 								<Button
 									className={`h-10 w-10 cursor-pointer ${action.className || ""}`}
-									variant="outline"
+									variant="secondary"
 									size="icon"
 									disabled={buttonDisabled}
+									onClick={(e) => {
+										e.preventDefault();
+										e.stopPropagation();
+										action.onClick();
+									}}
+								>
+									<Icon className="h-5 w-5" />
+								</Button>
+							</TooltipTrigger>
+
+							<TooltipContent side="right">
+								<Card className="w-[260px]">
+									<CardHeader>
+										<CardTitle>{action.label}</CardTitle>
+										<CardDescription>{action.description}</CardDescription>
+									</CardHeader>
+								</Card>
+							</TooltipContent>
+						</Tooltip>
+					);
+				})}
+			</div>
+
+			<SidebarDivider />
+
+			<div className="grid grid-cols-2 justify-items-center gap-1 px-2">
+				{topUtilityActionsExtended.map((action) => {
+					const Icon = action.icon;
+
+					return (
+						<Tooltip key={action.id}>
+							<TooltipTrigger asChild>
+								<Button
+									className={`h-10 w-10 cursor-pointer ${action.className || ""}`}
+									variant="secondary"
+									size="icon"
 									onClick={(e) => {
 										e.preventDefault();
 										e.stopPropagation();
@@ -105,16 +144,14 @@ export function PenSidebarMainContent({
 									<MotionButton
 										className="relative h-10 w-10 shrink-0 cursor-pointer"
 										variant={
-											tool.command === currentTool ? "secondary" : "outline"
+											tool.command === currentTool ? "outline" : "secondary"
 										}
 										size="icon"
-										initial={{ opacity: 0, x: 12, scale: 0.92 }}
-										animate={{ opacity: 1, x: 0, scale: 1 }}
+										initial={{ opacity: 0, x: 3 }}
+										animate={{ opacity: 1, x: 0 }}
 										transition={{
 											delay: index * 0.025,
 											type: "spring",
-											stiffness: 520,
-											damping: 32,
 										}}
 										whileTap={{ scale: 0.94 }}
 										onClick={(e) => {

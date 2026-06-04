@@ -109,7 +109,10 @@ export function PenSidebar() {
 					if (featureDialogParent)
 						watchElementPresence(
 							"#feature-dialog",
-							(isPresent) => setFeatureDialogVisible(isPresent),
+							(isPresent) => {
+								setFeatureDialogVisible(isPresent);
+								setCurrentTool(null);
+							},
 							featureDialogParent,
 						);
 				});
@@ -154,6 +157,12 @@ export function PenSidebar() {
 			if (data.name === FORWARDED_ONSHAPE_EVENTS.DOCUMENT_UNLOADED) {
 				onLeaveDocumentHandler();
 			}
+
+			if (data.name === FORWARDED_ONSHAPE_EVENTS.ADD_NEW_FEATURE) {
+				const newFeatureCommand = data.args?.[0].command;
+				console.log(newFeatureCommand);
+				setCurrentTool(newFeatureCommand);
+			}
 		}
 
 		window.addEventListener("message", onMessage);
@@ -185,18 +194,32 @@ export function PenSidebar() {
 				className="fixed left-0 top-0 z-[9999] flex max-h-[70vh] flex-col rounded-md border bg-background/95 py-2 shadow-2xl backdrop-blur os-animate-in overflow-hidden"
 			>
 				<div className="grid grid-cols-2 justify-items-center gap-1 px-2">
-					<Button
-						variant="outline"
-						size="icon"
-						className="os-pen-drag-handle h-10 w-10 shrink-0 cursor-pointer active:cursor-grabbing"
-					>
-						<GripHorizontal />
-					</Button>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Button
+								variant="secondary"
+								size="icon"
+								className="os-pen-drag-handle h-10 w-10 shrink-0 cursor-pointer active:cursor-grabbing"
+							>
+								<GripHorizontal />
+							</Button>
+						</TooltipTrigger>
+						<TooltipContent side="right">
+							<Card className="w-[350px]">
+								<CardHeader>
+									<CardTitle>Move</CardTitle>
+									<CardDescription>
+										Click and drag to change the position of this sidebar.
+									</CardDescription>
+								</CardHeader>
+							</Card>
+						</TooltipContent>
+					</Tooltip>
 
 					<Tooltip>
 						<TooltipTrigger asChild>
 							<Button
-								variant="outline"
+								variant="secondary"
 								size="icon"
 								className="h-10 w-10 shrink-0 cursor-pointer"
 								onClick={() => setCollapsed((c) => !c)}
@@ -219,7 +242,7 @@ export function PenSidebar() {
 					<Tooltip>
 						<TooltipTrigger asChild>
 							<Button
-								variant="outline"
+								variant="secondary"
 								size="icon"
 								className="h-10 w-10 shrink-0 cursor-pointer"
 								onClick={() =>
@@ -249,7 +272,7 @@ export function PenSidebar() {
 					<Tooltip>
 						<TooltipTrigger asChild>
 							<Button
-								variant="outline"
+								variant="secondary"
 								size="icon"
 								className="h-10 w-10 shrink-0 cursor-pointer"
 								onClick={toggleFullscreen}

@@ -46,23 +46,28 @@ export const topUtilityActions: UtilityAction[] = [
 			),
 	},
 	{
-		id: "escape",
-		label: "Cancel",
-		description: "Cancel the current command.",
-		icon: X,
-		onClick: () => {
-			clickElement("#feature-dialog .ns-dialog-button-cancel");
-		},
-	},
-	{
 		id: "confirm",
 		label: "Confirm",
 		description: "Confirm the current command.",
+		className: "bg-emerald-800",
 		icon: Check,
 		onClick: () => {
 			clickElement("#feature-dialog .ns-dialog-button-ok");
 		},
 	},
+	{
+		id: "escape",
+		label: "Cancel",
+		description: "Cancel the current command.",
+		className: "bg-red-800",
+		icon: X,
+		onClick: () => {
+			clickElement("#feature-dialog .ns-dialog-button-cancel");
+		},
+	},
+] as const;
+
+export const topUtilityActionsExtended: UtilityAction[] = [
 	{
 		id: "space",
 		label: "Clear Selection",
