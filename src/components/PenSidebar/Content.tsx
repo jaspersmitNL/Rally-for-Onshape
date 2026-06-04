@@ -1,20 +1,25 @@
 import { capitalize } from "lodash-es";
 import { LoaderCircle, XCircle } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { OnshapeIcon } from "@/components/OnShapeIcon";
 import { Button } from "@/components/ui/button";
+import {
+	Card,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { executeOnshapeShortcutCommand, pressKey } from "@/core/utils";
 import {
 	topUtilityActions,
 	topUtilityActionsExtended,
 } from "@/services/penSidebarCodeUtils";
 import type { OnshapeShortcutCommand, OnshapeToolbarMode } from "@/types";
-import { executeOnshapeShortcutCommand, pressKey } from "../core/utils";
-import { OnshapeIcon } from "./OnShapeIcon";
-import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
 const MotionButton = motion.create(Button);
 

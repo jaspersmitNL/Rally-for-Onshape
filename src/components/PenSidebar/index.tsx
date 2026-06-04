@@ -3,11 +3,16 @@ import {
 	ChevronUp,
 	Fullscreen,
 	GripHorizontal,
-	Pencil,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import { Button } from "@/components/ui/button";
+import {
+	Card,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 import {
 	Tooltip,
 	TooltipContent,
@@ -23,9 +28,9 @@ import type {
 	OnshapeShortcutCommandsResponse,
 	OnshapeToolbarMode,
 } from "@/types";
-import { pressKey } from "../core/utils";
-import { PenSidebarMainContent } from "./PenSidebarMainContent";
-import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { pressKey } from "../../core/utils";
+import { SettingsDialog } from "../dialogs/Settings";
+import { PenSidebarMainContent } from "./Content";
 
 const STORAGE_KEY = "onshapePenSidebarScreenPosition";
 
@@ -272,36 +277,9 @@ export function PenSidebar() {
 							</Card>
 						</TooltipContent>
 					</Tooltip>
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<Button
-								variant="secondary"
-								size="icon"
-								className="h-10 w-10 shrink-0 cursor-pointer"
-								onClick={() =>
-									window.open(
-										"https://cad.onshape.com/user/settings?minicontext=0",
-										"_blank",
-									)
-								}
-							>
-								<Pencil />
-							</Button>
-						</TooltipTrigger>
 
-						<TooltipContent side="right">
-							<Card className="w-[350px]">
-								<CardHeader>
-									<CardTitle>Edit Shortcuts</CardTitle>
-									<CardDescription>
-										The dynamic items are based on your onshape mini toolbar
-										items. Click the button to edit and then refresh the page to
-										see the changes.
-									</CardDescription>
-								</CardHeader>
-							</Card>
-						</TooltipContent>
-					</Tooltip>
+					<SettingsDialog />
+
 					<Tooltip>
 						<TooltipTrigger asChild>
 							<Button
