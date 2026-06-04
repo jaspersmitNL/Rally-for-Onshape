@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { shouldUseFloatingNumpad } from "@/lib/utils";
 import { fireInputEvents, pressKey, setNativeValue } from "../core/utils";
 
 const ACTION_DELAY = 40;
@@ -218,6 +219,7 @@ export function FloatingNumpad() {
 			if (!window.location.pathname.startsWith("/documents/")) {
 				return;
 			}
+			if (!shouldUseFloatingNumpad()) return;
 			const target = e.target;
 			const numpad = numpadRef.current;
 

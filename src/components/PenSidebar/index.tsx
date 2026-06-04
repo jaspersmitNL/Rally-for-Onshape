@@ -3,6 +3,7 @@ import {
 	ChevronUp,
 	Fullscreen,
 	GripHorizontal,
+	Settings,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
@@ -22,6 +23,7 @@ import {
 	ACCEPTED_ONSHAPE_TO_EXTENSION_EVENT_TYPE,
 	FORWARDED_ONSHAPE_EVENTS,
 } from "@/constants/onshapeEvents";
+import { useSettingsDialog } from "@/contexts/SettingsDialogContext";
 import { getUserShortcutCommands } from "@/core/userShortcuts";
 import { toggleFullscreen, watchElementPresence } from "@/core/utils";
 import type {
@@ -41,6 +43,7 @@ const DEFAULT_POSITION = {
 
 export function PenSidebar() {
 	const nodeRef = useRef<HTMLDivElement>(null);
+	const { openSettings } = useSettingsDialog();
 	const [allCommands, setAllCommands] = useState<
 		OnshapeShortcutCommandsResponse[]
 	>([]);
@@ -254,31 +257,14 @@ export function PenSidebar() {
 						</TooltipContent>
 					</Tooltip>
 
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<Button
-								variant="secondary"
-								size="icon"
-								className="h-10 w-10 shrink-0 cursor-pointer"
-								onClick={() => setCollapsed((c) => !c)}
-							>
-								{collapsed ? <ChevronDown /> : <ChevronUp />}
-							</Button>
-						</TooltipTrigger>
-
-						<TooltipContent side="right">
-							<Card className="w-[350px]">
-								<CardHeader>
-									<CardTitle>Collapse</CardTitle>
-									<CardDescription>
-										Hide / Show the sidebar content.
-									</CardDescription>
-								</CardHeader>
-							</Card>
-						</TooltipContent>
-					</Tooltip>
-
-					<SettingsDialog />
+					<Button
+						variant="secondary"
+						size="icon"
+						className="h-10 w-10 cursor-pointer"
+						onClick={openSettings}
+					>
+						<Settings className="h-5 w-5" />
+					</Button>
 
 					<Tooltip>
 						<TooltipTrigger asChild>
@@ -299,6 +285,29 @@ export function PenSidebar() {
 									<CardDescription>
 										Toggles the fullscreen onshape experience, give it a try to
 										experience onshape like a native app!
+									</CardDescription>
+								</CardHeader>
+							</Card>
+						</TooltipContent>
+					</Tooltip>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Button
+								variant="secondary"
+								size="icon"
+								className="h-10 w-10 shrink-0 cursor-pointer"
+								onClick={() => setCollapsed((c) => !c)}
+							>
+								{collapsed ? <ChevronDown /> : <ChevronUp />}
+							</Button>
+						</TooltipTrigger>
+
+						<TooltipContent side="right">
+							<Card className="w-[350px]">
+								<CardHeader>
+									<CardTitle>Collapse</CardTitle>
+									<CardDescription>
+										Hide / Show the sidebar content.
 									</CardDescription>
 								</CardHeader>
 							</Card>

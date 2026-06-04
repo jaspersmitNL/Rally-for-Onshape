@@ -14,6 +14,7 @@ import {
 	DISCORD_LINK,
 	GITHUB_URL,
 } from "@/constants/social";
+import { useSettingsDialog } from "@/contexts/SettingsDialogContext";
 
 const links = [
 	{
@@ -43,18 +44,9 @@ const links = [
 ];
 
 export function SettingsDialog() {
+	const { isSettingsOpen, setSettingsOpen } = useSettingsDialog();
 	return (
-		<Dialog>
-			<DialogTrigger asChild>
-				<Button
-					variant="secondary"
-					size="icon"
-					className="h-10 w-10 cursor-pointer"
-				>
-					<Settings className="h-5 w-5" />
-				</Button>
-			</DialogTrigger>
-
+		<Dialog open={isSettingsOpen} onOpenChange={setSettingsOpen}>
 			<DialogContent
 				className="
 					max-w-[420px] overflow-hidden rounded-2xl
