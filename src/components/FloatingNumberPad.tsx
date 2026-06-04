@@ -270,7 +270,7 @@ export function FloatingNumpad() {
 			id="os-floating-numpad"
 			tabIndex={-1}
 			className={[
-				"fixed z-[999999] select-none overflow-hidden rounded-2xl",
+				"fixed z-[999999] w-[230px] select-none overflow-hidden rounded-2xl",
 				"border border-white/10",
 				"bg-gradient-to-b from-slate-900/95 via-slate-950/92 to-black/90",
 				"p-2 backdrop-blur-xl",
@@ -293,7 +293,7 @@ export function FloatingNumpad() {
 				cancelPendingHide();
 			}}
 		>
-			<div className="relative z-9999999">
+			<div className="relative z-10">
 				<div className="flex items-center justify-between px-1 pb-2">
 					<div className="flex items-center gap-2">
 						<div className="h-2 w-2 rounded-full bg-blue-400 shadow-[0_0_12px_rgba(96,165,250,0.8)]" />
@@ -324,20 +324,36 @@ export function FloatingNumpad() {
 					</Button>
 				</div>
 
-				<Separator className="mb-0 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+				<Separator className="mb-2 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-				<div className="grid grid-cols-4 gap-1">
-					{KEYS.map(([label, key, className]) => {
+				<div className="grid grid-cols-4 gap-1.5">
+					{KEYS.map(([label, key]) => {
 						const isEnter = key === "Enter";
+						const isBackspace = key === "Backspace";
+						const isOperator = ["+", "-", "*", "/"].includes(key);
 
 						return (
 							<Button
 								key={`${label}-${key}`}
 								className={[
-									"cursor-pointer",
-									isEnter ? "col-span-4 bg-blue-800" : "",
+									"!h-12 w-full cursor-pointer rounded-xl border",
+									"text-base font-semibold",
+									"shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]",
+									"transition-all duration-150 active:scale-95",
+
+									isEnter
+										? "col-span-4 border-blue-400/30 bg-blue-500/20 text-blue-100 hover:bg-blue-500/30 hover:text-white"
+										: "",
+
+									isOperator || isBackspace
+										? "border-white/10 bg-white/[0.075] text-slate-200 hover:bg-white/12 hover:text-white"
+										: "",
+
+									!isEnter && !isOperator && !isBackspace
+										? "border-white/10 bg-white/[0.045] text-slate-100 hover:bg-white/10 hover:text-white"
+										: "",
 								].join(" ")}
-								variant="secondary"
+								variant="ghost"
 								tabIndex={-1}
 								type="button"
 								onPointerDown={(e) => {
