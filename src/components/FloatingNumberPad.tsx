@@ -306,9 +306,9 @@ export function FloatingNumpad() {
 							NUM
 						</span>
 					</div>
-					<div className="flex gap-3">
+					<div className="flex gap-1">
 						<Button
-							className="h-7 w-7"
+							className="h-7 w-7 cursor-pointer"
 							variant={"ghost"}
 							size={"icon"}
 							onClick={openSettings}
