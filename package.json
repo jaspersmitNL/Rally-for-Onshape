@@ -3,6 +3,7 @@
 		"format": "prettier --write .",
 		"dev": "vite",
 		"safari:convert": "xcrun safari-web-extension-converter dist --project-location ./apps/safari --app-name \"Onshape Plus\" --bundle-identifier com.rileydavidson.onshapeplus",
+		"safari:sync": "npm run build && ./scripts/sync-safari-extension.mjs",
 		"safari:open": "open ./apps/safari/Onshape\\ Plus/Onshape\\ Plus.xcodeproj",
 		"build": "vite build",
 		"build:watch": "vite build --watch"
@@ -25,6 +26,7 @@
 		"lodash-es": "^4.18.1",
 		"lucide-react": "^1.17.0",
 		"motion": "^12.40.0",
+		"motion-dom": "^12.40.0",
 		"radix-ui": "^1.4.3",
 		"react": "^19.2.6",
 		"react-dom": "^19.2.6",
