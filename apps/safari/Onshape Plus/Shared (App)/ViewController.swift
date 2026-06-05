@@ -25,15 +25,32 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
     override func viewDidLoad() {
         super.viewDidLoad()
 
+    #if os(iOS)
+        let backgroundColor = UIColor(
+            red: 9.0 / 255.0,
+            green: 11.0 / 255.0,
+            blue: 17.0 / 255.0,
+            alpha: 1.0
+        )
+
+        view.backgroundColor = backgroundColor
+        webView.backgroundColor = backgroundColor
+        webView.scrollView.backgroundColor = backgroundColor
+        webView.isOpaque = false
+    #endif
+
         self.webView.navigationDelegate = self
 
-#if os(iOS)
+    #if os(iOS)
         self.webView.scrollView.isScrollEnabled = false
-#endif
+    #endif
 
         self.webView.configuration.userContentController.add(self, name: "controller")
 
-        self.webView.loadFileURL(Bundle.main.url(forResource: "Main", withExtension: "html")!, allowingReadAccessTo: Bundle.main.resourceURL!)
+        self.webView.loadFileURL(
+            Bundle.main.url(forResource: "Main", withExtension: "html")!,
+            allowingReadAccessTo: Bundle.main.resourceURL!
+        )
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
