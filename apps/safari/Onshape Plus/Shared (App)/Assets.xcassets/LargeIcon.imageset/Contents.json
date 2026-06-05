@@ -1,21 +1,23 @@
 {
   "images" : [
     {
+      "filename" : "OnshapeAppLogo__IOS.png",
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "onshape-plus-logo-128.png"
+      "scale" : "1x"
     },
     {
+      "filename" : "OnshapeAppLogo__IOS 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "OnshapeAppLogo__IOS 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
   ],
   "info" : {
-    "version" : 1,
-    "author" : "xcode"
+    "author" : "xcode",
+    "version" : 1
   }
 }

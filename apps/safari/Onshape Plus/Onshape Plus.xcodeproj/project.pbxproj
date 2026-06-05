@@ -11,28 +11,14 @@
 		98EE81722FD320020070060C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EE81712FD320020070060C /* SceneDelegate.swift */; };
 		98EE81752FD320020070060C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98EE81732FD320020070060C /* LaunchScreen.storyboard */; };
 		98EE81782FD320020070060C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98EE81762FD320020070060C /* Main.storyboard */; };
-		98EE81812FD320020070060C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EE81802FD320020070060C /* AppDelegate.swift */; };
-		98EE81842FD320020070060C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98EE81822FD320020070060C /* Main.storyboard */; };
 		98EE818B2FD320020070060C /* Onshape Plus Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 98EE818A2FD320020070060C /* Onshape Plus Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		98EE81952FD320020070060C /* Onshape Plus Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 98EE81942FD320020070060C /* Onshape Plus Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		98EE819A2FD320020070060C /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 98EE815F2FD31FFF0070060C /* Main.html */; };
-		98EE819B2FD320020070060C /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 98EE815F2FD31FFF0070060C /* Main.html */; };
 		98EE819C2FD320020070060C /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 98EE81612FD31FFF0070060C /* Icon.png */; };
-		98EE819D2FD320020070060C /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 98EE81612FD31FFF0070060C /* Icon.png */; };
 		98EE819E2FD320020070060C /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = 98EE81622FD31FFF0070060C /* Style.css */; };
-		98EE819F2FD320020070060C /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = 98EE81622FD31FFF0070060C /* Style.css */; };
 		98EE81A02FD320020070060C /* Script.js in Resources */ = {isa = PBXBuildFile; fileRef = 98EE81632FD31FFF0070060C /* Script.js */; };
-		98EE81A12FD320020070060C /* Script.js in Resources */ = {isa = PBXBuildFile; fileRef = 98EE81632FD31FFF0070060C /* Script.js */; };
 		98EE81A22FD320020070060C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EE81642FD31FFF0070060C /* ViewController.swift */; };
-		98EE81A32FD320020070060C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EE81642FD31FFF0070060C /* ViewController.swift */; };
 		98EE81A42FD320020070060C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98EE81652FD320010070060C /* Assets.xcassets */; };
-		98EE81A52FD320020070060C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98EE81652FD320010070060C /* Assets.xcassets */; };
 		98EE81A62FD320020070060C /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EE81672FD320010070060C /* SafariWebExtensionHandler.swift */; };
-		98EE81A72FD320020070060C /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EE81672FD320010070060C /* SafariWebExtensionHandler.swift */; };
-		98EE81BD2FD320020070060C /* onshape-page-bridge.js in Resources */ = {isa = PBXBuildFile; fileRef = 98EE81B92FD320020070060C /* onshape-page-bridge.js */; };
-		98EE81BE2FD320020070060C /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 98EE81BA2FD320020070060C /* icons */; };
-		98EE81BF2FD320020070060C /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 98EE81BB2FD320020070060C /* manifest.json */; };
-		98EE81C02FD320020070060C /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 98EE81BC2FD320020070060C /* assets */; };
 		98EE81C12FD320020070060C /* onshape-page-bridge.js in Resources */ = {isa = PBXBuildFile; fileRef = 98EE81B92FD320020070060C /* onshape-page-bridge.js */; };
 		98EE81C22FD320020070060C /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 98EE81BA2FD320020070060C /* icons */; };
 		98EE81C32FD320020070060C /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 98EE81BB2FD320020070060C /* manifest.json */; };
@@ -47,13 +33,6 @@
 			remoteGlobalIDString = 98EE81892FD320020070060C;
 			remoteInfo = "Onshape Plus Extension (iOS)";
 		};
-		98EE81962FD320020070060C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 98EE81592FD31FFF0070060C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 98EE81932FD320020070060C;
-			remoteInfo = "Onshape Plus Extension (macOS)";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -64,17 +43,6 @@
 			dstSubfolderSpec = 13;
 			files = (
 				98EE818B2FD320020070060C /* Onshape Plus Extension.appex in Embed Foundation Extensions */,
-			);
-			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		98EE81B42FD320020070060C /* Embed Foundation Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				98EE81952FD320020070060C /* Onshape Plus Extension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -95,13 +63,11 @@
 		98EE81742FD320020070060C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		98EE81772FD320020070060C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		98EE81792FD320020070060C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		98EE817E2FD320020070060C /* Onshape Plus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Onshape Plus.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		98EE81802FD320020070060C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		98EE81832FD320020070060C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		98EE81852FD320020070060C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		98EE818A2FD320020070060C /* Onshape Plus Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Onshape Plus Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		98EE818F2FD320020070060C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		98EE81942FD320020070060C /* Onshape Plus Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Onshape Plus Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		98EE81992FD320020070060C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		98EE81B92FD320020070060C /* onshape-page-bridge.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "onshape-page-bridge.js"; path = "../../../../dist/onshape-page-bridge.js"; sourceTree = "<group>"; };
 		98EE81BA2FD320020070060C /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = ../../../../dist/icons; sourceTree = "<group>"; };
@@ -117,21 +83,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		98EE817B2FD320020070060C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		98EE81872FD320020070060C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		98EE81912FD320020070060C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -188,9 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				98EE816C2FD320020070060C /* Onshape Plus.app */,
-				98EE817E2FD320020070060C /* Onshape Plus.app */,
 				98EE818A2FD320020070060C /* Onshape Plus Extension.appex */,
-				98EE81942FD320020070060C /* Onshape Plus Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -269,27 +219,6 @@
 			productReference = 98EE816C2FD320020070060C /* Onshape Plus.app */;
 			productType = "com.apple.product-type.application";
 		};
-		98EE817D2FD320020070060C /* Onshape Plus (macOS) */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 98EE81B52FD320020070060C /* Build configuration list for PBXNativeTarget "Onshape Plus (macOS)" */;
-			buildPhases = (
-				98EE817A2FD320020070060C /* Sources */,
-				98EE817B2FD320020070060C /* Frameworks */,
-				98EE817C2FD320020070060C /* Resources */,
-				98EE81B42FD320020070060C /* Embed Foundation Extensions */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				98EE81972FD320020070060C /* PBXTargetDependency */,
-			);
-			name = "Onshape Plus (macOS)";
-			packageProductDependencies = (
-			);
-			productName = "Onshape Plus (macOS)";
-			productReference = 98EE817E2FD320020070060C /* Onshape Plus.app */;
-			productType = "com.apple.product-type.application";
-		};
 		98EE81892FD320020070060C /* Onshape Plus Extension (iOS) */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 98EE81AA2FD320020070060C /* Build configuration list for PBXNativeTarget "Onshape Plus Extension (iOS)" */;
@@ -309,25 +238,6 @@
 			productReference = 98EE818A2FD320020070060C /* Onshape Plus Extension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		98EE81932FD320020070060C /* Onshape Plus Extension (macOS) */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 98EE81B12FD320020070060C /* Build configuration list for PBXNativeTarget "Onshape Plus Extension (macOS)" */;
-			buildPhases = (
-				98EE81902FD320020070060C /* Sources */,
-				98EE81912FD320020070060C /* Frameworks */,
-				98EE81922FD320020070060C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Onshape Plus Extension (macOS)";
-			packageProductDependencies = (
-			);
-			productName = "Onshape Plus Extension (macOS)";
-			productReference = 98EE81942FD320020070060C /* Onshape Plus Extension.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -341,13 +251,7 @@
 					98EE816B2FD320020070060C = {
 						CreatedOnToolsVersion = 26.2;
 					};
-					98EE817D2FD320020070060C = {
-						CreatedOnToolsVersion = 26.2;
-					};
 					98EE81892FD320020070060C = {
-						CreatedOnToolsVersion = 26.2;
-					};
-					98EE81932FD320020070060C = {
 						CreatedOnToolsVersion = 26.2;
 					};
 				};
@@ -367,9 +271,7 @@
 			projectRoot = "";
 			targets = (
 				98EE816B2FD320020070060C /* Onshape Plus (iOS) */,
-				98EE817D2FD320020070060C /* Onshape Plus (macOS) */,
 				98EE81892FD320020070060C /* Onshape Plus Extension (iOS) */,
-				98EE81932FD320020070060C /* Onshape Plus Extension (macOS) */,
 			);
 		};
 /* End PBXProject section */
@@ -389,19 +291,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		98EE817C2FD320020070060C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				98EE819D2FD320020070060C /* Icon.png in Resources */,
-				98EE819F2FD320020070060C /* Style.css in Resources */,
-				98EE81842FD320020070060C /* Main.storyboard in Resources */,
-				98EE81A12FD320020070060C /* Script.js in Resources */,
-				98EE81A52FD320020070060C /* Assets.xcassets in Resources */,
-				98EE819B2FD320020070060C /* Main.html in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		98EE81882FD320020070060C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -410,17 +299,6 @@
 				98EE81C42FD320020070060C /* assets in Resources */,
 				98EE81C32FD320020070060C /* manifest.json in Resources */,
 				98EE81C22FD320020070060C /* icons in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		98EE81922FD320020070060C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				98EE81BD2FD320020070060C /* onshape-page-bridge.js in Resources */,
-				98EE81C02FD320020070060C /* assets in Resources */,
-				98EE81BF2FD320020070060C /* manifest.json in Resources */,
-				98EE81BE2FD320020070060C /* icons in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -437,28 +315,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		98EE817A2FD320020070060C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				98EE81A32FD320020070060C /* ViewController.swift in Sources */,
-				98EE81812FD320020070060C /* AppDelegate.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		98EE81862FD320020070060C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				98EE81A62FD320020070060C /* SafariWebExtensionHandler.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		98EE81902FD320020070060C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				98EE81A72FD320020070060C /* SafariWebExtensionHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -469,11 +330,6 @@
 			isa = PBXTargetDependency;
 			target = 98EE81892FD320020070060C /* Onshape Plus Extension (iOS) */;
 			targetProxy = 98EE818C2FD320020070060C /* PBXContainerItemProxy */;
-		};
-		98EE81972FD320020070060C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 98EE81932FD320020070060C /* Onshape Plus Extension (macOS) */;
-			targetProxy = 98EE81962FD320020070060C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -781,160 +637,6 @@
 			};
 			name = Release;
 		};
-		98EE81B22FD320020070060C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = XD8NKZCPXQ;
-				ENABLE_APP_SANDBOX = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "macOS (Extension)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Onshape Plus Extension";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 1.0;
-				OTHER_LDFLAGS = (
-					"-framework",
-					SafariServices,
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.rileydavidson.onshapeplus.Extension;
-				PRODUCT_NAME = "Onshape Plus Extension";
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		98EE81B32FD320020070060C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = XD8NKZCPXQ;
-				ENABLE_APP_SANDBOX = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "macOS (Extension)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Onshape Plus Extension";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 1.0;
-				OTHER_LDFLAGS = (
-					"-framework",
-					SafariServices,
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.rileydavidson.onshapeplus.Extension;
-				PRODUCT_NAME = "Onshape Plus Extension";
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
-		98EE81B62FD320020070060C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				ENABLE_APP_SANDBOX = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "macOS (App)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Onshape Plus";
-				INFOPLIST_KEY_NSMainStoryboardFile = Main;
-				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 1.0;
-				OTHER_LDFLAGS = (
-					"-framework",
-					SafariServices,
-					"-framework",
-					WebKit,
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.rileydavidson.onshapeplus;
-				PRODUCT_NAME = "Onshape Plus";
-				REGISTER_APP_GROUPS = YES;
-				SDKROOT = macosx;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		98EE81B72FD320020070060C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				ENABLE_APP_SANDBOX = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "macOS (App)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Onshape Plus";
-				INFOPLIST_KEY_NSMainStoryboardFile = Main;
-				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 1.0;
-				OTHER_LDFLAGS = (
-					"-framework",
-					SafariServices,
-					"-framework",
-					WebKit,
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.rileydavidson.onshapeplus;
-				PRODUCT_NAME = "Onshape Plus";
-				REGISTER_APP_GROUPS = YES;
-				SDKROOT = macosx;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -961,24 +663,6 @@
 			buildConfigurations = (
 				98EE81AF2FD320020070060C /* Debug */,
 				98EE81B02FD320020070060C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		98EE81B12FD320020070060C /* Build configuration list for PBXNativeTarget "Onshape Plus Extension (macOS)" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				98EE81B22FD320020070060C /* Debug */,
-				98EE81B32FD320020070060C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		98EE81B52FD320020070060C /* Build configuration list for PBXNativeTarget "Onshape Plus (macOS)" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				98EE81B62FD320020070060C /* Debug */,
-				98EE81B72FD320020070060C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
