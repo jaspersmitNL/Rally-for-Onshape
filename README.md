@@ -1,61 +1,137 @@
-# Onshape Tablet UI
+# Onshape Plus
 
-[Chrome Extension](https://chromewebstore.google.com/detail/onshape-tablet-ui/hanbmgaepnkkmmgafdpfocnjhfccckoh)
+Make Onshape faster, cleaner, and easier to use.
 
-A browser extension that adds tablet and pen-friendly UI enhancements for Onshape.
+Onshape Plus is an open-source browser extension that enhances the Onshape experience with touch-friendly controls, pen-focused workflows, floating tools, and productivity improvements for tablet and desktop users.
 
-It injects a custom React-based sidebar and floating numeric keypad into the Onshape workspace, making pen users more efficient with quick access to toolbar actions and numeric entry.
+Available for Chrome, Edge, and Safari on iPad.
+
+## Install
+
+### Chrome
+
+Chrome Web Store:
+
+https://chromewebstore.google.com/detail/onshape-plus/hanbmgaepnkkmmgafdpfocnjhfccckoh
+
+### Safari (iPad)
+
+Available on the App Store.
+
+### Edge
+
+Install from the Chrome Web Store or load the extension manually.
 
 ## Features
 
-- Floating pen sidebar with quick-access Onshape toolbar commands
-- Dynamic toolbar buttons driven by Onshape shortcut configuration
-- Draggable sidebar with persistent position using local storage
-- Floating numeric keypad for precise numeric input inside Onshape
-- Dark theme integration and icon sprite injection for a native feel
+### Touch & Pen Optimized
+
+* Tablet-friendly interface enhancements
+* Quick-access floating toolbar
+* Improved pen workflows
+* Faster access to common modeling actions
+
+### Productivity Tools
+
+* Floating numeric keypad for fast dimension entry
+* One-tap access to common commands
+* Dynamic command layouts
+* Persistent UI positioning
+
+### Native Look & Feel
+
+* Dark mode integration
+* Onshape-inspired styling
+* Lightweight overlay architecture
+* Seamless workspace integration
+
+### Open Source
+
+* Fully open source
+* No tracking
+* No analytics
+* No account required
+
+## Screenshots
+
+*Add screenshots here.*
+
+## Supported Platforms
+
+| Platform       | Supported |
+| -------------- | --------- |
+| Chrome         | ✅         |
+| Microsoft Edge | ✅         |
+| Safari (iPad)  | ✅         |
+| Safari (macOS) | Planned   |
+| Firefox        | Planned   |
 
 ## Technology
 
-- React + TypeScript
-- Vite
-- Tailwind CSS
-- Chrome Manifest V3 extension
-- Uses Onshape page bridge script injection and shadow DOM for safe UI overlay
+* React
+* TypeScript
+* Vite
+* Tailwind CSS
+* Safari Web Extensions
+* Chrome Manifest V3
 
-## Project structure
+## Development
 
-- `public/`
-  - `manifest.json` — browser extension manifest
-  - `background.js` — extension service worker
-  - `onshape-page-bridge.js` — page bridge script injected into Onshape
-- `src/`
-  - `main.tsx` — extension entry point and DOM injection logic
-  - `components/` — UI components including `PenSidebar` and `FloatingNumberPad`
-  - `core/`, `services/`, `hooks/` — shared helpers and extension logic
-  - `styles/` — extension and theme CSS
+Install dependencies:
 
-## Usage
+```bash
+npm install
+```
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-2. Run Build:
-   ```bash
-   npm run build
-   ```
-4. Load the extension into Chrome/Edge:
-   - Open `chrome://extensions`
-   - Enable `Developer mode`
-   - Click `Load unpacked`
-   - Select the project folder or the built `dist` folder if using a production build
+Run a build:
 
-## Notes
+```bash
+npm run build
+```
 
-- The extension targets Onshape pages at `https://cad.onshape.com/*`.
-- Shortcut and toolbar items are loaded from your Onshape account settings.
-- The sidebar is hidden until Onshape finishes loading its UI elements.
+Build Safari version:
+
+```bash
+npm run safari:build
+```
+
+Sync updated extension assets into the Safari project:
+
+```bash
+npm run safari:sync
+```
+
+## Project Structure
+
+```txt
+public/
+├─ manifest.json
+├─ onshape-page-bridge.js
+
+src/
+├─ components/
+├─ hooks/
+├─ services/
+├─ styles/
+├─ core/
+└─ main.tsx
+
+apps/
+└─ safari/
+```
+
+## Privacy
+
+Onshape Plus does not collect, store, transmit, or sell user data.
+
+## Disclaimer
+
+Onshape Plus is an independent third-party project and is not affiliated with, endorsed by, or sponsored by Onshape.
+
+## Contributing
+
+Issues, feature requests, and pull requests are welcome.
 
 ## License
 
-This project is available under the terms of the repository license.
+This project is licensed under the terms of the repository license.
