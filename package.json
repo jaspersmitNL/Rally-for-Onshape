@@ -3,7 +3,7 @@
 		"format": "prettier --write .",
 		"dev": "vite",
 		"safari:convert": "xcrun safari-web-extension-converter dist --project-location ./apps/safari --app-name \"Onshape Plus\" --bundle-identifier com.rileydavidson.onshapeplus",
-		"safari:sync": "npm run build && ./scripts/sync-safari-extension.mjs",
+		"safari:sync": "npm run build && node ./scripts/sync-safari-extension.mjs",
 		"safari:open": "open ./apps/safari/Onshape\\ Plus/Onshape\\ Plus.xcodeproj",
 		"build": "vite build",
 		"build:watch": "vite build --watch"
