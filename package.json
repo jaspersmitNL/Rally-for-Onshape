@@ -2,6 +2,7 @@
   "scripts": {
     "format": "prettier --write .",
     "dev": "vite",
+    "safari:convert": "xcrun safari-web-extension-converter dist --project-location ./apps/safari --app-name \"Onshape Plus\" --bundle-identifier com.rileydavidson.onshapeplus",
     "build": "vite build",
     "build:watch": "vite build --watch"
   },

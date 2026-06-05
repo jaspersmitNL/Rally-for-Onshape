@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
 	"name": "Onshape Plus",
-	"version": "1.1.2",
+	"version": "1.1.3",
 	"description": "Make Onshape faster, cleaner, and easier to use.",
 	"homepage_url": "https://github.com/RileyDavidson-Evans/onshape-plus",
 	"icons": {
@@ -30,18 +30,5 @@
 			"matches": ["https://cad.onshape.com/*"]
 		}
 	],
-	"commands": {
-		"reload-extension": {
-			"suggested_key": {
-				"default": "Ctrl+Shift+R",
-				"mac": "Command+Shift+R"
-			},
-			"description": "Reload extension"
-		}
-	},
-	"background": {
-		"service_worker": "background.js",
-		"type": "module"
-	},
 	"permissions": ["storage"]
 }
