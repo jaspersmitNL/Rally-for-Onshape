@@ -5,16 +5,16 @@
 	"description": "Make Onshape faster, cleaner, and easier to use.",
 	"homepage_url": "https://github.com/RileyDavidson-Evans/onshape-plus",
 	"icons": {
-		"16": "icons/onshape-plus-logo-128.png",
-		"32": "icons/onshape-plus-logo-128.png",
-		"48": "icons/onshape-plus-logo-128.png",
-		"128": "icons/onshape-plus-logo-128.png"
+		"16": "icons/onshape-plus-main-logo-128.png",
+		"32": "icons/onshape-plus-main-logo-128.png",
+		"48": "icons/onshape-plus-main-logo-128.png",
+		"128": "icons/onshape-plus-main-logo-128.png"
 	},
 	"action": {
 		"default_title": "Onshape Plus",
 		"default_icon": {
-			"16": "icons/onshape-plus-logo-128.png",
-			"32": "icons/onshape-plus-logo-128.png"
+			"16": "icons/onshape-plus-main-logo-128.png",
+			"32": "icons/onshape-plus-main-logo-128.png"
 		}
 	},
 	"content_scripts": [
