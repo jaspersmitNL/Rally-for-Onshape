@@ -1,7 +1,13 @@
 #!/bin/sh
 set -e
 
-cd "$CI_WORKSPACE"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../../../.." && pwd)"
+
+cd "$REPO_ROOT"
+
+echo "Repo root:"
+pwd
 
 TAG_NAME="${CI_TAG:-}"
 
