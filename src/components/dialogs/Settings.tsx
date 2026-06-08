@@ -99,10 +99,12 @@ export function SettingsDialog() {
 					<div className="relative z-10 p-5">
 						<DialogHeader>
 							<DialogTitle className="text-lg font-semibold">
-								Onshape Plus
+								Welcome to Onshape Plus
 							</DialogTitle>
+
 							<DialogDescription className="text-sm text-slate-300">
-								Settings, links, support, and quick menu configuration.
+								Customize your workflow, join the community, report bugs, or
+								support development.
 							</DialogDescription>
 						</DialogHeader>
 

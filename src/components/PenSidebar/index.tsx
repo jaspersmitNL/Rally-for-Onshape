@@ -23,6 +23,7 @@ import {
 	ACCEPTED_ONSHAPE_TO_EXTENSION_EVENT_TYPE,
 	FORWARDED_ONSHAPE_EVENTS,
 } from "@/constants/onshapeEvents";
+import { HAS_SEEN_SETTINGS_ONBOARDING_KEY } from "@/constants/storage";
 import { useSettingsDialog } from "@/contexts/SettingsDialogContext";
 import { getUserShortcutCommands } from "@/core/userShortcuts";
 import { toggleFullscreen, watchElementPresence } from "@/core/utils";
@@ -40,7 +41,7 @@ import { PenSidebarMainContent } from "./Content";
 
 export function PenSidebar() {
 	const nodeRef = useRef<HTMLDivElement>(null);
-	const { openSettings } = useSettingsDialog();
+	const { openSettings, setSettingsOpen } = useSettingsDialog();
 	const [allCommands, setAllCommands] = useState<
 		OnshapeShortcutCommandsResponse[]
 	>([]);
@@ -98,6 +99,19 @@ export function PenSidebar() {
 				getUserShortcutCommands().then((commands) => {
 					setVisible(true);
 					setAllCommands(commands);
+
+					const hasSeenSettingsOnboarding = localStorage.getItem(
+						HAS_SEEN_SETTINGS_ONBOARDING_KEY,
+					);
+
+					if (!hasSeenSettingsOnboarding) {
+						localStorage.setItem(HAS_SEEN_SETTINGS_ONBOARDING_KEY, "true");
+
+						window.setTimeout(() => {
+							setSettingsOpen(true);
+						}, 500);
+					}
+
 					document
 						.querySelector(".os-mini-toolbar-panel")
 						?.classList.remove("os-extension-hidden-item");
