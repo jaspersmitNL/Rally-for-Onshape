@@ -74,6 +74,15 @@ export function PenSidebar() {
 		setCurrentTool(null);
 	};
 
+	const setOnshapeSideBarWidth = () => {
+		const onshapeSidebarElement = document.querySelector("#left-content-pane");
+
+		document.body.style.setProperty(
+			"--os-plus-on-shape-left-content-pane-width",
+			`${Math.round(onshapeSidebarElement?.clientWidth || 0)}px`,
+		);
+	};
+
 	useEffect(() => {
 		async function onMessage(event: MessageEvent) {
 			if (event.source !== window) return;
@@ -176,6 +185,10 @@ export function PenSidebar() {
 				console.log(newFeatureCommand);
 				setCurrentTool(newFeatureCommand);
 			}
+
+			if (data.name === FORWARDED_ONSHAPE_EVENTS.RESIZE_ELEMENTS) {
+				setOnshapeSideBarWidth();
+			}
 		}
 
 		function onFullScreenChange() {
@@ -185,13 +198,7 @@ export function PenSidebar() {
 				"onshape-plus-fullscreen-mode",
 			);
 
-			const onshapeSidebarElement =
-				document.querySelector("#left-content-pane");
-
-			document.body.style.setProperty(
-				"--os-plus-on-shape-left-content-pane-width",
-				`${Math.round(onshapeSidebarElement?.clientWidth || 0)}px`,
-			);
+			setOnshapeSideBarWidth();
 		}
 
 		window.addEventListener("message", onMessage);
