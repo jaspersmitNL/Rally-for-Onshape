@@ -132,7 +132,7 @@ export function PenSidebarMainContent({
 				<AnimatePresence mode="wait" initial={false}>
 					<motion.div
 						key={toolbarType}
-						className="grid min-h-0 w-full flex-1 grid-cols-2 content-start justify-items-center gap-1 overflow-y-auto px-2"
+						className="grid min-h-0 w-full flex-1 grid-cols-2 content-start justify-items-center gap-1 overflow-y-auto px-2 pb-2"
 						initial={{ x: 28, opacity: 0, filter: "blur(4px)" }}
 						animate={{ x: 0, opacity: 1, filter: "blur(0px)" }}
 						exit={{ x: -28, opacity: 0, filter: "blur(4px)" }}

@@ -4,6 +4,7 @@ import {
 	Fullscreen,
 	GripHorizontal,
 	Settings,
+	Shrink,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
@@ -54,6 +55,8 @@ export function PenSidebar() {
 
 	const [undoEnabled, setUndoEnabled] = useState(false);
 	const [redoEnabled, setRedoEnabled] = useState(false);
+
+	const [isFullscreen, setIsFullscreen] = useState(false);
 
 	const [featureDialogVisible, setFeatureDialogVisible] = useState(false);
 
@@ -175,8 +178,28 @@ export function PenSidebar() {
 			}
 		}
 
+		function onFullScreenChange() {
+			const documentIsFullscreen = !!document.fullscreenElement;
+			setIsFullscreen(documentIsFullscreen);
+			document.body.classList[documentIsFullscreen ? "add" : "remove"](
+				"onshape-plus-fullscreen-mode",
+			);
+
+			const onshapeSidebarElement =
+				document.querySelector("#left-content-pane");
+
+			document.body.style.setProperty(
+				"--os-plus-on-shape-left-content-pane-width",
+				`${Math.round(onshapeSidebarElement?.clientWidth || 0)}px`,
+			);
+		}
+
 		window.addEventListener("message", onMessage);
-		return () => window.removeEventListener("message", onMessage);
+		document.addEventListener("fullscreenchange", onFullScreenChange);
+		return () => {
+			window.removeEventListener("message", onMessage);
+			document.removeEventListener("fullscreenchange", onFullScreenChange);
+		};
 	}, []);
 
 	useEffect(() => {
@@ -235,41 +258,21 @@ export function PenSidebar() {
 				ref={nodeRef}
 				id="os-pen-shortcut-sidebar"
 				className="
+		os-plus-glass
+    rounded-lg
+
 		fixed left-0 top-0 z-[9999]
-		flex max-h-[70vh] flex-col overflow-hidden
-		rounded-xl
-		border border-white/10
-
-		bg-gradient-to-b
-		from-slate-900/95
-		via-slate-950/92
-		to-black/90
-
-		py-2
-		backdrop-blur-xl
-
-		shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.06)]
-
-		before:pointer-events-none
-		before:absolute
-		before:inset-0
-		before:rounded-[inherit]
-		before:bg-gradient-to-b
-		before:from-white/5
-		before:via-white/[0.015]
-		before:to-transparent
-
-		after:pointer-events-none
-		after:absolute
-		after:inset-0
-		after:rounded-[inherit]
-		after:ring-1
-		after:ring-white/5
+		flex max-h-[70vh] flex-col
+		overflow-hidden
+    w-max
+      pt-2
 
 		os-animate-in
 	"
 			>
-				<div className="grid grid-cols-2 justify-items-center gap-1 px-2">
+				<div
+					className={`grid grid-cols-2 justify-items-center gap-1 px-2 ${collapsed ? "pb-2" : ""}`}
+				>
 					<Tooltip>
 						<TooltipTrigger asChild>
 							<Button
@@ -323,7 +326,7 @@ export function PenSidebar() {
 								className="h-10 w-10 shrink-0 cursor-pointer"
 								onClick={toggleFullscreen}
 							>
-								<Fullscreen />
+								{isFullscreen ? <Shrink /> : <Fullscreen />}
 							</Button>
 						</TooltipTrigger>
 

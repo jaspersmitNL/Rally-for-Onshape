@@ -1,10 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+@import "./os-glass.css";
 
 :root,
 [data-os-theme],
 [data-os-theme="light"],
 [data-os-theme="dark"] {
 	color-scheme: dark;
+
+	--os-plus-on-shape-left-content-pane-width: 205px;
 
 	--os-font-family: "Poppins", system-ui, sans-serif;
 
@@ -94,11 +97,11 @@ a,
 p,
 td,
 th {
-  font-family: var(--os-font-family) !important;
+	font-family: var(--os-font-family) !important;
 }
 
 .os-extension-hidden-item {
-  display: none !important;
+	display: none !important;
 }
 
 #canvas {
@@ -113,9 +116,61 @@ th {
 			rgba(99, 102, 241, 0.04),
 			transparent 55%
 		),
-		linear-gradient(
-			180deg,
-			#12151d 0%,
-			#090b11 100%
-		) !important;
+		linear-gradient(180deg, #12151d 0%, #090b11 100%) !important;
+}
+
+body.onshape-plus-fullscreen-mode nav.fixed-top.navbar {
+	display: none;
+}
+
+body.onshape-plus-fullscreen-mode div.os-element-toolbar {
+	position: fixed;
+	top: 20px;
+	left: var(--os-plus-on-shape-left-content-pane-width, 0px);
+	opacity: 0.5;
+	width: calc(
+		100vw -
+		var(--os-plus-on-shape-left-content-pane-width, 0px) -
+		180px
+	);
+	transition: opacity 0.5s ease-in-out;
+	z-index: 1000;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+body.onshape-plus-fullscreen-mode .custom-toolbar {
+	border-radius: 10.5px;
+	border: none;
+	overflow: hidden;
+}
+
+body.onshape-plus-fullscreen-mode .toolbar-overflow {
+	display: none;
+}
+
+body.onshape-plus-fullscreen-mode div.os-element-toolbar:hover {
+	opacity: 1;
+}
+
+body.onshape-plus-fullscreen-mode
+	.os-element-toolbar
+	.custom-toolbar
+	.os-row
+	> .toolbar-item:first-child
+	> .toolset-seperator {
+	display: none !important;
+}
+
+body.onshape-plus-fullscreen-mode div[command-id="UNDO_A_CHANGE"],
+body.onshape-plus-fullscreen-mode div[command-id="REDO_A_CHANGE"] {
+	display: none;
+}
+
+body.onshape-plus-fullscreen-mode osx-row.os-content-container {
+	top: 0;
+}
+
+body.onshape-plus-fullscreen-mode os-vue-panel-selector-component {
+	display: none;
 }

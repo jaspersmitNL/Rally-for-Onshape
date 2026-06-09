@@ -25,19 +25,19 @@ export type FeatureState = {
 export type Unsubscribe = () => void;
 
 export function executeOnshapeCommand(
-  command: string,
-  commandDetails?: unknown,
+	command: string,
+	commandDetails?: unknown,
 ): boolean {
-  window.postMessage(
-    {
-      type: "OS_EXECUTE_BROADCAST_EVENT",
-      name: command,
-      args: [commandDetails],
-    },
-    window.location.origin,
-  );
+	window.postMessage(
+		{
+			type: "OS_EXECUTE_BROADCAST_EVENT",
+			name: command,
+			args: [commandDetails],
+		},
+		window.location.origin,
+	);
 
-  return true;
+	return true;
 }
 
 export type ExecuteOnshapeCommandOptions = {
@@ -49,9 +49,7 @@ export type ExecuteOnshapeCommandOptions = {
 export function suppressVirtualKeyboard(): void {
 	if (navigator.maxTouchPoints === 0) return;
 
-	const patchInput = (
-		input: HTMLInputElement | HTMLTextAreaElement
-	): void => {
+	const patchInput = (input: HTMLInputElement | HTMLTextAreaElement): void => {
 		if (input.dataset.osKeyboardSuppressed) return;
 
 		input.dataset.osKeyboardSuppressed = "true";
@@ -75,16 +73,14 @@ export function suppressVirtualKeyboard(): void {
 
 		node
 			.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
-				"input, textarea"
+				"input, textarea",
 			)
 			.forEach(patchInput);
 	};
 
 	// Patch inputs that already exist.
 	document
-		.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
-			"input, textarea"
-		)
+		.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input, textarea")
 		.forEach(patchInput);
 
 	// Patch only newly-added inputs instead of rescanning the full DOM.
@@ -109,7 +105,7 @@ export function suppressVirtualKeyboard(): void {
 export function executeOnshapeShortcutCommand(
 	tool: ExecuteOnshapeCommandOptions,
 ): boolean {
-  window.postMessage(
+	window.postMessage(
 		{
 			type: "OS_EXECUTE_COMMAND",
 			namespace: tool.namespace,
@@ -136,8 +132,7 @@ function showKeyboard() {
 	} catch {}
 }
 
-const ON_SHAPE_ICON_SPRITE_SELECTOR =
-	"osc-icons-min.osc-svgmin-container";
+const ON_SHAPE_ICON_SPRITE_SELECTOR = "osc-icons-min.osc-svgmin-container";
 
 export async function waitForOnshapeIconSprite(
 	timeoutMs = 5000,
@@ -267,7 +262,6 @@ export function pressKey(key: string, opts: PressKeyOptions = {}): void {
 		}, 35);
 	}
 }
-
 
 export function setNativeValue(
 	el: HTMLInputElement | HTMLTextAreaElement,
