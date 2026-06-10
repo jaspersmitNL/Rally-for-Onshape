@@ -33,18 +33,21 @@ const links = [
 		description: "Join the community, report bugs, and request features.",
 		icon: MessageCircle,
 		href: DISCORD_LINK,
+		target: "_blank",
 	},
 	{
 		label: "GitHub",
 		description: "View the source code, open issues, or contribute.",
 		icon: Code,
 		href: GITHUB_URL,
+		target: "_blank",
 	},
 	{
 		label: "Buy Me a Coffee",
 		description: "Support development of Onshape Plus.",
 		icon: Coffee,
 		href: BUY_ME_A_COFFEE_URL,
+		target: "_blank",
 	},
 ];
 
@@ -153,10 +156,10 @@ export function SettingsDialog() {
 								const Icon = item.icon;
 
 								return (
-									<button
-										key={item.label}
-										type="button"
-										className="
+									<a key={item.label} href={item.href} target={item.target}>
+										<button
+											type="button"
+											className="
 											group flex w-full cursor-pointer items-center gap-3 rounded-xl
 											border border-white/10 bg-white/[0.045] p-3 text-left
 											shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]
@@ -164,28 +167,28 @@ export function SettingsDialog() {
 											hover:border-white/15 hover:bg-white/[0.075]
 											active:scale-[0.985]
 										"
-										onClick={() => window.open(item.href, "_blank")}
-									>
-										<div
-											className="
+										>
+											<div
+												className="
 												flex h-10 w-10 shrink-0 items-center justify-center rounded-xl
 												border border-white/10 bg-white/[0.06]
 												text-blue-300
 												group-hover:bg-blue-500/15 group-hover:text-blue-200
 											"
-										>
-											<Icon className="h-5 w-5" />
-										</div>
+											>
+												<Icon className="h-5 w-5" />
+											</div>
 
-										<div className="min-w-0">
-											<div className="text-sm font-medium text-slate-100">
-												{item.label}
+											<div className="min-w-0">
+												<div className="text-sm font-medium text-slate-100">
+													{item.label}
+												</div>
+												<div className="mt-0.5 text-xs leading-snug text-slate-300">
+													{item.description}
+												</div>
 											</div>
-											<div className="mt-0.5 text-xs leading-snug text-slate-300">
-												{item.description}
-											</div>
-										</div>
-									</button>
+										</button>
+									</a>
 								);
 							})}
 						</div>
