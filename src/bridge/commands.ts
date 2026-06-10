@@ -1,3 +1,4 @@
+import { delay } from "@/core/utils";
 import type {
 	ElementToolbarService,
 	ExecuteCommandMessage,
@@ -42,11 +43,16 @@ function getCommandName(setting: string | { command: string }): string {
 	return typeof setting === "string" ? setting : setting.command;
 }
 
-export function getUserShortcutCommands(): OnshapeShortcutCommandsResponse[] {
+export async function getUserShortcutCommands(): Promise<
+	OnshapeShortcutCommandsResponse[]
+> {
 	const injector = getInjector();
 	if (!injector) throw new Error("Onshape injector not available");
 
 	const mini = injector.get<MiniToolbarService>("MiniToolbarService");
+	mini.refreshMiniToolbarSettings();
+
+	await delay(1000);
 
 	return (mini.miniToolbarSetting ?? []).map((settingGroup) => {
 		const collectionGroup = (mini.miniToolbarCollection ?? []).find(

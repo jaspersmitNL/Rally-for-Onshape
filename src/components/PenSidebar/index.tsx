@@ -95,19 +95,6 @@ export function PenSidebar() {
 				document
 					.querySelector(".os-mini-toolbar-panel")
 					?.classList.add("os-extension-hidden-item");
-				pressKey("s");
-			}
-
-			if (data.name === FORWARDED_ONSHAPE_EVENTS.OPEN_MINI_TOOLBAR) {
-				if (initialLoadDoneRef.current) return;
-				initialLoadDoneRef.current = true;
-				document.body.dispatchEvent(
-					new MouseEvent("mousedown", {
-						bubbles: true,
-						cancelable: true,
-						view: window,
-					}),
-				);
 				getUserShortcutCommands().then((commands) => {
 					setVisible(true);
 					setAllCommands(commands);

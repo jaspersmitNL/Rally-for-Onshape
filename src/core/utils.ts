@@ -27,6 +27,9 @@ export type Unsubscribe = () => void;
 const SUPPRESSED_INPUT_SELECTOR =
 	"input.os-param-number, textarea.os-param-number";
 
+export const delay = (ms: number) =>
+	new Promise((resolve) => setTimeout(resolve, ms));
+
 export function executeOnshapeCommand(
 	command: string,
 	commandDetails?: unknown,

@@ -1,18 +1,17 @@
-import type {
-	GetUserShortcutCommandsMessage,
-} from "@/types/onshape-bridge";
+import type { GetUserShortcutCommandsMessage } from "@/types/onshape-bridge";
 import { executeBroadcastEvent, postToPage } from "./angular-events";
 import { executeCommand, getUserShortcutCommands } from "./commands";
 import { isInboundBridgeMessage } from "./guards";
 
-function handleGetUserShortcutCommands(
+async function handleGetUserShortcutCommands(
 	data: GetUserShortcutCommandsMessage,
-): void {
+): Promise<void> {
 	try {
+		const result = await getUserShortcutCommands();
 		postToPage({
 			type: "OS_GET_USER_SHORTCUT_COMMANDS_RESULT",
 			requestId: data.requestId,
-			modes: getUserShortcutCommands(),
+			modes: result,
 		});
 	} catch (error) {
 		postToPage({
