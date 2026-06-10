@@ -53,12 +53,10 @@ type Position = {
 type EditableInput = HTMLInputElement | HTMLTextAreaElement;
 
 function isUsefulInput(el: EventTarget | null): el is HTMLElement {
-	return (
-		el instanceof HTMLElement &&
-		(el.tagName === "INPUT" ||
-			el.tagName === "TEXTAREA" ||
-			el.isContentEditable)
-	);
+	if (el instanceof HTMLElement) {
+		return el.classList.contains("os-param-number");
+	}
+	return false;
 }
 
 function isEditableInput(el: HTMLElement): el is EditableInput {

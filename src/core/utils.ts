@@ -24,6 +24,9 @@ export type FeatureState = {
 
 export type Unsubscribe = () => void;
 
+const SUPPRESSED_INPUT_SELECTOR =
+	"input.os-param-number, textarea.os-param-number";
+
 export function executeOnshapeCommand(
 	command: string,
 	commandDetails?: unknown,
@@ -107,13 +110,15 @@ export function suppressVirtualKeyboard(): () => void {
 
 		node
 			.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
-				"input, textarea",
+				SUPPRESSED_INPUT_SELECTOR,
 			)
 			.forEach(patchInput);
 	};
 
 	document
-		.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input, textarea")
+		.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+			SUPPRESSED_INPUT_SELECTOR,
+		)
 		.forEach(patchInput);
 
 	const observer = new MutationObserver((mutations) => {
