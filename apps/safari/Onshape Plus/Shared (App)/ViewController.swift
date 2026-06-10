@@ -39,52 +39,81 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
         webView.isOpaque = false
     #endif
 
-        self.webView.navigationDelegate = self
+        webView.navigationDelegate = self
 
     #if os(iOS)
-        self.webView.scrollView.isScrollEnabled = false
+        webView.scrollView.isScrollEnabled = false
     #endif
 
-        self.webView.configuration.userContentController.add(self, name: "controller")
+        webView.configuration.userContentController.add(self, name: "controller")
 
-        self.webView.loadFileURL(
+        webView.loadFileURL(
             Bundle.main.url(forResource: "Main", withExtension: "html")!,
             allowingReadAccessTo: Bundle.main.resourceURL!
         )
     }
 
+    // Open Onshape links in Safari instead of inside the app's WKWebView
+    func webView(
+        _ webView: WKWebView,
+        decidePolicyFor navigationAction: WKNavigationAction,
+        decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
+    ) {
+    #if os(iOS)
+        if let url = navigationAction.request.url,
+           let host = url.host,
+           host.contains("onshape.com") {
+
+            UIApplication.shared.open(url)
+            decisionHandler(.cancel)
+            return
+        }
+    #endif
+
+        decisionHandler(.allow)
+    }
+
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-#if os(iOS)
+    #if os(iOS)
         webView.evaluateJavaScript("show('ios')")
-#elseif os(macOS)
+    #elseif os(macOS)
         webView.evaluateJavaScript("show('mac')")
 
-        SFSafariExtensionManager.getStateOfSafariExtension(withIdentifier: extensionBundleIdentifier) { (state, error) in
+        SFSafariExtensionManager.getStateOfSafariExtension(
+            withIdentifier: extensionBundleIdentifier
+        ) { (state, error) in
             guard let state = state, error == nil else {
-                // Insert code to inform the user that something went wrong.
                 return
             }
 
             DispatchQueue.main.async {
                 if #available(macOS 13, *) {
-                    webView.evaluateJavaScript("show('mac', \(state.isEnabled), true)")
+                    webView.evaluateJavaScript(
+                        "show('mac', \(state.isEnabled), true)"
+                    )
                 } else {
-                    webView.evaluateJavaScript("show('mac', \(state.isEnabled), false)")
+                    webView.evaluateJavaScript(
+                        "show('mac', \(state.isEnabled), false)"
+                    )
                 }
             }
         }
-#endif
+    #endif
     }
 
-    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-#if os(macOS)
+    func userContentController(
+        _ userContentController: WKUserContentController,
+        didReceive message: WKScriptMessage
+    ) {
+    #if os(macOS)
         if (message.body as! String != "open-preferences") {
             return
         }
 
-        SFSafariApplication.showPreferencesForExtension(withIdentifier: extensionBundleIdentifier) { error in
+        SFSafariApplication.showPreferencesForExtension(
+            withIdentifier: extensionBundleIdentifier
+        ) { error in
             guard error == nil else {
-                // Insert code to inform the user that something went wrong.
                 return
             }
 
@@ -92,7 +121,6 @@ class ViewController: PlatformViewController, WKNavigationDelegate, WKScriptMess
                 NSApp.terminate(self)
             }
         }
-#endif
+    #endif
     }
-
 }
