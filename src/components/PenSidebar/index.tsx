@@ -96,6 +96,13 @@ export function PenSidebar() {
 					.querySelector(".os-mini-toolbar-panel")
 					?.classList.add("os-extension-hidden-item");
 				getUserShortcutCommands().then((commands) => {
+					document.body.dispatchEvent(
+						new MouseEvent("mousedown", {
+							bubbles: true,
+							cancelable: true,
+							view: window,
+						}),
+					);
 					setVisible(true);
 					setAllCommands(commands);
 
