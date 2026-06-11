@@ -50,10 +50,10 @@ export interface OnshapeMiniToolbarCollectionGroup {
 }
 
 export interface MiniToolbarService {
-		miniToolbarSetting?: OnshapeMiniToolbarSettingGroup[];
-		miniToolbarCollection?: OnshapeMiniToolbarCollectionGroup[];
-		refreshMiniToolbarSettings: () => void
-	}
+	miniToolbarSetting?: OnshapeMiniToolbarSettingGroup[];
+	miniToolbarCollection?: OnshapeMiniToolbarCollectionGroup[];
+	refreshMiniToolbarSettings: () => void;
+}
 
 export interface ElementToolbarService {
 	executeCommand: (

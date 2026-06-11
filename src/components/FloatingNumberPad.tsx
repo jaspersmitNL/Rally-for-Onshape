@@ -1,12 +1,8 @@
 import { Settings, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import {
-	ACCEPTED_ONSHAPE_TO_EXTENSION_EVENT_TYPE,
-	FORWARDED_ONSHAPE_EVENTS,
-} from "@/constants/onshapeEvents";
 import { useSettingsDialog } from "@/contexts/SettingsDialogContext";
 import { shouldUseFloatingNumpad } from "@/core/settings";
 import {
@@ -53,10 +49,7 @@ type Position = {
 type EditableInput = HTMLInputElement | HTMLTextAreaElement;
 
 function isUsefulInput(el: EventTarget | null): el is HTMLElement {
-	if (el instanceof HTMLElement) {
-		return el.classList.contains("os-param-number");
-	}
-	return false;
+	return el instanceof HTMLElement && el.classList.contains("os-param-number");
 }
 
 function isEditableInput(el: HTMLElement): el is EditableInput {
@@ -99,25 +92,26 @@ export function FloatingNumpad() {
 	const numpadRef = useRef<HTMLDivElement | null>(null);
 	const activeInputRef = useRef<HTMLElement | null>(null);
 	const hideTimerRef = useRef<number | null>(null);
+
 	const { openSettings } = useSettingsDialog();
 
 	const [isVisible, setIsVisible] = useState(false);
 	const [position, setPosition] = useState<Position>({ left: 0, top: 0 });
 
-	function cancelPendingHide() {
+	const cancelPendingHide = useCallback(() => {
 		if (hideTimerRef.current === null) return;
 
 		window.clearTimeout(hideTimerRef.current);
 		hideTimerRef.current = null;
-	}
+	}, []);
 
-	function hideNumpad() {
+	const hideNumpad = useCallback(() => {
 		setIsVisible(false);
 		activeInputRef.current = null;
 		hideTimerRef.current = null;
-	}
+	}, []);
 
-	function scheduleAutoHide() {
+	const scheduleAutoHide = useCallback(() => {
 		cancelPendingHide();
 
 		hideTimerRef.current = window.setTimeout(() => {
@@ -135,7 +129,67 @@ export function FloatingNumpad() {
 				hideNumpad();
 			}
 		}, AUTO_HIDE_DELAY);
-	}
+	}, [cancelPendingHide, hideNumpad]);
+
+	const handleFocusIn = useCallback(
+		(e: FocusEvent) => {
+			if (!shouldUseFloatingNumpad()) return;
+
+			const target = e.target;
+			const numpad = numpadRef.current;
+
+			if (!isUsefulInput(target)) return;
+			if (numpad?.contains(target)) return;
+
+			cancelPendingHide();
+
+			activeInputRef.current = target;
+
+			requestAnimationFrame(() => {
+				setPosition(getNumpadPosition(target, numpadRef.current));
+				setIsVisible(true);
+			});
+		},
+		[cancelPendingHide],
+	);
+
+	const handleFocusOut = useCallback(
+		(e: FocusEvent) => {
+			const activeInput = activeInputRef.current;
+			const numpad = numpadRef.current;
+
+			if (!activeInput) return;
+
+			if (
+				e.relatedTarget instanceof Node &&
+				numpad?.contains(e.relatedTarget)
+			) {
+				return;
+			}
+
+			scheduleAutoHide();
+		},
+		[scheduleAutoHide],
+	);
+
+	useEffect(() => {
+		const cleanupKeyboardSuppression = suppressVirtualKeyboard();
+
+		window.addEventListener("focusin", handleFocusIn, true);
+		window.addEventListener("focusout", handleFocusOut, true);
+
+		return () => {
+			cleanupKeyboardSuppression();
+
+			window.removeEventListener("focusin", handleFocusIn, true);
+			window.removeEventListener("focusout", handleFocusOut, true);
+
+			if (hideTimerRef.current !== null) {
+				window.clearTimeout(hideTimerRef.current);
+				hideTimerRef.current = null;
+			}
+		};
+	}, [handleFocusIn, handleFocusOut]);
 
 	function sendInputKey(key: string) {
 		const el = activeInputRef.current;
@@ -223,78 +277,6 @@ export function FloatingNumpad() {
 		}
 	}
 
-	useEffect(() => {
-		let cleanupKeyboardSuppression: (() => void) | null = null;
-		const handleFocusIn = (e: FocusEvent) => {
-			if (!shouldUseFloatingNumpad()) return;
-			const target = e.target;
-			const numpad = numpadRef.current;
-
-			if (!isUsefulInput(target)) return;
-			if (numpad?.contains(target)) return;
-
-			cancelPendingHide();
-
-			activeInputRef.current = target;
-
-			requestAnimationFrame(() => {
-				setPosition(getNumpadPosition(target, numpadRef.current));
-				setIsVisible(true);
-			});
-		};
-
-		const handleFocusOut = (e: FocusEvent) => {
-			const activeInput = activeInputRef.current;
-			const numpad = numpadRef.current;
-
-			if (!activeInput) return;
-
-			if (
-				e.relatedTarget instanceof Node &&
-				numpad?.contains(e.relatedTarget)
-			) {
-				return;
-			}
-
-			scheduleAutoHide();
-		};
-
-		async function onMessage(event: MessageEvent) {
-			if (event.source !== window) return;
-
-			const data = event.data;
-			if (!data || data.type !== ACCEPTED_ONSHAPE_TO_EXTENSION_EVENT_TYPE)
-				return;
-			if (data.name === FORWARDED_ONSHAPE_EVENTS.ELEMENT_LOAD_DONE) {
-				cleanupKeyboardSuppression?.();
-				cleanupKeyboardSuppression = suppressVirtualKeyboard();
-				window.addEventListener("focusin", handleFocusIn, true);
-				window.addEventListener("focusout", handleFocusOut, true);
-			}
-
-			if (data.name === FORWARDED_ONSHAPE_EVENTS.DOCUMENT_UNLOADED) {
-				cleanupKeyboardSuppression?.();
-				cleanupKeyboardSuppression = null;
-				window.removeEventListener("focusin", handleFocusIn, true);
-				window.removeEventListener("focusout", handleFocusOut, true);
-			}
-		}
-
-		window.addEventListener("message", onMessage);
-
-		return () => {
-			cleanupKeyboardSuppression?.();
-			window.removeEventListener("message", onMessage);
-			window.removeEventListener("focusin", handleFocusIn, true);
-			window.removeEventListener("focusout", handleFocusOut, true);
-
-			if (hideTimerRef.current !== null) {
-				window.clearTimeout(hideTimerRef.current);
-				hideTimerRef.current = null;
-			}
-		};
-	}, []);
-
 	return (
 		<Card
 			ref={numpadRef}
@@ -333,11 +315,12 @@ export function FloatingNumpad() {
 							NUM
 						</span>
 					</div>
+
 					<div className="flex gap-1">
 						<Button
 							className="h-7 w-7 cursor-pointer"
-							variant={"ghost"}
-							size={"icon"}
+							variant="ghost"
+							size="icon"
 							onClick={openSettings}
 						>
 							<Settings />

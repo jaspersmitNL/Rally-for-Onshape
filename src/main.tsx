@@ -2,10 +2,9 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import cssText from "@/styles/extension.css?inline";
 import onshapeThemeCss from "@/styles/onshape-theme.css?inline";
-import { SettingsDialog } from "./components/dialogs/Settings";
-import { FloatingNumpad } from "./components/FloatingNumberPad";
-import { PenSidebar } from "./components/PenSidebar";
+import { App } from "./App";
 import { TooltipProvider } from "./components/ui/tooltip";
+import { OnshapeBridgeProvider } from "./contexts/OnshapeBridgeContext";
 import { SettingsDialogProvider } from "./contexts/SettingsDialogContext";
 import { copyOnshapeIconSpriteToShadowRoot } from "./core/utils";
 import { PortalContainerProvider } from "./extensions/PortalContainerContext";
@@ -63,19 +62,19 @@ if (!document.getElementById("onshape-extension-host")) {
 
 	createRoot(root).render(
 		<React.StrictMode>
-			<SettingsDialogProvider>
-				<PortalContainerProvider container={portalRoot}>
-					<TooltipProvider
-						delayDuration={350}
-						skipDelayDuration={0}
-						disableHoverableContent
-					>
-						<PenSidebar />
-						<FloatingNumpad />
-						<SettingsDialog />
-					</TooltipProvider>
-				</PortalContainerProvider>
-			</SettingsDialogProvider>
+			<OnshapeBridgeProvider>
+				<SettingsDialogProvider>
+					<PortalContainerProvider container={portalRoot}>
+						<TooltipProvider
+							delayDuration={350}
+							skipDelayDuration={0}
+							disableHoverableContent
+						>
+							<App />
+						</TooltipProvider>
+					</PortalContainerProvider>
+				</SettingsDialogProvider>
+			</OnshapeBridgeProvider>
 		</React.StrictMode>,
 	);
 }

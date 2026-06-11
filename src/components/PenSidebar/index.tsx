@@ -1,78 +1,92 @@
-import {
-	ChevronDown,
-	ChevronUp,
-	Fullscreen,
-	GripHorizontal,
-	Settings,
-	Shrink,
-} from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
-import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-	ACCEPTED_ONSHAPE_TO_EXTENSION_EVENT_TYPE,
-	FORWARDED_ONSHAPE_EVENTS,
-} from "@/constants/onshapeEvents";
+import { FORWARDED_ONSHAPE_EVENTS } from "@/constants/onshapeEvents";
 import { HAS_SEEN_SETTINGS_ONBOARDING_KEY } from "@/constants/storage";
+import {
+	useOnshapeBridge,
+	useOnshapeBridgeSubscription,
+} from "@/contexts/OnshapeBridgeContext";
 import { useSettingsDialog } from "@/contexts/SettingsDialogContext";
 import { getUserShortcutCommands } from "@/core/userShortcuts";
-import { toggleFullscreen, watchElementPresence } from "@/core/utils";
+import { watchElementPresence } from "@/core/utils";
 import {
 	clampSidebarPosition,
 	getInitialPosition,
 	STORAGE_KEY,
 } from "@/lib/utils";
-import type {
-	OnshapeShortcutCommandsResponse,
-	OnshapeToolbarMode,
-} from "@/types";
-import { pressKey } from "../../core/utils";
+import type { OnshapeShortcutCommandsResponse } from "@/types";
 import { PenSidebarMainContent } from "./Content";
+import { FixedItems } from "./FixedItems";
 
 export function PenSidebar() {
 	const nodeRef = useRef<HTMLDivElement>(null);
-	const { openSettings, setSettingsOpen } = useSettingsDialog();
+	const { openSettings } = useSettingsDialog();
+
+	const { toolbarType, currentTool, undoEnabled, redoEnabled, setCurrentTool } =
+		useOnshapeBridge();
+
 	const [allCommands, setAllCommands] = useState<
 		OnshapeShortcutCommandsResponse[]
 	>([]);
 
-	const [currentTool, setCurrentTool] = useState<string | null>(null);
-
 	const [collapsed, setCollapsed] = useState(false);
-
-	const [visible, setVisible] = useState(false);
-
-	const [undoEnabled, setUndoEnabled] = useState(false);
-	const [redoEnabled, setRedoEnabled] = useState(false);
-
-	const [isFullscreen, setIsFullscreen] = useState(false);
-
 	const [featureDialogVisible, setFeatureDialogVisible] = useState(false);
-
-	const initialLoadDoneRef = useRef(false);
-
 	const [position, setPosition] = useState(getInitialPosition);
+	const fixPositionRef = useRef<number | undefined>(undefined);
 
-	const [toolbarType, setToolbarType] =
-		useState<OnshapeToolbarMode>("Part Studio");
+	const init = async () => {
+		try {
+			document
+				.querySelector(".os-mini-toolbar-panel")
+				?.classList.add("os-extension-hidden-item");
 
-	const onLeaveDocumentHandler = () => {
-		setVisible(false);
-		initialLoadDoneRef.current = false;
-		setAllCommands([]);
-		setCurrentTool(null);
+			const commands = await getUserShortcutCommands();
+			document.body.dispatchEvent(
+				new MouseEvent("mousedown", {
+					bubbles: true,
+					cancelable: true,
+					view: window,
+				}),
+			);
+
+			setAllCommands(commands);
+
+			const hasSeenSettingsOnboarding = localStorage.getItem(
+				HAS_SEEN_SETTINGS_ONBOARDING_KEY,
+			);
+
+			if (!hasSeenSettingsOnboarding) {
+				localStorage.setItem(HAS_SEEN_SETTINGS_ONBOARDING_KEY, "true");
+
+				window.setTimeout(() => {
+					openSettings();
+				}, 500);
+			}
+
+			document
+				.querySelector(".os-mini-toolbar-panel")
+				?.classList.remove("os-extension-hidden-item");
+
+			const featureDialogParent = document.querySelector("#content-div");
+
+			if (featureDialogParent) {
+				watchElementPresence(
+					"#feature-dialog",
+					(isPresent) => {
+						setFeatureDialogVisible(isPresent);
+						setCurrentTool(null);
+					},
+					featureDialogParent,
+				);
+			}
+		} catch (e) {
+			console.log("Hello from space ", e);
+		}
 	};
+
+	useEffect(() => {
+		init();
+	}, []);
 
 	const setOnshapeSideBarWidth = () => {
 		const onshapeSidebarElement = document.querySelector("#left-content-pane");
@@ -83,162 +97,48 @@ export function PenSidebar() {
 		);
 	};
 
-	useEffect(() => {
-		async function onMessage(event: MessageEvent) {
-			if (event.source !== window) return;
-
-			const data = event.data;
-			if (!data || data.type !== ACCEPTED_ONSHAPE_TO_EXTENSION_EVENT_TYPE)
-				return;
-
-			if (data.name === FORWARDED_ONSHAPE_EVENTS.ELEMENT_LOAD_DONE) {
-				document
-					.querySelector(".os-mini-toolbar-panel")
-					?.classList.add("os-extension-hidden-item");
-				getUserShortcutCommands().then((commands) => {
-					document.body.dispatchEvent(
-						new MouseEvent("mousedown", {
-							bubbles: true,
-							cancelable: true,
-							view: window,
-						}),
-					);
-					setVisible(true);
-					setAllCommands(commands);
-
-					const hasSeenSettingsOnboarding = localStorage.getItem(
-						HAS_SEEN_SETTINGS_ONBOARDING_KEY,
-					);
-
-					if (!hasSeenSettingsOnboarding) {
-						localStorage.setItem(HAS_SEEN_SETTINGS_ONBOARDING_KEY, "true");
-
-						window.setTimeout(() => {
-							setSettingsOpen(true);
-						}, 500);
-					}
-
-					document
-						.querySelector(".os-mini-toolbar-panel")
-						?.classList.remove("os-extension-hidden-item");
-					const featureDialogParent = document.querySelector("#content-div");
-					if (featureDialogParent)
-						watchElementPresence(
-							"#feature-dialog",
-							(isPresent) => {
-								setFeatureDialogVisible(isPresent);
-								setCurrentTool(null);
-							},
-							featureDialogParent,
-						);
-				});
-			}
-
-			if (data.name === FORWARDED_ONSHAPE_EVENTS.CHANGE_ELEMENT_TOOLBAR) {
-				const newToolbarType = data.args?.[0]?.toolbarName || null;
-				setToolbarType(newToolbarType);
-			}
-
-			if (data.name === FORWARDED_ONSHAPE_EVENTS.ENABLE_TOOLBAR_COMMAND) {
-				if (data.args?.includes("UNDO_A_CHANGE")) {
-					setUndoEnabled(true);
+	useOnshapeBridgeSubscription(
+		useCallback(
+			(event) => {
+				if (event.name === FORWARDED_ONSHAPE_EVENTS.RESIZE_ELEMENTS) {
+					setOnshapeSideBarWidth();
 				}
-				if (data.args?.includes("REDO_A_CHANGE")) {
-					setRedoEnabled(true);
+
+				if (event.name === "SELECTION_UPDATED") {
+					console.log("selection updated", event);
 				}
-			}
+			},
+			[setOnshapeSideBarWidth],
+		),
+	);
 
-			if (data.name === FORWARDED_ONSHAPE_EVENTS.DISABLE_TOOLBAR_COMMAND) {
-				if (data.args?.includes("UNDO_A_CHANGE")) {
-					setUndoEnabled(false);
-				}
-				if (data.args?.includes("REDO_A_CHANGE")) {
-					setRedoEnabled(false);
-				}
-			}
+	const fixPosition = () => {
+		window.clearTimeout(fixPositionRef.current);
 
-			if (
-				data.name === FORWARDED_ONSHAPE_EVENTS.ELEMENT_TOOLBAR_SET_CURRENT_TOOL
-			) {
-				const currentTool = data.args?.[0];
-				setCurrentTool(currentTool);
-			}
-
-			if (
-				data.name === FORWARDED_ONSHAPE_EVENTS.ELEMENT_TOOLBAR_EXIT_CURRENT_TOOL
-			) {
-				setCurrentTool(null);
-			}
-
-			if (data.name === FORWARDED_ONSHAPE_EVENTS.DOCUMENT_UNLOADED) {
-				onLeaveDocumentHandler();
-				window.removeEventListener("message", onMessage);
-				document.removeEventListener("fullscreenchange", onFullScreenChange);
-			}
-
-			if (data.name === FORWARDED_ONSHAPE_EVENTS.ADD_NEW_FEATURE) {
-				const newFeatureCommand = data.args?.[0].command;
-				console.log(newFeatureCommand);
-				setCurrentTool(newFeatureCommand);
-			}
-
-			if (data.name === FORWARDED_ONSHAPE_EVENTS.RESIZE_ELEMENTS) {
-				setOnshapeSideBarWidth();
-			}
-		}
-
-		function onFullScreenChange() {
-			const documentIsFullscreen = !!document.fullscreenElement;
-			setIsFullscreen(documentIsFullscreen);
-			document.body.classList[documentIsFullscreen ? "add" : "remove"](
-				"onshape-plus-fullscreen-mode",
-			);
-
-			setOnshapeSideBarWidth();
-		}
-
-		window.addEventListener("message", onMessage);
-		document.addEventListener("fullscreenchange", onFullScreenChange);
-		return () => {
-			window.removeEventListener("message", onMessage);
-			document.removeEventListener("fullscreenchange", onFullScreenChange);
-		};
-	}, []);
+		fixPositionRef.current = window.setTimeout(() => {
+			setPosition((current) => {
+				const next = clampSidebarPosition(current);
+				localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+				return next;
+			});
+		}, 250);
+	};
 
 	useEffect(() => {
-		if (!visible) return;
-
-		let timeoutId: number | undefined;
-
-		const fixPosition = () => {
-			window.clearTimeout(timeoutId);
-
-			timeoutId = window.setTimeout(() => {
-				setPosition((current) => {
-					const next = clampSidebarPosition(current);
-					localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-					return next;
-				});
-			}, 250);
-		};
-
 		fixPosition();
-
 		window.addEventListener("resize", fixPosition);
 		window.addEventListener("orientationchange", fixPosition);
 		window.visualViewport?.addEventListener("resize", fixPosition);
 		window.visualViewport?.addEventListener("scroll", fixPosition);
 
 		return () => {
-			window.clearTimeout(timeoutId);
+			window.clearTimeout(fixPositionRef.current);
 			window.removeEventListener("resize", fixPosition);
 			window.removeEventListener("orientationchange", fixPosition);
 			window.visualViewport?.removeEventListener("resize", fixPosition);
 			window.visualViewport?.removeEventListener("scroll", fixPosition);
 		};
-	}, [visible]);
-
-	if (!visible) return null;
+	}, []);
 
 	const modeTools =
 		allCommands.find((c) => c.tabType === toolbarType)?.commands ?? [];
@@ -261,114 +161,22 @@ export function PenSidebar() {
 				ref={nodeRef}
 				id="os-pen-shortcut-sidebar"
 				className="
-		os-plus-glass
-    rounded-lg
-
-		fixed left-0 top-0 z-[9999]
-		flex max-h-[70vh] flex-col
-		overflow-hidden
-    w-max
-      pt-2
-
-		os-animate-in
-	"
+					os-plus-glass
+					rounded-lg
+					fixed left-0 top-0 z-[9999]
+					flex max-h-[70vh] flex-col
+					overflow-hidden
+					w-max
+					pt-2
+					os-animate-in
+				"
 			>
-				<div
-					className={`grid grid-cols-2 justify-items-center gap-1 px-2 ${collapsed ? "pb-2" : ""}`}
-				>
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<Button
-								variant="secondary"
-								size="icon"
-								className="os-pen-drag-handle h-10 w-10 shrink-0 cursor-pointer active:cursor-grabbing"
-							>
-								<GripHorizontal />
-							</Button>
-						</TooltipTrigger>
-						<TooltipContent side="right">
-							<Card className="w-[350px]">
-								<CardHeader>
-									<CardTitle>Move</CardTitle>
-									<CardDescription>
-										Click and drag to change the position of this sidebar.
-									</CardDescription>
-								</CardHeader>
-							</Card>
-						</TooltipContent>
-					</Tooltip>
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<Button
-								variant="secondary"
-								size="icon"
-								className="h-10 w-10 cursor-pointer"
-								onClick={openSettings}
-							>
-								<Settings className="h-5 w-5" />
-							</Button>
-						</TooltipTrigger>
-						<TooltipContent>
-							<Card className="w-[350px]">
-								<CardHeader>
-									<CardTitle>Configuration</CardTitle>
-									<CardDescription>
-										Change the way Onshape Plus works to best suit your
-										workflow. View links for the Github, Discord and more.
-									</CardDescription>
-								</CardHeader>
-							</Card>
-						</TooltipContent>
-					</Tooltip>
+				<FixedItems
+					collapsed={collapsed}
+					setCollapsed={setCollapsed}
+					setOnshapeSideBarWidth={setOnshapeSideBarWidth}
+				/>
 
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<Button
-								variant="secondary"
-								size="icon"
-								className="h-10 w-10 shrink-0 cursor-pointer"
-								onClick={toggleFullscreen}
-							>
-								{isFullscreen ? <Shrink /> : <Fullscreen />}
-							</Button>
-						</TooltipTrigger>
-
-						<TooltipContent side="right">
-							<Card className="w-[350px]">
-								<CardHeader>
-									<CardTitle>Toggle Fullscreen</CardTitle>
-									<CardDescription>
-										Toggles the fullscreen onshape experience, give it a try to
-										experience onshape like a native app!
-									</CardDescription>
-								</CardHeader>
-							</Card>
-						</TooltipContent>
-					</Tooltip>
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<Button
-								variant="secondary"
-								size="icon"
-								className="h-10 w-10 shrink-0 cursor-pointer"
-								onClick={() => setCollapsed((c) => !c)}
-							>
-								{collapsed ? <ChevronDown /> : <ChevronUp />}
-							</Button>
-						</TooltipTrigger>
-
-						<TooltipContent side="right">
-							<Card className="w-[350px]">
-								<CardHeader>
-									<CardTitle>Collapse</CardTitle>
-									<CardDescription>
-										Hide / Show the sidebar content.
-									</CardDescription>
-								</CardHeader>
-							</Card>
-						</TooltipContent>
-					</Tooltip>
-				</div>
 				{!collapsed && (
 					<PenSidebarMainContent
 						modeTools={modeTools}
