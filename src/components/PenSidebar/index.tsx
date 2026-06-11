@@ -103,10 +103,6 @@ export function PenSidebar() {
 				if (event.name === FORWARDED_ONSHAPE_EVENTS.RESIZE_ELEMENTS) {
 					setOnshapeSideBarWidth();
 				}
-
-				if (event.name === "SELECTION_UPDATED") {
-					console.log("selection updated", event);
-				}
 			},
 			[setOnshapeSideBarWidth],
 		),

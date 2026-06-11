@@ -72,10 +72,10 @@ export function startAngularEventForwarding(): void {
 		...args: unknown[]
 	): unknown {
 		const result = originalBroadcast.apply(this, [name, ...args]);
-
 		try {
 			forwardLater("broadcast", name, args);
 		} catch {
+			return null;
 			// Never let forwarding break Onshape.
 		}
 
@@ -88,7 +88,6 @@ export function startAngularEventForwarding(): void {
 		...args: unknown[]
 	): unknown {
 		const result = originalEmit.apply(this, [name, ...args]);
-
 		try {
 			forwardLater("emit", name, args);
 		} catch {
@@ -97,6 +96,4 @@ export function startAngularEventForwarding(): void {
 
 		return result;
 	};
-
-	console.log("Onshape Angular event forwarding started");
 }

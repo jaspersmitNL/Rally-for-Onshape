@@ -1,6 +1,14 @@
+import {
+	ACCEPTED_ONSHAPE_TO_EXTENSION_EVENT_TYPE,
+	FORWARDED_ONSHAPE_EVENTS,
+} from "@/constants/onshapeEvents";
 import type { GetUserShortcutCommandsMessage } from "@/types/onshape-bridge";
 import { executeBroadcastEvent, postToPage } from "./angular-events";
-import { executeCommand, getUserShortcutCommands } from "./commands";
+import {
+	executeCommand,
+	getCurrentSelectionCommands,
+	getUserShortcutCommands,
+} from "./commands";
 import { isInboundBridgeMessage } from "./guards";
 
 async function handleGetUserShortcutCommands(
@@ -23,6 +31,29 @@ async function handleGetUserShortcutCommands(
 	}
 }
 
+function handleCurrentUserSelectionsCommands() {
+	try {
+		const result = getCurrentSelectionCommands();
+		window.postMessage(
+			{
+				name: FORWARDED_ONSHAPE_EVENTS.SELECTION_UPDATED,
+				data: result,
+				type: ACCEPTED_ONSHAPE_TO_EXTENSION_EVENT_TYPE,
+			},
+			window.location.origin,
+		);
+	} catch (e) {
+		window.postMessage(
+			{
+				name: FORWARDED_ONSHAPE_EVENTS.SELECTION_UPDATED,
+				data: [],
+				type: ACCEPTED_ONSHAPE_TO_EXTENSION_EVENT_TYPE,
+			},
+			window.location.origin,
+		);
+	}
+}
+
 export function handleMessage(event: MessageEvent<unknown>): void {
 	if (event.source !== window) return;
 	if (!isInboundBridgeMessage(event.data)) return;
@@ -33,6 +64,11 @@ export function handleMessage(event: MessageEvent<unknown>): void {
 		case "OS_GET_USER_SHORTCUT_COMMANDS": {
 			if (typeof data.requestId !== "string") return;
 			handleGetUserShortcutCommands(data);
+			return;
+		}
+
+		case "GET_CURRENT_USER_SELECTIONS": {
+			handleCurrentUserSelectionsCommands();
 			return;
 		}
 

@@ -1,4 +1,5 @@
-import { delay } from "@/core/utils";
+import { classifyOnshapeSelection, delay } from "@/core/utils";
+import type { OnshapeSelectionService } from "@/types/onshape/selection";
 import type {
 	ElementToolbarService,
 	ExecuteCommandMessage,
@@ -78,6 +79,21 @@ export async function getUserShortcutCommands(): Promise<
 			commands,
 		};
 	});
+}
+
+export function getCurrentSelectionCommands() {
+	const injector = getInjector();
+	if (!injector) throw new Error("Onshape injector not available");
+
+	const selectionService =
+		injector.get<OnshapeSelectionService>("SelectionService");
+	const s = selectionService.constructor.getCurrentSelections();
+
+	const annoatetedSelection = s.map((selection) =>
+		classifyOnshapeSelection(selection),
+	);
+
+	return annoatetedSelection;
 }
 
 export function executeCommand(data: ExecuteCommandMessage): void {

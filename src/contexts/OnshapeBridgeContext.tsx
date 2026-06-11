@@ -17,6 +17,7 @@ type OnshapeBridgeEvent = {
 	type: typeof ACCEPTED_ONSHAPE_TO_EXTENSION_EVENT_TYPE;
 	name: string;
 	args?: any[];
+	data?: Record<string, any>;
 };
 
 type OnshapeBridgeHandler = (event: OnshapeBridgeEvent) => void;
@@ -68,7 +69,6 @@ export function OnshapeBridgeProvider({ children }: { children: ReactNode }) {
 		function onMessage(messageEvent: MessageEvent) {
 			if (messageEvent.source !== window) return;
 			if (!isOnshapeBridgeEvent(messageEvent.data)) return;
-
 			const event = messageEvent.data;
 
 			if (event.name === FORWARDED_ONSHAPE_EVENTS.ELEMENT_LOAD_DONE) {

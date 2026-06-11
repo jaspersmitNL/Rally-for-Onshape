@@ -1,3 +1,9 @@
+import type {
+	ClassifiedOnshapeSelection,
+	OnshapeSelection,
+	OnshapeSelectionKind,
+} from "@/types/onshape/selection";
+
 export type PressKeyOptions = {
 	code?: string;
 	keyCode?: number;
@@ -383,4 +389,36 @@ export function watchElementPresence(
 	});
 
 	return () => observer.disconnect();
+}
+
+export function classifyOnshapeSelection(
+	selection: OnshapeSelection,
+): ClassifiedOnshapeSelection {
+	const isFace = selection.isFace();
+	const isEdge = selection.isEdge();
+	const isVertex = selection.isVertex();
+	const isSketchFeature = selection.isSketchFeature();
+	const isUserSketchEntity = selection.isUserSketchEntity();
+	const isBody = selection.isBody();
+	const isMateConnector = selection.isMateConnector();
+	const isFeature = selection.isFeature();
+
+	let kind: OnshapeSelectionKind = "unknown";
+
+	if (isFace) kind = "face";
+	else if (isEdge) kind = "edge";
+	else if (isVertex) kind = "vertex";
+	else if (isSketchFeature) kind = "sketch";
+	else if (isUserSketchEntity) kind = "sketch-entity";
+	else if (isBody) kind = "body";
+	else if (isMateConnector) kind = "mate-connector";
+	else if (isFeature) kind = "feature";
+
+	return {
+		kind,
+		id: selection.getIdString(),
+		name: selection.getName(),
+		pickLocation: selection.getPickLocation(),
+		planarNormal: selection.getPlanarNormal(),
+	};
 }

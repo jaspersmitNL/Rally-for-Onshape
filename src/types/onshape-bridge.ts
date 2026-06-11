@@ -103,6 +103,11 @@ export interface GetUserShortcutCommandsMessage extends BaseInboundMessage {
 	requestId: string;
 }
 
+export interface GetCurrentUserSelectionCommandMessage
+	extends BaseInboundMessage {
+	type: "GET_CURRENT_USER_SELECTIONS";
+}
+
 export interface ExecuteBroadcastEventMessage extends BaseInboundMessage {
 	type: "OS_EXECUTE_BROADCAST_EVENT";
 	name: string;
@@ -119,4 +124,5 @@ export interface ExecuteCommandMessage extends BaseInboundMessage {
 export type InboundBridgeMessage =
 	| GetUserShortcutCommandsMessage
 	| ExecuteBroadcastEventMessage
-	| ExecuteCommandMessage;
+	| ExecuteCommandMessage
+	| GetCurrentUserSelectionCommandMessage;
