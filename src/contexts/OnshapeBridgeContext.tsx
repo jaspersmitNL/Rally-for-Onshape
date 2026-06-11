@@ -23,9 +23,12 @@ type OnshapeBridgeEvent = {
 
 type OnshapeBridgeHandler = (event: OnshapeBridgeEvent) => void;
 
+type AllTools = { tabType: string; commands: SafeOnshapeCommand[] }[];
+
 type OnshapeBridgeContextValue = {
 	isDocumentLoaded: boolean;
 	toolbarType: OnshapeToolbarMode;
+	allAvailableTools: AllTools;
 	currentTool: string | null;
 	setCurrentTool: (v: string | null) => void;
 	undoEnabled: boolean;
@@ -45,8 +48,6 @@ function isOnshapeBridgeEvent(data: unknown): data is OnshapeBridgeEvent {
 		typeof (data as any).name === "string"
 	);
 }
-
-type AllTools = { tabType: string; commands: SafeOnshapeCommand[] }[];
 
 export function OnshapeBridgeProvider({ children }: { children: ReactNode }) {
 	const [isDocumentLoaded, setIsDocumentLoaded] = useState(false);

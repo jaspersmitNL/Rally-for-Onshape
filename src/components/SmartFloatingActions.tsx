@@ -2,8 +2,13 @@ import { debounce } from "lodash-es";
 import { Move3d, Sparkles } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FORWARDED_ONSHAPE_EVENTS } from "@/constants/onshapeEvents";
-import { useOnshapeBridgeSubscription } from "@/contexts/OnshapeBridgeContext";
+import {
+	useOnshapeBridge,
+	useOnshapeBridgeSubscription,
+} from "@/contexts/OnshapeBridgeContext";
+import { executeOnshapeShortcutCommand } from "@/core/utils";
 import type { ClassifiedOnshapeSelection } from "@/types/onshape/selection";
+import { OnshapeIcon } from "./OnShapeIcon";
 import { RadialContextMenu } from "./RadialContextMenu";
 
 type Position = {
@@ -21,12 +26,16 @@ function isFromSmartFloatingActions(event: Event) {
 }
 
 export function SmartFloatingActions() {
+	const { allAvailableTools, toolbarType } = useOnshapeBridge();
+
 	const lastPointerPositionRef = useRef<Position | null>(null);
 
 	const [selections, setSelections] = useState<ClassifiedOnshapeSelection[]>(
 		[],
 	);
 	const [position, setPosition] = useState<Position | null>(null);
+
+	const modeTools = allAvailableTools.find((c) => c.tabType === toolbarType);
 
 	const triggerFetchOfSelections = useMemo(
 		() =>
@@ -47,7 +56,7 @@ export function SmartFloatingActions() {
 
 			lastPointerPositionRef.current = {
 				left: event.clientX,
-				top: event.clientY - 150,
+				top: event.clientY - 50,
 			};
 
 			triggerFetchOfSelections();
@@ -93,24 +102,16 @@ export function SmartFloatingActions() {
 	);
 
 	const items = useMemo(
-		() => [
-			{
-				id: "demo",
-				label: "Demo",
-				icon: <Sparkles className="h-4 w-4" />,
+		() =>
+			modeTools?.commands.slice(0, 3).map((s) => ({
+				id: s.id,
+				label: s.command,
+				icon: <OnshapeIcon icon={s.icon as string} />,
 				onClick: () => {
-					console.log("Selected items", selections);
+					executeOnshapeShortcutCommand(s);
 				},
-			},
-			{
-				id: "extrude",
-				label: "Extrude",
-				icon: <Move3d className="h-4 w-4" />,
-				onClick: () => {
-					console.log("Extrude face", selections);
-				},
-			},
-		],
+			})) || [],
+
 		[selections],
 	);
 
