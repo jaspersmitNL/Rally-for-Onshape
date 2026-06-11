@@ -16,8 +16,8 @@ type Position = {
 };
 
 const SMART_COMMANDS = {
-	singleEdge: ["fillet", "chamfer", "measure"],
-	singleFace: ["extrude", "sketch", "measure"],
+	singleEdge: ["fillet", "chamfer"],
+	singleFace: ["extrude", "newSketch", "moveFace", "offsetSurface"],
 } as const;
 
 function isFromSmartFloatingActions(event: Event) {
@@ -65,7 +65,7 @@ export function SmartFloatingActions() {
 					},
 					window.location.origin,
 				);
-			}, 75),
+			}, 200),
 		[],
 	);
 
