@@ -6,6 +6,7 @@ import type { GetUserShortcutCommandsMessage } from "@/types/onshape-bridge";
 import { executeBroadcastEvent, postToPage } from "./angular-events";
 import {
 	executeCommand,
+	getAllAvailableCommands,
 	getCurrentSelectionCommands,
 	getUserShortcutCommands,
 } from "./commands";
@@ -26,6 +27,24 @@ async function handleGetUserShortcutCommands(
 			type: "OS_GET_USER_SHORTCUT_COMMANDS_RESULT",
 			requestId: data.requestId,
 			modes: [],
+			error: String(error),
+		});
+	}
+}
+
+async function handleGetAllCommandsCommands(): Promise<void> {
+	try {
+		const result = await getAllAvailableCommands();
+		postToPage({
+			name: "OS_GET_ALL_AVAILABLE_COMMANDS_RESULT",
+			type: ACCEPTED_ONSHAPE_TO_EXTENSION_EVENT_TYPE,
+			data: result,
+		});
+	} catch (error) {
+		postToPage({
+			name: "OS_GET_ALL_AVAILABLE_COMMANDS_RESULT",
+			type: ACCEPTED_ONSHAPE_TO_EXTENSION_EVENT_TYPE,
+			data: [],
 			error: String(error),
 		});
 	}
@@ -69,6 +88,12 @@ export function handleMessage(event: MessageEvent<unknown>): void {
 
 		case "GET_CURRENT_USER_SELECTIONS": {
 			handleCurrentUserSelectionsCommands();
+			return;
+		}
+
+		case "OS_GET_ALL_AVAILABLE_COMMANDS": {
+			console.log("EHHLLOO");
+			handleGetAllCommandsCommands();
 			return;
 		}
 

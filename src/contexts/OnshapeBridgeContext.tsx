@@ -12,6 +12,7 @@ import {
 	FORWARDED_ONSHAPE_EVENTS,
 } from "@/constants/onshapeEvents";
 import type { OnshapeToolbarMode } from "@/types";
+import type { SafeOnshapeCommand } from "@/types/onshape-bridge";
 
 type OnshapeBridgeEvent = {
 	type: typeof ACCEPTED_ONSHAPE_TO_EXTENSION_EVENT_TYPE;
@@ -45,12 +46,15 @@ function isOnshapeBridgeEvent(data: unknown): data is OnshapeBridgeEvent {
 	);
 }
 
+type AllTools = { tabType: string; commands: SafeOnshapeCommand[] }[];
+
 export function OnshapeBridgeProvider({ children }: { children: ReactNode }) {
 	const [isDocumentLoaded, setIsDocumentLoaded] = useState(false);
 	const [toolbarType, setToolbarType] =
 		useState<OnshapeToolbarMode>("Part Studio");
 	const [currentTool, setCurrentTool] = useState<string | null>(null);
 	const [undoEnabled, setUndoEnabled] = useState(false);
+	const [allAvailableTools, setAllAvailableTools] = useState<AllTools>([]);
 	const [redoEnabled, setRedoEnabled] = useState(false);
 	const [subscribers] = useState(() => new Set<OnshapeBridgeHandler>());
 
@@ -65,6 +69,15 @@ export function OnshapeBridgeProvider({ children }: { children: ReactNode }) {
 		[subscribers],
 	);
 
+	const requestAllCommands = () => {
+		window.postMessage(
+			{
+				type: "OS_GET_ALL_AVAILABLE_COMMANDS",
+			},
+			window.location.origin,
+		);
+	};
+
 	useEffect(() => {
 		function onMessage(messageEvent: MessageEvent) {
 			if (messageEvent.source !== window) return;
@@ -73,6 +86,7 @@ export function OnshapeBridgeProvider({ children }: { children: ReactNode }) {
 
 			if (event.name === FORWARDED_ONSHAPE_EVENTS.ELEMENT_LOAD_DONE) {
 				setIsDocumentLoaded(true);
+				requestAllCommands();
 			}
 
 			if (event.name === FORWARDED_ONSHAPE_EVENTS.DOCUMENT_UNLOADED) {
@@ -80,6 +94,13 @@ export function OnshapeBridgeProvider({ children }: { children: ReactNode }) {
 				setCurrentTool(null);
 				setUndoEnabled(false);
 				setRedoEnabled(false);
+			}
+
+			if (
+				event.name ===
+				FORWARDED_ONSHAPE_EVENTS.OS_GET_ALL_AVAILABLE_COMMANDS_RESULT
+			) {
+				setAllAvailableTools(event.data as AllTools);
 			}
 
 			if (event.name === FORWARDED_ONSHAPE_EVENTS.CHANGE_ELEMENT_TOOLBAR) {
@@ -133,6 +154,7 @@ export function OnshapeBridgeProvider({ children }: { children: ReactNode }) {
 	const value = useMemo(
 		() => ({
 			isDocumentLoaded,
+			allAvailableTools,
 			toolbarType,
 			currentTool,
 			undoEnabled,
@@ -142,6 +164,7 @@ export function OnshapeBridgeProvider({ children }: { children: ReactNode }) {
 		}),
 		[
 			isDocumentLoaded,
+			allAvailableTools,
 			toolbarType,
 			currentTool,
 			undoEnabled,

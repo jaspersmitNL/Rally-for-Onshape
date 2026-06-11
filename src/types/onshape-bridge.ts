@@ -46,7 +46,7 @@ export interface OnshapeMiniToolbarSettingGroup {
 
 export interface OnshapeMiniToolbarCollectionGroup {
 	tabType: string;
-	commands?: OnshapeCommand[];
+	commands: OnshapeCommand[];
 }
 
 export interface MiniToolbarService {
@@ -108,6 +108,11 @@ export interface GetCurrentUserSelectionCommandMessage
 	type: "GET_CURRENT_USER_SELECTIONS";
 }
 
+export interface GetAllAvailableCommandsCommandMessage
+	extends BaseInboundMessage {
+	type: "OS_GET_ALL_AVAILABLE_COMMANDS";
+}
+
 export interface ExecuteBroadcastEventMessage extends BaseInboundMessage {
 	type: "OS_EXECUTE_BROADCAST_EVENT";
 	name: string;
@@ -125,4 +130,5 @@ export type InboundBridgeMessage =
 	| GetUserShortcutCommandsMessage
 	| ExecuteBroadcastEventMessage
 	| ExecuteCommandMessage
-	| GetCurrentUserSelectionCommandMessage;
+	| GetCurrentUserSelectionCommandMessage
+	| GetAllAvailableCommandsCommandMessage;

@@ -96,6 +96,28 @@ export function getCurrentSelectionCommands() {
 	return annoatetedSelection;
 }
 
+export async function getAllAvailableCommands(): Promise<
+	{ tabType: string; commands: SafeOnshapeCommand[] }[]
+> {
+	const injector = getInjector();
+	if (!injector) throw new Error("Onshape injector not available");
+
+	const mini = injector.get<MiniToolbarService>("MiniToolbarService");
+	mini.refreshMiniToolbarSettings();
+
+	await delay(1000);
+
+	return (
+		mini?.miniToolbarCollection?.map((c) => ({
+			...c,
+			commands:
+				c.commands?.map((command) =>
+					safeCommand(command, c.tabType, c.tabType),
+				) || [],
+		})) || []
+	);
+}
+
 export function executeCommand(data: ExecuteCommandMessage): void {
 	const injector = getInjector();
 	const service = injector?.get<ElementToolbarService>("ElementToolbarService");
