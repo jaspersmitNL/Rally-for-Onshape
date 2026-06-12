@@ -93,7 +93,7 @@ function getSmartCommandNames(selections: ClassifiedOnshapeSelection[]) {
 }
 
 export function SmartFloatingActions() {
-	const { allAvailableTools, toolbarType } = useOnshapeBridge();
+	const { allAvailableTools, toolbarType, currentTool } = useOnshapeBridge();
 
 	const lastPointerPositionRef = useRef<Position | null>(null);
 	const selectionSignatureRef = useRef("");
@@ -231,7 +231,8 @@ export function SmartFloatingActions() {
 			.filter((item): item is NonNullable<typeof item> => item !== null);
 	}, [modeTools, selections]);
 
-	if (selections.length === 0 || !position || items.length === 0) return null;
+	if (currentTool || selections.length === 0 || !position || items.length === 0)
+		return null;
 
 	return (
 		<RadialContextMenu

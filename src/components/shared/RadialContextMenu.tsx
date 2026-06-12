@@ -1,5 +1,4 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { capitalize } from "lodash-es";
 import { Zap } from "lucide-react";
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
