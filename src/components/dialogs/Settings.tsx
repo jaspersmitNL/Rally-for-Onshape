@@ -1,5 +1,4 @@
-import { Code, Coffee, MessageCircle, Pencil } from "lucide-react";
-import { useState } from "react";
+import { Code, Coffee, MessageCircle, Pencil, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -15,11 +14,7 @@ import {
 	GITHUB_URL,
 } from "@/constants/social";
 import { useSettingsDialog } from "@/contexts/SettingsDialogContext";
-import {
-	type FloatingNumpadMode,
-	getFloatingNumpadMode,
-	setFloatingNumpadMode,
-} from "@/core/settings";
+import type { FloatingNumpadMode } from "@/core/settings";
 
 const links = [
 	{
@@ -74,15 +69,14 @@ const floatingNumpadModes: {
 ];
 
 export function SettingsDialog() {
-	const { isSettingsOpen, setSettingsOpen } = useSettingsDialog();
-	const [numpadMode, setNumpadModeState] = useState<FloatingNumpadMode>(() =>
-		getFloatingNumpadMode(),
-	);
-
-	function updateNumpadMode(mode: FloatingNumpadMode) {
-		setNumpadModeState(mode);
-		setFloatingNumpadMode(mode);
-	}
+	const {
+		isSettingsOpen,
+		setSettingsOpen,
+		floatingNumpadMode,
+		setFloatingNumpadMode,
+		smartFloatingActionsEnabled,
+		setSmartFloatingActionsEnabled,
+	} = useSettingsDialog();
 
 	return (
 		<Dialog open={isSettingsOpen} onOpenChange={setSettingsOpen}>
@@ -122,7 +116,7 @@ export function SettingsDialog() {
 
 							<div className="mt-3 grid grid-cols-3 gap-1.5">
 								{floatingNumpadModes.map((mode) => {
-									const isSelected = numpadMode === mode.value;
+									const isSelected = floatingNumpadMode === mode.value;
 
 									return (
 										<Button
@@ -135,7 +129,7 @@ export function SettingsDialog() {
 													? "border-blue-400/30 bg-blue-500/20 text-blue-100 hover:bg-blue-500/25"
 													: "border-white/10 bg-white/[0.045] text-slate-300 hover:bg-white/10 hover:text-white",
 											].join(" ")}
-											onClick={() => updateNumpadMode(mode.value)}
+											onClick={() => setFloatingNumpadMode(mode.value)}
 										>
 											{mode.label}
 										</Button>
@@ -145,9 +139,55 @@ export function SettingsDialog() {
 
 							<div className="mt-3 text-xs leading-snug text-slate-400">
 								{
-									floatingNumpadModes.find((mode) => mode.value === numpadMode)
-										?.description
+									floatingNumpadModes.find(
+										(mode) => mode.value === floatingNumpadMode,
+									)?.description
 								}
+							</div>
+						</div>
+
+						<div className="mt-3 rounded-xl border border-white/10 bg-white/[0.035] p-3">
+							<div className="flex items-start gap-3">
+								<div
+									className="
+										flex h-10 w-10 shrink-0 items-center justify-center rounded-xl
+										border border-white/10 bg-white/[0.06] text-blue-300
+									"
+								>
+									<Zap className="h-5 w-5" />
+								</div>
+
+								<div className="min-w-0 flex-1">
+									<div className="text-sm font-medium text-slate-100">
+										Smart Context Actions
+									</div>
+
+									<div className="mt-1 text-xs leading-snug text-slate-300">
+										Shows a small lightning menu near your selection with
+										relevant CAD actions. It adapts automatically for faces,
+										edges, and multi-selection workflows.
+									</div>
+								</div>
+
+								<Button
+									type="button"
+									variant="ghost"
+									className={[
+										"h-9 shrink-0 cursor-pointer rounded-lg border px-3 text-xs font-medium",
+										smartFloatingActionsEnabled
+											? "border-blue-400/30 bg-blue-500/20 text-blue-100 hover:bg-blue-500/25"
+											: "border-white/10 bg-white/[0.045] text-slate-300 hover:bg-white/10 hover:text-white",
+									].join(" ")}
+									onClick={() =>
+										setSmartFloatingActionsEnabled(!smartFloatingActionsEnabled)
+									}
+								>
+									{smartFloatingActionsEnabled ? "On" : "Off"}
+								</Button>
+							</div>
+
+							<div className="mt-3 text-xs leading-snug text-slate-400">
+								Experimental... but amazing.
 							</div>
 						</div>
 

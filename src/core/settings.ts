@@ -34,3 +34,13 @@ export function shouldUseFloatingNumpad(): boolean {
 			);
 	}
 }
+
+const SMART_FLOATING_ACTIONS_KEY = "smartFloatingActionsEnabled";
+
+export function getSmartFloatingActionsEnabled() {
+	return localStorage.getItem(SMART_FLOATING_ACTIONS_KEY) === "true";
+}
+
+export function setSmartFloatingActionsEnabled(enabled: boolean) {
+	localStorage.setItem(SMART_FLOATING_ACTIONS_KEY, String(enabled));
+}
