@@ -78,7 +78,7 @@ export function RadialContextMenu({
 	return (
 		<div
 			className={[
-				"os-smart-floating-actions fixed z-[999999] select-none",
+				"os-smart-floating-actions pointer-events-none fixed z-[999999] select-none",
 				className ?? "",
 			].join(" ")}
 			style={{
@@ -88,10 +88,7 @@ export function RadialContextMenu({
 			}}
 		>
 			<div
-				className={[
-					"relative h-[180px] w-[180px]",
-					open ? "pointer-events-auto" : "pointer-events-none",
-				].join(" ")}
+				className="relative h-[180px] w-[180px] pointer-events-none"
 				onPointerEnter={cancelClose}
 				onPointerLeave={scheduleClose}
 			>
@@ -115,7 +112,7 @@ export function RadialContextMenu({
 							return (
 								<motion.div
 									key={item.id}
-									className="absolute left-1/2 top-1/2"
+									className="pointer-events-auto absolute left-1/2 top-1/2"
 									initial={{
 										x: "-50%",
 										y: "-50%",
