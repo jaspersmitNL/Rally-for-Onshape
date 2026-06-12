@@ -1,7 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { capitalize } from "lodash-es";
 import { Zap } from "lucide-react";
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export type RadialContextMenuItem = {
 	id: string;
@@ -9,6 +12,7 @@ export type RadialContextMenuItem = {
 	icon: ReactNode;
 	onClick: () => void;
 	disabled?: boolean;
+	tooltipContent: string;
 };
 
 type Position = {
@@ -139,50 +143,63 @@ export function RadialContextMenu({
 										delay: index * 0.025,
 									}}
 								>
-									<Button
-										type="button"
-										size="icon"
-										variant="ghost"
-										disabled={item.disabled}
-										title={item.label}
-										aria-label={item.label}
-										className={[
-											"os-plus-glass",
-											"grid rounded-full text-slate-100",
-											"hover:bg-transparent hover:text-white",
-											"active:scale-95",
-											"disabled:pointer-events-none disabled:opacity-35",
-										].join(" ")}
-										style={{
-											width: BUTTON_SIZE,
-											height: BUTTON_SIZE,
-										}}
-										onPointerDown={(event) => {
-											event.preventDefault();
-											event.stopPropagation();
-										}}
-										onPointerUp={(event) => {
-											event.preventDefault();
-											event.stopPropagation();
-										}}
-										onClick={(event) => {
-											event.preventDefault();
-											event.stopPropagation();
+									<Tooltip key={item.id} disableHoverableContent>
+										<TooltipTrigger asChild>
+											<Button
+												type="button"
+												size="icon"
+												variant="ghost"
+												disabled={item.disabled}
+												className={[
+													"os-plus-glass cursor-pointer",
+													"grid rounded-full text-slate-100",
+													"hover:bg-transparent hover:text-white",
+													"active:scale-95",
+													"disabled:pointer-events-none disabled:opacity-35",
+												].join(" ")}
+												style={{
+													width: BUTTON_SIZE,
+													height: BUTTON_SIZE,
+												}}
+												onPointerDown={(event) => {
+													event.preventDefault();
+													event.stopPropagation();
+												}}
+												onPointerUp={(event) => {
+													event.preventDefault();
+													event.stopPropagation();
+												}}
+												onClick={(event) => {
+													event.preventDefault();
+													event.stopPropagation();
 
-											item.onClick();
-											setOpen(false);
-										}}
-									>
-										<motion.span
-											className="grid h-full w-full place-items-center rounded-full"
-											whileHover={{ scale: 1.12 }}
-											whileTap={{ scale: 0.94 }}
-										>
-											<span className="grid h-5 w-5 place-items-center">
-												{item.icon}
-											</span>
-										</motion.span>
-									</Button>
+													item.onClick();
+													setOpen(false);
+												}}
+											>
+												<motion.span
+													className="grid h-full w-full place-items-center rounded-full"
+													whileHover={{ scale: 1.12 }}
+													whileTap={{ scale: 0.94 }}
+												>
+													<span className="grid h-5 w-5 place-items-center">
+														{item.icon}
+													</span>
+												</motion.span>
+											</Button>
+										</TooltipTrigger>
+
+										<TooltipContent side="right" className=" z-[10000000]">
+											<Card className="w-[350px]">
+												<CardHeader>
+													<CardTitle>{item.label}</CardTitle>
+													<CardDescription>
+														{item.tooltipContent}
+													</CardDescription>
+												</CardHeader>
+											</Card>
+										</TooltipContent>
+									</Tooltip>
 								</motion.div>
 							);
 						})}
@@ -235,7 +252,6 @@ export function RadialContextMenu({
 						<motion.span
 							animate={{
 								scale: open ? 1.25 : 1,
-								rotate: open ? 12 : 0,
 							}}
 							transition={{
 								type: "spring",

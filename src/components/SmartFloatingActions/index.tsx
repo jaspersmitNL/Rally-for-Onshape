@@ -1,4 +1,4 @@
-import { debounce } from "lodash-es";
+import { capitalize, debounce } from "lodash-es";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { OnshapeIcon } from "@/components/shared/OnShapeIcon";
 import { RadialContextMenu } from "@/components/shared/RadialContextMenu";
@@ -218,7 +218,10 @@ export function SmartFloatingActions() {
 
 				return {
 					id: tool.id,
-					label: tool.command,
+					label: capitalize(tool.command),
+					tooltipContent: capitalize(
+						tool.expandedTooltipKey?.replace("tooltips:::", ""),
+					),
 					icon: <OnshapeIcon icon={tool.icon as string} />,
 					onClick: () => {
 						executeOnshapeShortcutCommand(tool);
