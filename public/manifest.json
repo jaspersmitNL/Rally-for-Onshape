@@ -24,6 +24,19 @@
 			"run_at": "document_idle"
 		}
 	],
+	"commands": {
+		"reload-extension": {
+			"suggested_key": {
+				"default": "Ctrl+Shift+R",
+				"mac": "Command+Shift+R"
+			},
+			"description": "Reload extension"
+		}
+	},
+	"background": {
+		"service_worker": "background.js",
+		"type": "module"
+	},
 	"web_accessible_resources": [
 		{
 			"resources": ["onshape-page-bridge.js"],

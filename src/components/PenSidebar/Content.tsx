@@ -1,7 +1,7 @@
 import { capitalize } from "lodash-es";
 import { LoaderCircle, XCircle } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { OnshapeIcon } from "@/components/OnShapeIcon";
+import { OnshapeIcon } from "@/components/shared/OnShapeIcon";
 import { Button } from "@/components/ui/button";
 import {
 	Card,

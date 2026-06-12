@@ -10,7 +10,7 @@ import {
 	pressKey,
 	setNativeValue,
 	suppressVirtualKeyboard,
-} from "../core/utils";
+} from "@/core/utils";
 
 const ACTION_DELAY = 40;
 const AUTO_HIDE_DELAY = 600;

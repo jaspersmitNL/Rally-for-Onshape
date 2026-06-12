@@ -1,5 +1,7 @@
 import { debounce } from "lodash-es";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { OnshapeIcon } from "@/components/shared/OnShapeIcon";
+import { RadialContextMenu } from "@/components/shared/RadialContextMenu";
 import { FORWARDED_ONSHAPE_EVENTS } from "@/constants/onshapeEvents";
 import {
 	useOnshapeBridge,
@@ -7,8 +9,6 @@ import {
 } from "@/contexts/OnshapeBridgeContext";
 import { executeOnshapeShortcutCommand } from "@/core/utils";
 import type { ClassifiedOnshapeSelection } from "@/types/onshape/selection";
-import { OnshapeIcon } from "./OnShapeIcon";
-import { RadialContextMenu } from "./RadialContextMenu";
 
 type Position = {
 	left: number;
