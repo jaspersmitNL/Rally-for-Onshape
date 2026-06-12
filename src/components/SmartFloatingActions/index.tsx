@@ -95,10 +95,24 @@ function getSmartCommandNames(selections: ClassifiedOnshapeSelection[]) {
 	return [];
 }
 
+function isFromOnshapeCanvas(event: Event) {
+	return event.composedPath().some((target) => {
+		if (target instanceof HTMLCanvasElement) return true;
+
+		return (
+			target instanceof HTMLElement &&
+			(target.id === "canvas" ||
+				target.classList.contains("canvas") ||
+				target.classList.contains("os-canvas"))
+		);
+	});
+}
+
 export function SmartFloatingActions() {
 	const { allAvailableTools, toolbarType, currentTool } = useOnshapeBridge();
 
 	const lastPointerPositionRef = useRef<Position | null>(null);
+	const lastSelectionInteractionWasCanvasRef = useRef(false);
 	const selectionSignatureRef = useRef("");
 	const suppressUntilNextUserInteractionRef = useRef(false);
 	const positionRef = useRef<Position | null>(null);
@@ -142,6 +156,14 @@ export function SmartFloatingActions() {
 		const handlePointerEvent = (event: PointerEvent) => {
 			if (isFromSmartFloatingActions(event)) return;
 
+			const isCanvasInteraction = isFromOnshapeCanvas(event);
+			lastSelectionInteractionWasCanvasRef.current = isCanvasInteraction;
+
+			if (!isCanvasInteraction) {
+				updatePosition(null);
+				return;
+			}
+
 			suppressUntilNextUserInteractionRef.current = false;
 			updateLastPointerPosition(event);
 
@@ -152,6 +174,14 @@ export function SmartFloatingActions() {
 
 		const handleMouseEvent = (event: MouseEvent) => {
 			if (isFromSmartFloatingActions(event)) return;
+
+			const isCanvasInteraction = isFromOnshapeCanvas(event);
+			lastSelectionInteractionWasCanvasRef.current = isCanvasInteraction;
+
+			if (!isCanvasInteraction) {
+				updatePosition(null);
+				return;
+			}
 
 			suppressUntilNextUserInteractionRef.current = false;
 			updateLastPointerPosition(event);
@@ -209,6 +239,7 @@ export function SmartFloatingActions() {
 
 		const handlePointerDown = (event: PointerEvent) => {
 			if (isFromSmartFloatingActions(event)) return;
+			if (!isFromOnshapeCanvas(event)) return;
 			if (!positionRef.current) return;
 
 			isDraggingCanvas = true;
@@ -229,6 +260,7 @@ export function SmartFloatingActions() {
 
 		const handleWheel = (event: WheelEvent) => {
 			if (!positionRef.current) return;
+			if (!isFromOnshapeCanvas(event)) return;
 			if (isFromSmartFloatingActions(event)) return;
 
 			const scale = event.deltaY < 0 ? 1.04 : 0.96;
@@ -296,6 +328,11 @@ export function SmartFloatingActions() {
 				setSelections(nextSelections);
 
 				if (nextSelections.length === 0) {
+					updatePosition(null);
+					return;
+				}
+
+				if (!lastSelectionInteractionWasCanvasRef.current) {
 					updatePosition(null);
 					return;
 				}
