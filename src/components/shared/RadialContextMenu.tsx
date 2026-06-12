@@ -22,7 +22,8 @@ type RadialContextMenuProps = {
 	className?: string;
 };
 
-const MENU_RADIUS = 76;
+const MENU_RADIUS = 68;
+const ITEM_ANGLE_STEP = 48;
 const CENTER_SIZE = 48;
 const BUTTON_SIZE = 44;
 const CLOSE_DELAY = 300;
@@ -32,10 +33,9 @@ function getRadialLayout(index: number, count: number) {
 		return { x: 0, y: -MENU_RADIUS };
 	}
 
-	const totalArc = Math.min(140, Math.max(70, (count - 1) * 54));
+	const totalArc = (count - 1) * ITEM_ANGLE_STEP;
 	const startAngle = -90 - totalArc / 2;
-	const endAngle = -90 + totalArc / 2;
-	const angle = startAngle + (index * (endAngle - startAngle)) / (count - 1);
+	const angle = startAngle + index * ITEM_ANGLE_STEP;
 	const radians = (angle * Math.PI) / 180;
 
 	return {
@@ -88,7 +88,7 @@ export function RadialContextMenu({
 			}}
 		>
 			<div
-				className="relative h-[180px] w-[180px] pointer-events-none"
+				className="relative h-[240px] w-[240px] pointer-events-none"
 				onPointerEnter={cancelClose}
 				onPointerLeave={scheduleClose}
 			>
