@@ -30,6 +30,7 @@ const ITEM_ANGLE_STEP = 48;
 const CENTER_SIZE = 48;
 const BUTTON_SIZE = 44;
 const CLOSE_DELAY = 300;
+const TOUCH_CLICK_IGNORE_MS = 500;
 
 function getRadialLayout(index: number, count: number) {
 	if (count <= 1) {
@@ -53,6 +54,7 @@ export function RadialContextMenu({
 	className,
 }: RadialContextMenuProps) {
 	const closeTimerRef = useRef<number | null>(null);
+	const lastTouchPointerDownRef = useRef(0);
 	const [open, setOpen] = useState(false);
 
 	const menuItems = useMemo(() => items, [items]);
@@ -70,6 +72,11 @@ export function RadialContextMenu({
 		closeTimerRef.current = window.setTimeout(() => {
 			setOpen(false);
 		}, CLOSE_DELAY);
+	}
+
+	function toggleOpen() {
+		cancelClose();
+		setOpen((value) => !value);
 	}
 
 	useEffect(() => {
@@ -92,8 +99,16 @@ export function RadialContextMenu({
 		>
 			<div
 				className="relative h-[240px] w-[240px] pointer-events-none"
-				onPointerEnter={cancelClose}
-				onPointerLeave={scheduleClose}
+				onPointerEnter={(event) => {
+					if (event.pointerType === "mouse" || event.pointerType === "pen") {
+						cancelClose();
+					}
+				}}
+				onPointerLeave={(event) => {
+					if (event.pointerType === "mouse" || event.pointerType === "pen") {
+						scheduleClose();
+					}
+				}}
 			>
 				<AnimatePresence>
 					{open && (
@@ -150,7 +165,7 @@ export function RadialContextMenu({
 												variant="ghost"
 												disabled={item.disabled}
 												className={[
-													"os-plus-glass cursor-pointer",
+													"os-plus-glass touch-none cursor-pointer",
 													"grid rounded-full text-slate-100",
 													"hover:bg-transparent hover:text-white",
 													"active:scale-95",
@@ -188,7 +203,7 @@ export function RadialContextMenu({
 											</Button>
 										</TooltipTrigger>
 
-										<TooltipContent side="right" className=" z-[10000000]">
+										<TooltipContent side="right" className="z-[10000000]">
 											<Card className="w-[350px]">
 												<CardHeader>
 													<CardTitle>{item.label}</CardTitle>
@@ -227,25 +242,46 @@ export function RadialContextMenu({
 						variant="ghost"
 						aria-label={open ? "Close actions" : "Open actions"}
 						className={[
-							"os-plus-glass",
+							"os-plus-glass touch-none",
 							"h-full w-full rounded-full text-white",
 							"hover:bg-transparent",
 							"active:scale-95",
 						].join(" ")}
-						onPointerEnter={() => {
-							cancelClose();
-							setOpen(true);
+						onPointerEnter={(event) => {
+							if (
+								event.pointerType === "mouse" ||
+								event.pointerType === "pen"
+							) {
+								cancelClose();
+								setOpen(true);
+							}
 						}}
 						onPointerDown={(event) => {
 							event.preventDefault();
 							event.stopPropagation();
 
 							cancelClose();
-							setOpen((value) => !value);
+
+							if (event.pointerType === "touch") {
+								lastTouchPointerDownRef.current = Date.now();
+								toggleOpen();
+							}
 						}}
 						onPointerUp={(event) => {
 							event.preventDefault();
 							event.stopPropagation();
+						}}
+						onClick={(event) => {
+							event.preventDefault();
+							event.stopPropagation();
+
+							const justHandledTouch =
+								Date.now() - lastTouchPointerDownRef.current <
+								TOUCH_CLICK_IGNORE_MS;
+
+							if (justHandledTouch) return;
+
+							toggleOpen();
 						}}
 					>
 						<motion.span
