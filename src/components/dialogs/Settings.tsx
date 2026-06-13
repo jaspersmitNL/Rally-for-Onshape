@@ -22,6 +22,7 @@ import {
 } from "@/constants/social";
 import { useSettingsDialog } from "@/contexts/SettingsDialogContext";
 import type { FloatingNumpadMode } from "@/core/settings";
+import { isSafari } from "@/lib/utils";
 import { ButtonGroup } from "../ui/button-group";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
@@ -52,8 +53,9 @@ const links = [
 		icon: Coffee,
 		href: BUY_ME_A_COFFEE_URL,
 		target: "_blank",
+		hidden: isSafari,
 	},
-];
+].filter((item) => !(item.hidden?.() ?? false));
 
 const floatingNumpadModes: {
 	value: FloatingNumpadMode;

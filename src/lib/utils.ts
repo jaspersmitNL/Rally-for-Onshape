@@ -56,3 +56,12 @@ export const getInitialPosition = () => {
 		return clampSidebarPosition(fallback);
 	}
 };
+
+export function isSafari() {
+	const userAgent = window.navigator.userAgent;
+
+	return (
+		/safari/i.test(userAgent) &&
+		!/chrome|chromium|crios|fxios|edgios|opr|opera|android/i.test(userAgent)
+	);
+}
