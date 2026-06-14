@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   publish-chrome:
-    name: Build, zip, and submit to Chrome Web Store
+    name: Build, zip, cancel pending review, and submit to Chrome Web Store
     runs-on: ubuntu-latest
 
     steps:
@@ -36,40 +36,46 @@ jobs:
 
           echo "access_token=$ACCESS_TOKEN" >> "$GITHUB_OUTPUT"
 
-      - name: Check Chrome Web Store review status
+      - name: Check and cancel pending Chrome Web Store review
         id: review_check
         shell: bash
         run: |
-          RESPONSE=$(curl -sS \
+          STATUS_RESPONSE=$(curl -sS \
             -H "Authorization: Bearer ${{ steps.auth.outputs.access_token }}" \
             "https://chromewebstore.googleapis.com/v2/publishers/${{ secrets.GOOGLE_CHROME_PUBLISHER_ID }}/items/${{ secrets.GOOGLE_CHROME_EXTENSION_ID }}:fetchStatus")
 
-          echo "$RESPONSE"
+          echo "$STATUS_RESPONSE"
 
-          SUBMITTED_STATE=$(echo "$RESPONSE" | jq -r '.submittedItemRevisionStatus.state // empty')
-          SUBMITTED_VERSION=$(echo "$RESPONSE" | jq -r '.submittedItemRevisionStatus.distributionChannels[0].crxVersion // empty')
+          SUBMITTED_STATE=$(echo "$STATUS_RESPONSE" | jq -r '.submittedItemRevisionStatus.state // empty')
+          SUBMITTED_VERSION=$(echo "$STATUS_RESPONSE" | jq -r '.submittedItemRevisionStatus.distributionChannels[0].crxVersion // empty')
 
           if [ "$SUBMITTED_STATE" = "PENDING_REVIEW" ]; then
-            echo "::notice::Chrome Web Store already has version $SUBMITTED_VERSION pending review. Skipping publish."
-            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Chrome Web Store has version $SUBMITTED_VERSION pending review. Cancelling it before uploading the new package."
+
+            CANCEL_RESPONSE=$(curl -sS -X POST \
+              -H "Authorization: Bearer ${{ steps.auth.outputs.access_token }}" \
+              "https://chromewebstore.googleapis.com/v2/publishers/${{ secrets.GOOGLE_CHROME_PUBLISHER_ID }}/items/${{ secrets.GOOGLE_CHROME_EXTENSION_ID }}:cancelSubmission")
+
+            echo "$CANCEL_RESPONSE"
+
+            if echo "$CANCEL_RESPONSE" | jq -e '.error' > /dev/null; then
+              echo "Failed to cancel pending Chrome Web Store review"
+              exit 1
+            fi
           else
             echo "No pending Chrome Web Store review found."
-            echo "should_publish=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Setup Node
-        if: steps.review_check.outputs.should_publish == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
       - name: Install dependencies
-        if: steps.review_check.outputs.should_publish == 'true'
         run: npm ci
 
       - name: Derive version from release tag
-        if: steps.review_check.outputs.should_publish == 'true'
         shell: bash
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
@@ -83,7 +89,6 @@ jobs:
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
 
       - name: Set package and manifest versions
-        if: steps.review_check.outputs.should_publish == 'true'
         run: |
           node -e "
             const fs = require('fs');
@@ -104,11 +109,9 @@ jobs:
           "
 
       - name: Build extension
-        if: steps.review_check.outputs.should_publish == 'true'
         run: npm run build
 
       - name: Verify built manifest version
-        if: steps.review_check.outputs.should_publish == 'true'
         run: |
           node -e "
             const manifest = require('./dist/manifest.json');
@@ -122,19 +125,16 @@ jobs:
           "
 
       - name: Zip extension
-        if: steps.review_check.outputs.should_publish == 'true'
         run: |
           cd dist
           zip -r ../chrome-extension-${{ env.VERSION }}.zip .
 
       - name: Upload ZIP to GitHub release
-        if: steps.review_check.outputs.should_publish == 'true'
         uses: softprops/action-gh-release@v2
         with:
           files: chrome-extension-${{ env.VERSION }}.zip
 
       - name: Upload extension to Chrome Web Store
-        if: steps.review_check.outputs.should_publish == 'true'
         shell: bash
         run: |
           RESPONSE=$(curl -sS -X POST \
@@ -152,7 +152,6 @@ jobs:
           fi
 
       - name: Submit extension for review
-        if: steps.review_check.outputs.should_publish == 'true'
         shell: bash
         run: |
           RESPONSE=$(curl -sS -X POST \
@@ -160,3 +159,8 @@ jobs:
             "https://chromewebstore.googleapis.com/v2/publishers/${{ secrets.GOOGLE_CHROME_PUBLISHER_ID }}/items/${{ secrets.GOOGLE_CHROME_EXTENSION_ID }}:publish")
 
           echo "$RESPONSE"
+
+          if echo "$RESPONSE" | jq -e '.error' > /dev/null; then
+            echo "Failed to submit extension for review"
+            exit 1
+          fi
