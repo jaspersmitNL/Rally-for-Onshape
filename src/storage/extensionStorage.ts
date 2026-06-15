@@ -32,7 +32,7 @@ export const DEFAULT_STORAGE_VALUES: OnshapePlusStorageSchema = {
 		multipleFaces: [
 			"extrude",
 			"loft",
-			"boolean",
+			"booleanBodies",
 			"deleteFace",
 			"moveFace",
 			"offsetSurface",
