@@ -253,11 +253,11 @@ export function SmartActionsCustomizer({
 
 				<div className="min-w-0 flex-1">
 					<div className="text-sm font-medium text-slate-100">
-						Customize Smart Actions
+						Quick Actions
 					</div>
 
 					<div className="mt-1 text-xs leading-snug text-slate-300">
-						Choose which actions appear for faces and edges.
+						Choose which actions appear when selecting faces and edges.
 					</div>
 				</div>
 				<div className="flex items-center gap-3">

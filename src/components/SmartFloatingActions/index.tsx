@@ -1,4 +1,5 @@
 import { capitalize, debounce } from "lodash-es";
+import { Settings } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { OnshapeIcon } from "@/components/shared/OnShapeIcon";
 import { RadialContextMenu } from "@/components/shared/RadialContextMenu";
@@ -8,6 +9,7 @@ import {
 	useOnshapeBridge,
 	useOnshapeBridgeSubscription,
 } from "@/contexts/OnshapeBridgeContext";
+import { useSettingsDialog } from "@/contexts/SettingsDialogContext";
 import {
 	executeOnshapeShortcutCommand,
 	watchElementPresence,
@@ -96,6 +98,7 @@ export function SmartFloatingActions() {
 	const { allAvailableTools, toolbarType, currentTool } = useOnshapeBridge();
 
 	const { settings } = useExtensionSettings();
+	const { openSettings } = useSettingsDialog();
 
 	const lastPointerPositionRef = useRef<Position | null>(null);
 	const lastSelectionInteractionWasCanvasRef = useRef(false);
@@ -352,25 +355,36 @@ export function SmartFloatingActions() {
 			settings.radialMenuConfig[selectedKind.config].includes(m.command),
 		);
 
-		return selectedTools
-			.map((tool) => {
-				if (!tool) return null;
+		return [
+			...selectedTools
+				.map((tool) => {
+					if (!tool) return null;
 
-				return {
-					id: tool.id,
-					label: tool.name?.replace("server:::", ""),
-					tooltipContent: capitalize(
-						tool.expandedTooltipKey?.replace("tooltips:::", "") ?? tool.command,
-					),
-					icon: <OnshapeIcon icon={tool.icon as string} />,
-					onClick: () => {
-						suppressUntilNextUserInteractionRef.current = true;
-						updatePosition(null);
-						executeOnshapeShortcutCommand(tool);
-					},
-				};
-			})
-			.filter((item): item is NonNullable<typeof item> => item !== null);
+					return {
+						id: tool.id,
+						label: tool.name?.replace("server:::", ""),
+						tooltipContent: capitalize(
+							tool.expandedTooltipKey?.replace("tooltips:::", "") ??
+								tool.command,
+						),
+						icon: <OnshapeIcon icon={tool.icon as string} />,
+						onClick: () => {
+							suppressUntilNextUserInteractionRef.current = true;
+							updatePosition(null);
+							executeOnshapeShortcutCommand(tool);
+						},
+					};
+				})
+				.filter((item): item is NonNullable<typeof item> => item !== null),
+			{
+				id: "customize",
+				label: "Customize",
+				tooltipContent:
+					"Enable or disable the Smart Actions menu and choose which tools appear for each selection type.",
+				icon: <Settings className="text-blue-300" />,
+				onClick: () => openSettings(),
+			},
+		];
 	}, [modeTools, selections, updatePosition]);
 
 	if (

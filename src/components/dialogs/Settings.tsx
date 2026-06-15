@@ -32,7 +32,7 @@ import { SmartActionsCustomizer } from "./SmartFloatingActionsConfiguration";
 
 const links = [
 	{
-		label: "Edit Quick Menu Actions",
+		label: "Toolbar Actions",
 		description: "Customize the Onshape shortcut menu used by Onshape Plus.",
 		icon: Pencil,
 		href: EDIT_SHORTCUT_ITEMS_URL,
@@ -86,8 +86,6 @@ const floatingNumpadModes: {
 export function SettingsDialog() {
 	const { isSettingsOpen, setSettingsOpen } = useSettingsDialog();
 	const { allAvailableTools } = useOnshapeBridge();
-
-	console.log(allAvailableTools);
 
 	const partsStudioTools =
 		allAvailableTools.find((t) => t.tabType === "Part Studio")?.commands || [];

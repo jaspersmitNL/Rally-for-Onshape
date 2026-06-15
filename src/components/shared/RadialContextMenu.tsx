@@ -2,7 +2,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Zap } from "lucide-react";
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import { useSettingsDialog } from "@/contexts/SettingsDialogContext";
+import {
+	Card,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "../ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export type RadialContextMenuItem = {
