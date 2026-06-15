@@ -292,9 +292,9 @@ export function SmartActionsCustomizer({
 									key={section.key}
 									className="rounded-lg border border-white/10 bg-black/15 p-3"
 								>
-									<div className="mb-2 flex items-start justify-between gap-3">
+									<div className="flex items-center justify-between gap-3">
 										<div className="min-w-0">
-											<div className="text-xs font-medium text-slate-100">
+											<div className="font-medium text-slate-100">
 												{section.label}
 											</div>
 										</div>
