@@ -25,10 +25,10 @@ type RadialContextMenuProps = {
 	className?: string;
 };
 
-const MENU_RADIUS = 68;
-const ITEM_ANGLE_STEP = 48;
-const CENTER_SIZE = 48;
-const BUTTON_SIZE = 44;
+const MENU_RADIUS = 62;
+const ITEM_ANGLE_STEP = 44;
+const CENTER_SIZE = 40;
+const BUTTON_SIZE = 40;
 const CLOSE_DELAY = 300;
 const TOUCH_CLICK_IGNORE_MS = 500;
 
@@ -165,7 +165,7 @@ export function RadialContextMenu({
 												variant="ghost"
 												disabled={item.disabled}
 												className={[
-													"os-plus-glass touch-none cursor-pointer",
+													"os-plus-glass os-plus-glass-dark touch-none cursor-pointer",
 													"grid rounded-full text-slate-100",
 													"hover:bg-transparent hover:text-white",
 													"active:scale-95",
@@ -242,7 +242,7 @@ export function RadialContextMenu({
 						variant="ghost"
 						aria-label={open ? "Close actions" : "Open actions"}
 						className={[
-							"os-plus-glass touch-none",
+							"os-plus-glass os-plus-glass-dark touch-none",
 							"h-full w-full rounded-full text-white",
 							"hover:bg-transparent",
 							"active:scale-95",
@@ -294,12 +294,7 @@ export function RadialContextMenu({
 								damping: 24,
 							}}
 						>
-							<Zap
-								className={[
-									"h-5 w-5",
-									open ? "text-blue-300" : "text-blue-400",
-								].join(" ")}
-							/>
+							<Zap className={["h-5 w-5", "text-blue-300"].join(" ")} />
 						</motion.span>
 					</Button>
 				</motion.div>
