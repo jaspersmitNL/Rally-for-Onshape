@@ -180,12 +180,15 @@ function SmartActionToolMultiSelect({
 						<CommandGroup heading="All actions">
 							{options.map((tool) => {
 								const isSelected = value.includes(tool.id);
+								const disableSelection =
+									selectedOptions.length >= 7 && !isSelected;
 
 								return (
 									<CommandItem
 										key={tool.id}
 										value={`${tool.label} ${tool.id}`}
 										onSelect={() => toggleValue(tool.id)}
+										disabled={disableSelection}
 									>
 										<div
 											className={cn(
