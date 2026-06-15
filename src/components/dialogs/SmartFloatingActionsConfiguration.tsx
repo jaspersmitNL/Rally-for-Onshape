@@ -26,6 +26,7 @@ import {
 	DEFAULT_STORAGE_VALUES,
 	type RadialMenuConfig,
 } from "@/storage/extensionStorage";
+import { Switch } from "../ui/switch";
 
 export type SmartActionToolOption = {
 	id: string;
@@ -200,16 +201,8 @@ function SmartActionToolMultiSelect({
 export function SmartActionsCustomizer({
 	availableTools,
 }: SmartActionsCustomizerProps) {
-	const { settings, updateSetting } = useExtensionSettings();
+	const { settings, updateSetting, setSetting } = useExtensionSettings();
 	const [isExpanded, setIsExpanded] = useState(false);
-
-	const toolsById = useMemo(
-		() =>
-			Object.fromEntries(
-				availableTools.map((tool) => [tool.id, tool]),
-			) as Record<string, SmartActionToolOption | undefined>,
-		[availableTools],
-	);
 
 	const setSectionTools = async (
 		sectionKey: keyof RadialMenuConfig,
@@ -236,7 +229,6 @@ export function SmartActionsCustomizer({
 					flex w-full cursor-pointer items-center gap-3 p-3 text-left
 					transition-colors hover:bg-white/[0.04]
 				"
-				onClick={() => setIsExpanded((current) => !current)}
 			>
 				<div
 					className="
@@ -256,13 +248,19 @@ export function SmartActionsCustomizer({
 						Choose which actions appear for faces and edges.
 					</div>
 				</div>
-
-				<ChevronDown
-					className={cn(
-						"h-4 w-4 shrink-0 text-slate-400 transition-transform",
-						isExpanded && "rotate-180",
-					)}
-				/>
+				<div className="flex items-center gap-3">
+					<Switch
+						checked={settings.smartActionsEnabled}
+						onCheckedChange={(v) => setSetting("smartActionsEnabled", v)}
+					/>
+					<ChevronDown
+						className={cn(
+							"h-4 w-4 shrink-0 text-slate-400 transition-transform",
+							isExpanded && "rotate-180",
+						)}
+						onClick={() => setIsExpanded(!isExpanded)}
+					/>
+				</div>
 			</button>
 
 			{isExpanded && (
