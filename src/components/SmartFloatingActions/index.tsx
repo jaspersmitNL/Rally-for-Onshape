@@ -382,7 +382,10 @@ export function SmartFloatingActions() {
 				tooltipContent:
 					"Enable or disable the Smart Actions menu and choose which tools appear for each selection type.",
 				icon: <Settings className="text-blue-300" />,
-				onClick: () => openSettings(),
+				onClick: () => {
+					openSettings();
+					setSelections([]);
+				},
 			},
 		];
 	}, [modeTools, selections, updatePosition]);
