@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { OnshapeIcon } from "@/components/shared/OnShapeIcon";
 import { RadialContextMenu } from "@/components/shared/RadialContextMenu";
 import { FORWARDED_ONSHAPE_EVENTS } from "@/constants/onshapeEvents";
+import { useExtensionSettings } from "@/contexts/ExtensionSettingsContext";
 import {
 	useOnshapeBridge,
 	useOnshapeBridgeSubscription,
@@ -11,26 +12,13 @@ import {
 	executeOnshapeShortcutCommand,
 	watchElementPresence,
 } from "@/core/utils";
+import type { RadialMenuConfig } from "@/storage/extensionStorage";
 import type { ClassifiedOnshapeSelection } from "@/types/onshape/selection";
 
 type Position = {
 	left: number;
 	top: number;
 };
-
-const SMART_COMMANDS = {
-	singleEdge: ["fillet", "chamfer", "plane"],
-	multipleEdges: ["fillet", "chamfer", "loft"],
-	singleFace: ["extrude", "newSketch", "moveFace", "offsetSurface", "plane"],
-	multipleFaces: [
-		"extrude",
-		"loft",
-		"boolean",
-		"deleteFace",
-		"moveFace",
-		"offsetSurface",
-	],
-} as const;
 
 function isFromSmartFloatingActions(event: Event) {
 	return event.composedPath().some((target) => {
@@ -39,12 +27,6 @@ function isFromSmartFloatingActions(event: Event) {
 			target.classList.contains("os-smart-floating-actions")
 		);
 	});
-}
-
-function commandMatches(toolCommand: string, wantedCommand: string) {
-	const normalize = (value: string) => value.toLowerCase().replace(/\s+/g, "");
-
-	return normalize(toolCommand).includes(normalize(wantedCommand));
 }
 
 function getSelectionSignature(selections: ClassifiedOnshapeSelection[]) {
@@ -61,38 +43,40 @@ function getSelectionSignature(selections: ClassifiedOnshapeSelection[]) {
 		.join("|");
 }
 
-function getSelectionKind(selections: ClassifiedOnshapeSelection[]) {
-	if (selections.length === 0) return null;
+type SelectionToConfig = {
+	config: keyof RadialMenuConfig;
+	isMultiple: boolean;
+};
+
+function getSelectionKind(
+	selections: ClassifiedOnshapeSelection[],
+): SelectionToConfig | undefined {
+	if (selections.length === 0) return undefined;
 
 	const firstKind = selections[0]?.kind;
-	if (!firstKind) return null;
+	if (!firstKind) return undefined;
 
 	const allSameKind = selections.every(
 		(selection) => selection.kind === firstKind,
 	);
+	if (!allSameKind) return undefined;
 
-	return allSameKind ? firstKind : null;
-}
+	const isMultiSelection = selections.length > 1;
 
-function getSmartCommandNames(selections: ClassifiedOnshapeSelection[]) {
-	const selectionKind = getSelectionKind(selections);
-	if (!selectionKind) return [];
+	let settingKey: keyof RadialMenuConfig | null = null;
 
-	const isMultiple = selections.length > 1;
+	if (firstKind === "face")
+		settingKey = isMultiSelection ? "multipleFaces" : "singleFace";
+	if (firstKind === "edge")
+		settingKey = isMultiSelection ? "multipleEdges" : "singleEdge";
 
-	if (selectionKind === "edge") {
-		return isMultiple
-			? SMART_COMMANDS.multipleEdges
-			: SMART_COMMANDS.singleEdge;
-	}
+	if (!settingKey) return undefined;
+	const response: SelectionToConfig = {
+		config: settingKey,
+		isMultiple: isMultiSelection,
+	};
 
-	if (selectionKind === "face") {
-		return isMultiple
-			? SMART_COMMANDS.multipleFaces
-			: SMART_COMMANDS.singleFace;
-	}
-
-	return [];
+	return response;
 }
 
 function isFromOnshapeCanvas(event: Event) {
@@ -110,6 +94,8 @@ function isFromOnshapeCanvas(event: Event) {
 
 export function SmartFloatingActions() {
 	const { allAvailableTools, toolbarType, currentTool } = useOnshapeBridge();
+
+	const { settings } = useExtensionSettings();
 
 	const lastPointerPositionRef = useRef<Position | null>(null);
 	const lastSelectionInteractionWasCanvasRef = useRef(false);
@@ -358,14 +344,16 @@ export function SmartFloatingActions() {
 	const items = useMemo(() => {
 		if (!modeTools) return [];
 
-		const smartCommandNames = getSmartCommandNames(selections);
+		const selectedKind = getSelectionKind(selections);
 
-		return smartCommandNames
-			.map((commandName) => {
-				const tool = modeTools.commands.find((candidate) =>
-					commandMatches(candidate.command, commandName),
-				);
+		if (!selectedKind) return [];
 
+		const selectedTools = modeTools.commands.filter((m) =>
+			settings.radialMenuConfig[selectedKind.config].includes(m.command),
+		);
+
+		return selectedTools
+			.map((tool) => {
 				if (!tool) return null;
 
 				return {

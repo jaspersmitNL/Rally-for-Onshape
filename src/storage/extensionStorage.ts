@@ -27,10 +27,17 @@ export const DEFAULT_STORAGE_VALUES: OnshapePlusStorageSchema = {
 	hasSeenWelcomeDialog: false,
 	floatingNumpadMode: "auto",
 	radialMenuConfig: {
-		singleFace: ["extrude", "newSketch", "moveFace"],
-		singleEdge: ["fillet", "chamfer", "measure"],
-		multipleFaces: ["extrude", "loft", "boolean"],
-		multipleEdges: ["fillet", "chamfer", "measure"],
+		singleFace: ["extrude", "newSketch", "moveFace", "offsetSurface", "plane"],
+		singleEdge: ["fillet", "chamfer", "plane"],
+		multipleFaces: [
+			"extrude",
+			"loft",
+			"boolean",
+			"deleteFace",
+			"moveFace",
+			"offsetSurface",
+		],
+		multipleEdges: ["fillet", "chamfer", "loft"],
 	},
 	toolbarPosition: {
 		x: 290,
