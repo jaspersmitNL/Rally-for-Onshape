@@ -358,7 +358,7 @@ export function SmartFloatingActions() {
 
 				return {
 					id: tool.id,
-					label: capitalize(tool.command),
+					label: tool.name?.replace("server:::", ""),
 					tooltipContent: capitalize(
 						tool.expandedTooltipKey?.replace("tooltips:::", "") ?? tool.command,
 					),

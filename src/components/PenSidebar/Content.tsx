@@ -190,7 +190,9 @@ export function PenSidebarMainContent({
 								<TooltipContent side="right">
 									<Card className="w-[350px]">
 										<CardHeader>
-											<CardTitle>{capitalize(tool.command)}</CardTitle>
+											<CardTitle>
+												{tool.name?.replace("server:::", "")}
+											</CardTitle>
 											<CardDescription>
 												{capitalize(
 													tool.expandedTooltipKey?.replace("tooltips:::", ""),

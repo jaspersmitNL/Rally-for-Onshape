@@ -87,6 +87,8 @@ export function SettingsDialog() {
 	const { isSettingsOpen, setSettingsOpen } = useSettingsDialog();
 	const { allAvailableTools } = useOnshapeBridge();
 
+	console.log(allAvailableTools);
+
 	const partsStudioTools =
 		allAvailableTools.find((t) => t.tabType === "Part Studio")?.commands || [];
 
@@ -175,7 +177,7 @@ export function SettingsDialog() {
 							<SmartActionsCustomizer
 								availableTools={partsStudioTools.map((t) => ({
 									id: t.command,
-									label: capitalize(t.command),
+									label: t.name?.replace("server:::", ""),
 									description: capitalize(
 										t.expandedTooltipKey?.replace("tooltips:::", ""),
 									),
