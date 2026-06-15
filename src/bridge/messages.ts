@@ -92,7 +92,6 @@ export function handleMessage(event: MessageEvent<unknown>): void {
 		}
 
 		case "OS_GET_ALL_AVAILABLE_COMMANDS": {
-			console.log("EHHLLOO");
 			handleGetAllCommandsCommands();
 			return;
 		}

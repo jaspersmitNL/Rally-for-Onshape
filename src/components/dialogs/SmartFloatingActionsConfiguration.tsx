@@ -121,7 +121,6 @@ function SmartActionToolMultiSelect({
 		onChange([...value, toolId]);
 	};
 
-	console.log("Search value ", searchValue);
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
@@ -158,6 +157,9 @@ function SmartActionToolMultiSelect({
 						value={searchValue}
 						onValueChange={setSearchValue}
 					/>
+					<div className="border-b border-white/10 px-3 py-2 text-[11px] text-slate-400">
+						Select up to 7 actions.
+					</div>
 
 					<CommandList className="max-h-[220px] overflow-y-auto overscroll-contain">
 						<CommandEmpty>No actions found.</CommandEmpty>
@@ -241,7 +243,7 @@ export function SmartActionsCustomizer({
 			<button
 				type="button"
 				className="
-					flex w-full cursor-pointer items-center gap-3 p-3 text-left
+					flex w-full items-center gap-3 p-3 text-left
 					transition-colors hover:bg-white/[0.04]
 				"
 			>
@@ -263,17 +265,17 @@ export function SmartActionsCustomizer({
 						Choose which actions appear when selecting faces and edges.
 					</div>
 				</div>
-				<div className="flex items-center gap-3">
-					<Switch
-						checked={settings.smartActionsEnabled}
-						onCheckedChange={(v) => setSetting("smartActionsEnabled", v)}
-					/>
+				<div className="flex items-center gap-4">
 					<Settings
 						className={cn(
-							"h-4 w-4 shrink-0 text-slate-400 transition-transform",
+							"h-5 w-5 shrink-0 text-slate-200 transition-transform cursor-pointer",
 							isExpanded && "rotate-180",
 						)}
 						onClick={() => setIsExpanded(!isExpanded)}
+					/>
+					<Switch
+						checked={settings.smartActionsEnabled}
+						onCheckedChange={(v) => setSetting("smartActionsEnabled", v)}
 					/>
 				</div>
 			</button>

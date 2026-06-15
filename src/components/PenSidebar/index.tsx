@@ -105,7 +105,6 @@ export function PenSidebar() {
 	);
 
 	const fixPosition = () => {
-		console.log("in here hello");
 		const next = clampSidebarPosition(
 			settings.toolbarPosition,
 			DEFAULT_STORAGE_VALUES.toolbarPosition,
