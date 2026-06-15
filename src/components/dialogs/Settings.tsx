@@ -177,7 +177,7 @@ export function SettingsDialog() {
 							<SmartActionsCustomizer
 								availableTools={partsStudioTools.map((t) => ({
 									id: t.command,
-									label: t.name?.replace("server:::", ""),
+									label: t.name?.replace("server:::", "") || "",
 									description: capitalize(
 										t.expandedTooltipKey?.replace("tooltips:::", ""),
 									),
