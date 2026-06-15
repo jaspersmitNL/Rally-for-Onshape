@@ -1,5 +1,5 @@
 import { capitalize } from "lodash-es";
-import { LoaderCircle, XCircle } from "lucide-react";
+import { LoaderCircle, Settings, XCircle } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { OnshapeIcon } from "@/components/shared/OnShapeIcon";
 import { Button } from "@/components/ui/button";
@@ -143,12 +143,8 @@ export function PenSidebarMainContent({
 							mass: 0.8,
 						}}
 					>
-						{modeTools.length === 0 && (
-							<LoaderCircle className="col-span-2 my-2 h-6 w-6 animate-spin text-muted-foreground" />
-						)}
-
 						{modeTools.map((tool, index) => (
-							<Tooltip key={tool.id} disableHoverableContent={false}>
+							<Tooltip key={tool.id} disableHoverableContent>
 								<TooltipTrigger asChild>
 									<MotionButton
 										className={`relative h-10 w-10 shrink-0 cursor-pointer ${tool.command === currentTool ? "bg-slate-800 border border-slate-700" : ""}`}
@@ -199,19 +195,45 @@ export function PenSidebarMainContent({
 												)}
 											</CardDescription>
 										</CardHeader>
-										<CardFooter>
-											<Button
-												onClick={openSettings}
-												variant={"link"}
-												className="cursor-pointer"
-											>
-												Customize your quick actions
-											</Button>
-										</CardFooter>
 									</Card>
 								</TooltipContent>
 							</Tooltip>
 						))}
+						<Tooltip disableHoverableContent>
+							<TooltipTrigger asChild>
+								<MotionButton
+									className={`relative h-10 w-10 shrink-0 cursor-pointer`}
+									variant={"secondary"}
+									size="icon"
+									initial={{ opacity: 0, x: 3 }}
+									animate={{ opacity: 1, x: 0 }}
+									transition={{
+										delay: modeTools.length * 0.025,
+										type: "spring",
+									}}
+									whileTap={{ scale: 0.94 }}
+									onClick={(e) => {
+										e.preventDefault();
+										e.stopPropagation();
+
+										openSettings();
+									}}
+								>
+									<Settings />
+								</MotionButton>
+							</TooltipTrigger>
+
+							<TooltipContent side="right">
+								<Card className="w-[350px]">
+									<CardHeader>
+										<CardTitle>Customize</CardTitle>
+										<CardDescription>
+											Customize your dynamic Toolbar Actions.
+										</CardDescription>
+									</CardHeader>
+								</Card>
+							</TooltipContent>
+						</Tooltip>
 					</motion.div>
 				</AnimatePresence>
 			</div>
