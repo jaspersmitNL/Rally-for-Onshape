@@ -4,6 +4,7 @@ import cssText from "@/styles/extension.css?inline";
 import onshapeThemeCss from "@/styles/onshape-theme.css?inline";
 import { App } from "./App";
 import { TooltipProvider } from "./components/ui/tooltip";
+import { ExtensionSettingsProvider } from "./contexts/ExtensionSettingsContext";
 import { OnshapeBridgeProvider } from "./contexts/OnshapeBridgeContext";
 import { SettingsDialogProvider } from "./contexts/SettingsDialogContext";
 import { copyOnshapeIconSpriteToShadowRoot } from "./core/utils";
@@ -63,17 +64,19 @@ if (!document.getElementById("onshape-extension-host")) {
 	createRoot(root).render(
 		<React.StrictMode>
 			<OnshapeBridgeProvider>
-				<SettingsDialogProvider>
-					<PortalContainerProvider container={portalRoot}>
-						<TooltipProvider
-							delayDuration={350}
-							skipDelayDuration={0}
-							disableHoverableContent
-						>
-							<App />
-						</TooltipProvider>
-					</PortalContainerProvider>
-				</SettingsDialogProvider>
+				<ExtensionSettingsProvider>
+					<SettingsDialogProvider>
+						<PortalContainerProvider container={portalRoot}>
+							<TooltipProvider
+								delayDuration={350}
+								skipDelayDuration={0}
+								disableHoverableContent
+							>
+								<App />
+							</TooltipProvider>
+						</PortalContainerProvider>
+					</SettingsDialogProvider>
+				</ExtensionSettingsProvider>
 			</OnshapeBridgeProvider>
 		</React.StrictMode>,
 	);
