@@ -262,7 +262,8 @@ export function SmartActionsCustomizer({
 					</div>
 
 					<div className="mt-1 text-xs leading-snug text-slate-300">
-						Choose which actions appear when selecting faces and edges.
+						Choose which actions appear when selecting faces and edges in Part
+						Studio.
 					</div>
 				</div>
 				<div className="flex items-center gap-4">
