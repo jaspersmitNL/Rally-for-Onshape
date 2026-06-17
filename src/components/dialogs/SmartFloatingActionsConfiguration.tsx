@@ -1,27 +1,7 @@
-import {
-	Check,
-	ChevronDown,
-	ChevronsUpDown,
-	RotateCcw,
-	Settings,
-	X,
-	Zap,
-} from "lucide-react";
-import { useMemo, useState } from "react";
+import { RotateCcw, Settings, X, Zap } from "lucide-react";
+import { useState } from "react";
+import { CommandMultiSelect } from "@/components/shared/CommandMultiSelect";
 import { Button } from "@/components/ui/button";
-import {
-	Command,
-	CommandEmpty,
-	CommandGroup,
-	CommandInput,
-	CommandItem,
-	CommandList,
-} from "@/components/ui/command";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover";
 import { useExtensionSettings } from "@/contexts/ExtensionSettingsContext";
 import { cn } from "@/lib/utils";
 import {
@@ -66,154 +46,6 @@ const SMART_ACTION_SECTIONS: {
 		description: "Actions shown when multiple edges are selected.",
 	},
 ];
-
-function getSelectedSummary(
-	value: string[],
-	toolsById: Record<string, SmartActionToolOption | undefined>,
-) {
-	if (value.length === 0) {
-		return "No actions selected";
-	}
-
-	if (value.length <= 2) {
-		return value.map((toolId) => toolsById[toolId]?.label ?? toolId).join(", ");
-	}
-
-	return `${value.length} actions selected`;
-}
-
-type SmartActionToolMultiSelectProps = {
-	value: string[];
-	options: SmartActionToolOption[];
-	placeholder?: string;
-	onChange: (value: string[]) => void;
-};
-
-function SmartActionToolMultiSelect({
-	value,
-	options,
-	placeholder = "Select actions",
-	onChange,
-}: SmartActionToolMultiSelectProps) {
-	const [open, setOpen] = useState(false);
-
-	const [searchValue, setSearchValue] = useState("");
-
-	const toolsById = useMemo(
-		() =>
-			Object.fromEntries(options.map((tool) => [tool.id, tool])) as Record<
-				string,
-				SmartActionToolOption | undefined
-			>,
-		[options],
-	);
-
-	const selectedSummary = getSelectedSummary(value, toolsById);
-
-	const selectedOptions = options.filter((o) => value.includes(o.id));
-
-	const toggleValue = (toolId: string) => {
-		if (value.includes(toolId)) {
-			onChange(value.filter((id) => id !== toolId));
-			return;
-		}
-
-		onChange([...value, toolId]);
-	};
-
-	return (
-		<Popover open={open} onOpenChange={setOpen}>
-			<PopoverTrigger asChild>
-				<Button
-					type="button"
-					variant="ghost"
-					role="combobox"
-					aria-expanded={open}
-					className="
-						w-[150px] justify-between rounded-lg border border-white/10
-						bg-white/[0.045] px-3 text-left text-xs font-medium text-slate-200
-						hover:bg-white/10 hover:text-white
-					"
-				>
-					<span className="min-w-0 truncate">
-						{selectedSummary || placeholder}
-					</span>
-
-					<ChevronsUpDown className="ml-2 h-3.5 w-3.5 shrink-0 text-slate-400" />
-				</Button>
-			</PopoverTrigger>
-
-			<PopoverContent
-				align="start"
-				className="
-		w-96 border-white/10
-		bg-slate-950/95 p-0 text-white shadow-2xl backdrop-blur-xl
-	"
-			>
-				<Command className="bg-transparent">
-					<CommandInput
-						placeholder="Search actions..."
-						className="h-9 text-xs"
-						value={searchValue}
-						onValueChange={setSearchValue}
-					/>
-					<div className="border-b border-white/10 px-3 py-2 text-[11px] text-slate-400">
-						Select up to 7 actions.
-					</div>
-
-					<CommandList className="max-h-[220px] overflow-y-auto overscroll-contain">
-						<CommandEmpty>No actions found.</CommandEmpty>
-
-						{searchValue.length === 0 && selectedOptions.length > 0 && (
-							<CommandGroup heading="Selected">
-								{selectedOptions.map((tool) => (
-									<CommandItem
-										key={`selected-${tool.id}`}
-										value={`selected-${tool.id}`}
-										onSelect={() => toggleValue(tool.id)}
-									>
-										<Check className="mr-2 h-3 w-3 text-blue-200" />
-										{tool.label}
-									</CommandItem>
-								))}
-							</CommandGroup>
-						)}
-
-						<CommandGroup heading="All actions">
-							{options.map((tool) => {
-								const isSelected = value.includes(tool.id);
-								const disableSelection =
-									selectedOptions.length >= 7 && !isSelected;
-
-								return (
-									<CommandItem
-										key={tool.id}
-										value={`${tool.label} ${tool.id}`}
-										onSelect={() => toggleValue(tool.id)}
-										disabled={disableSelection}
-									>
-										<div
-											className={cn(
-												"mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-white/15",
-												isSelected
-													? "bg-blue-500/25 text-blue-100"
-													: "text-transparent",
-											)}
-										>
-											<Check className="h-3 w-3" />
-										</div>
-
-										{tool.label}
-									</CommandItem>
-								);
-							})}
-						</CommandGroup>
-					</CommandList>
-				</Command>
-			</PopoverContent>
-		</Popover>
-	);
-}
 
 export function SmartActionsCustomizer({
 	availableTools,
@@ -266,17 +98,29 @@ export function SmartActionsCustomizer({
 						Studio.
 					</div>
 				</div>
+
 				<div className="flex items-center gap-4">
-					<Settings
-						className={cn(
-							"h-5 w-5 shrink-0 text-slate-200 transition-transform cursor-pointer",
-							isExpanded && "rotate-180",
-						)}
-						onClick={() => setIsExpanded(!isExpanded)}
-					/>
+					<Button
+						size="icon"
+						variant={"ghost"}
+						className="cursor-pointer"
+						onClick={(event) => {
+							event.stopPropagation();
+							setIsExpanded((current) => !current);
+						}}
+					>
+						<Settings
+							className={cn(
+								"h-5 w-5 shrink-0 cursor-pointer text-slate-200 transition-transform",
+							)}
+						/>
+					</Button>
+
 					<Switch
 						checked={settings.smartActionsEnabled}
-						onCheckedChange={(v) => setSetting("smartActionsEnabled", v)}
+						onCheckedChange={(value) =>
+							setSetting("smartActionsEnabled", value)
+						}
 					/>
 				</div>
 			</button>
@@ -298,35 +142,43 @@ export function SmartActionsCustomizer({
 												{section.label}
 											</div>
 										</div>
+
 										<div className="flex items-center gap-3">
-											<SmartActionToolMultiSelect
+											<CommandMultiSelect
 												value={selectedToolIds}
 												options={availableTools}
 												onChange={(toolIds) =>
 													setSectionTools(section.key, toolIds)
 												}
+												placeholder="Select actions"
+												searchPlaceholder="Search actions..."
+												emptyMessage="No actions found."
+												maxSelected={7}
+												maxSelectedMessage="Select up to 7 actions."
 											/>
+
 											<Button
 												type="button"
 												variant="ghost"
 												className="
-												shrink-0 cursor-pointer rounded-md border border-white/10
-												bg-white/[0.045] px-2 text-[11px] text-slate-300
-												hover:bg-white/10 hover:text-white
-											"
+													shrink-0 cursor-pointer rounded-md border border-white/10
+													bg-white/[0.045] px-2 text-[11px] text-slate-300
+													hover:bg-white/10 hover:text-white
+												"
 												onClick={() => setSectionTools(section.key, [])}
 											>
 												<X className="mr-1 h-3 w-3" />
 												Clear
 											</Button>
+
 											<Button
 												type="button"
 												variant="ghost"
 												className="
-												shrink-0 cursor-pointer rounded-md border border-white/10
-												bg-white/[0.045] px-2 text-[11px] text-slate-300
-												hover:bg-white/10 hover:text-white
-											"
+													shrink-0 cursor-pointer rounded-md border border-white/10
+													bg-white/[0.045] px-2 text-[11px] text-slate-300
+													hover:bg-white/10 hover:text-white
+												"
 												onClick={() => resetSection(section.key)}
 											>
 												<RotateCcw className="mr-1 h-3 w-3" />
