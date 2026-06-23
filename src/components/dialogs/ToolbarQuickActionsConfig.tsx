@@ -119,7 +119,6 @@ export function ToolbarQuickActionsConfig({
 												placeholder="Select actions"
 												searchPlaceholder="Search actions..."
 												emptyMessage="No actions found."
-												maxSelected={7}
 												maxSelectedMessage="Select up to 7 actions."
 											/>
 
