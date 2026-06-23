@@ -1,5 +1,5 @@
 import { ChevronDown, RotateCcw, Wrench, X } from "lucide-react";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import { CommandMultiSelect } from "@/components/shared/CommandMultiSelect";
 import { Button } from "@/components/ui/button";
 import { useExtensionSettings } from "@/contexts/ExtensionSettingsContext";
@@ -12,6 +12,7 @@ export type ToolbarQuickActionOption = {
 	id: string;
 	label: string;
 	description?: string;
+	iconComponent?: ReactNode;
 };
 
 type ToolbarQuickActionsCustomizerProps = {

@@ -1,5 +1,5 @@
-import { Check, ChevronsUpDown } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Check, ChevronsUpDown, Info } from "lucide-react";
+import { type ReactNode, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Command,
@@ -15,11 +15,14 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { Card, CardContent } from "../ui/card";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export type CommandMultiSelectOption = {
 	id: string;
 	label: string;
 	description?: string;
+	iconComponent?: ReactNode;
 };
 
 type CommandMultiSelectProps = {
@@ -140,17 +143,35 @@ export function CommandMultiSelect({
 
 						{searchValue.length === 0 && selectedOptions.length > 0 && (
 							<CommandGroup heading="Selected">
-								{selectedOptions.map((option) => (
-									<CommandItem
-										key={`selected-${option.id}`}
-										value={`selected-${option.label} ${option.id}`}
-										className="text-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
-										onSelect={() => toggleValue(option.id)}
-									>
-										<Check className="mr-2 h-3 w-3 text-primary" />
-										{option.label}
-									</CommandItem>
-								))}
+								{selectedOptions.map((option) => {
+									return (
+										<CommandItem
+											key={`selected-${option.id}`}
+											value={`selected-${option.label} ${option.id}`}
+											className="text-foreground cursor-pointer data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
+											onSelect={() => toggleValue(option.id)}
+											data-checked
+										>
+											<div className="flex gap-2 justify-between items-center">
+												{option.iconComponent}
+												{option.label}
+											</div>
+											<Tooltip>
+												<TooltipTrigger asChild>
+													<Button type="button" variant="ghost" size={"icon"}>
+														<Info />
+													</Button>
+												</TooltipTrigger>
+
+												<TooltipContent>
+													<Card className="w-[350px]">
+														<CardContent>{option.description}</CardContent>
+													</Card>
+												</TooltipContent>
+											</Tooltip>
+										</CommandItem>
+									);
+								})}
 							</CommandGroup>
 						)}
 
@@ -166,32 +187,31 @@ export function CommandMultiSelect({
 										value={`${option.label} ${option.id}`}
 										className="
 											text-foreground
+                      cursor-pointer
 											data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-45
 											data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground
 										"
 										onSelect={() => toggleValue(option.id)}
+										data-checked={value.includes(option.id)}
 										disabled={disableSelection}
 									>
-										<div
-											className={cn(
-												"mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-border",
-												isSelected
-													? "border-primary bg-primary/20 text-primary"
-													: "bg-background/50 text-transparent",
-											)}
-										>
-											<Check className="h-3 w-3" />
+										<div className="flex gap-2 justify-between items-center">
+											{option.iconComponent}
+											{option.label}
 										</div>
+										<Tooltip>
+											<TooltipTrigger asChild>
+												<Button type="button" variant="ghost" size={"icon"}>
+													<Info />
+												</Button>
+											</TooltipTrigger>
 
-										<div className="min-w-0">
-											<div className="truncate">{option.label}</div>
-
-											{option.description && (
-												<div className="truncate text-[11px] text-muted-foreground">
-													{option.description}
-												</div>
-											)}
-										</div>
+											<TooltipContent>
+												<Card className="w-[350px]">
+													<CardContent>{option.description}</CardContent>
+												</Card>
+											</TooltipContent>
+										</Tooltip>
 									</CommandItem>
 								);
 							})}

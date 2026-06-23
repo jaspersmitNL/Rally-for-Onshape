@@ -1,4 +1,5 @@
 import { Calculator, Code, Coffee, MessageCircle } from "lucide-react";
+import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -18,6 +19,7 @@ import { useSettingsDialog } from "@/contexts/SettingsDialogContext";
 import { isSafari } from "@/lib/utils";
 import type { FloatingNumpadMode } from "@/storage/extensionStorage";
 import { ONSHAPE_TOOLBAR_MODES, type OnshapeToolbarMode } from "@/types";
+import { OnshapeIcon } from "../shared/OnShapeIcon";
 import { ButtonGroup } from "../ui/button-group";
 import { Card, CardContent } from "../ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
@@ -87,6 +89,7 @@ export function SettingsDialog() {
 				id: tool.command,
 				label: tool.name?.replace("server:::", "") || tool.command,
 				description: tool.expandedTooltipKey?.replace("tooltips:::", ""),
+				iconComponent: tool.icon ? <OnshapeIcon icon={tool.icon} /> : null,
 			})) ?? [];
 
 	const availableToolsByMode = Object.fromEntries(
@@ -97,6 +100,7 @@ export function SettingsDialog() {
 			id: string;
 			label: string;
 			description?: string;
+			iconComponent?: ReactNode;
 		}[]
 	>;
 
@@ -190,6 +194,7 @@ export function SettingsDialog() {
 									id: t.command,
 									label: t.name?.replace("server:::", "") || "",
 									description: t.expandedTooltipKey?.replace("tooltips:::", ""),
+									iconComponent: t.icon ? <OnshapeIcon icon={t.icon} /> : null,
 								}))}
 							/>
 
