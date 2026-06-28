@@ -67,7 +67,7 @@ export function SmartActionsCustomizer({
 	};
 
 	return (
-		<div className="rounded-xl border border-border bg-muted/35">
+		<div className="rounded-xl border border-border bg-muted/35 overflow-hidden">
 			<button
 				type="button"
 				className="
