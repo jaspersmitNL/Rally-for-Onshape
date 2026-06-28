@@ -7,12 +7,12 @@ import {
 	useMemo,
 	useState,
 } from "react";
+import { ALL_TOOLS_BY_TYPE } from "@/constants/onshape-available-tools";
 import {
 	ACCEPTED_ONSHAPE_TO_EXTENSION_EVENT_TYPE,
 	FORWARDED_ONSHAPE_EVENTS,
 } from "@/constants/onshapeEvents";
 import type { OnshapeShortcutCommand, OnshapeToolbarMode } from "@/types";
-import { ALL_TOOLS_BY_TYPE } from '@/constants/onshape-available-tools'
 
 type OnshapeBridgeEvent = {
 	type: typeof ACCEPTED_ONSHAPE_TO_EXTENSION_EVENT_TYPE;
@@ -91,7 +91,7 @@ export function OnshapeBridgeProvider({ children }: { children: ReactNode }) {
 
 			if (event.name === FORWARDED_ONSHAPE_EVENTS.ELEMENT_LOAD_DONE) {
 				setIsDocumentLoaded(true);
-				requestAllCommands();
+				// requestAllCommands();
 			}
 
 			if (event.name === FORWARDED_ONSHAPE_EVENTS.DOCUMENT_UNLOADED) {
@@ -106,7 +106,7 @@ export function OnshapeBridgeProvider({ children }: { children: ReactNode }) {
 			// 	FORWARDED_ONSHAPE_EVENTS.OS_GET_ALL_AVAILABLE_COMMANDS_RESULT
 			// ) {
 			// 	console.log(event.data);
-      //   if (event.data?.length)
+			//   if (event.data?.length)
 			// 	setAllAvailableTools(event.data as AllTools);
 			// }
 
