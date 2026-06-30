@@ -13,7 +13,7 @@ Rally for Onshape is an open-source browser extension that enhances the Onshape 
 
 Whether you're using a mouse, trackpad, touchscreen, or stylus, Rally for Onshape helps reduce friction and streamline common modeling tasks while preserving the workflows you already know.
 
-Available for Chrome, Microsoft Edge, and Safari on iPad.
+Available for Chrome, Microsoft Edge, Firefox, Safari on iPad, and Android tablets.
 
 ---
 
@@ -46,23 +46,13 @@ Features are designed to feel native to Onshape and integrate seamlessly into th
 
 ## Installation
 
-### Chrome
+[![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Install-4285F4?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/onshape-plus/hanbmgaepnkkmmgafdpfocnjhfccckoh?authuser=0&hl=en)
+[![Microsoft Edge](https://img.shields.io/badge/Microsoft%20Edge-Install-0078D7?logo=microsoftedge&logoColor=white)](https://microsoftedge.microsoft.com/addons/detail/onshape-plus/ogbpbkkaednceiocabdfmmepdbpgonko)
+[![iPad App Store](https://img.shields.io/badge/iPad%20App%20Store-Install-0D96F6?logo=appstore&logoColor=white)](https://apps.apple.com/us/app/onshape-plus/id6777179140)
+[![Firefox Add-ons](https://img.shields.io/badge/Firefox%20Add--ons-Install-FF7139?logo=firefoxbrowser&logoColor=white)](https://addons.mozilla.org/en-CA/firefox/addon/rally-for-onshape/)
+[![Android Tablet Install](https://img.shields.io/badge/Android%20Tablet-Install%20Guide-3DDC84?logo=android&logoColor=white)](https://github.com/RileyDavidson-Evans/onshape-plus/blob/main/docs/AndroidTabletInstall.md)
 
-Install from the Chrome Web Store:
-
-https://chromewebstore.google.com/detail/onshape-plus/hanbmgaepnkkmmgafdpfocnjhfccckoh
-
-### Microsoft Edge
-
-Install from the Chrome Web Store or load the extension manually.
-
-### Safari (iPad)
-
-https://apps.apple.com/us/app/onshape-plus/id6777179140
-
-### Android Tablet
-
-[View the guide](./docs/AndroidTabletInstall.md)
+Chrome Web Store installs also work on Microsoft Edge.
 
 ---
 
@@ -125,7 +115,8 @@ Rally for Onshape is developed in the open and available for anyone to inspect, 
 | Chrome         | ✅ Supported    |
 | Microsoft Edge | ✅ Supported    |
 | Safari (iPad)  | ✅ Supported    |
-| Firefox        | 🚧 In Progress |
+| Firefox        | ✅ Supported    |
+| Android Tablet | ✅ Supported    |
 | Safari (macOS) | 📋 Planned     |
 
 ---
