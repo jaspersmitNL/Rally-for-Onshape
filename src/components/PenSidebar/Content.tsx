@@ -196,43 +196,7 @@ export function PenSidebarMainContent({
 								</TooltipContent>
 							</Tooltip>
 						))}
-						<Tooltip disableHoverableContent>
-							<TooltipTrigger asChild>
-								<MotionButton
-									className={`relative h-10 w-10 shrink-0 cursor-pointer`}
-									variant={"secondary"}
-									size="icon"
-									initial={{ opacity: 0, x: 3 }}
-									animate={{ opacity: 1, x: 0 }}
-									transition={{
-										delay: modeTools.length * 0.025,
-										type: "spring",
-									}}
-									whileTap={{ scale: 0.94 }}
-									onClick={(e) => {
-										e.preventDefault();
-										e.stopPropagation();
-
-										openSettings();
-									}}
-								>
-									<Settings />
-								</MotionButton>
-							</TooltipTrigger>
-
-							<TooltipContent
-								side={modeTools.length % 2 === 0 ? "left" : "right"}
-							>
-								<Card className="w-[350px]">
-									<CardHeader>
-										<CardTitle>Customize</CardTitle>
-										<CardDescription>
-											Customize your dynamic Toolbar Actions.
-										</CardDescription>
-									</CardHeader>
-								</Card>
-							</TooltipContent>
-						</Tooltip>
+						
 					</motion.div>
 				</AnimatePresence>
 			</div>
